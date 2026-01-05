@@ -1,0 +1,115 @@
+{
+  "objects": [],
+  "wallObjects": [],
+  "items": [
+    {
+      "type": "bat_red",
+      "name": "Batje Rood",
+      "mass": 0.4,
+      "canTopple": true,
+      "x": 0.5,
+      "y": 4.106373391324086,
+      "vx": 0,
+      "vy": 0,
+      "z": 0,
+      "vz": 0,
+      "rotation": -1.5707963267948966,
+      "vr": 0
+    },
+    {
+      "type": "bat_black",
+      "name": "Batje Zwart",
+      "mass": 0.4,
+      "canTopple": true,
+      "x": 0.6824861432705134,
+      "y": 2.743307063990922,
+      "vx": 0,
+      "vy": 0,
+      "z": 0,
+      "vz": 0,
+      "rotation": 1.5707963267948966,
+      "vr": 0
+    },
+    {
+      "type": "bat_red",
+      "name": "Batje Rood",
+      "mass": 0.4,
+      "canTopple": true,
+      "x": 4.0360542967354425,
+      "y": 3.2051226861573587,
+      "vx": 0,
+      "vy": 0,
+      "z": 50,
+      "vz": 0,
+      "rotation": 0,
+      "vr": 0
+    },
+    {
+      "type": "bat_black",
+      "name": "Batje Zwart",
+      "mass": 0.4,
+      "canTopple": true,
+      "x": 4.780035926624868,
+      "y": 4.4054313233339375,
+      "vx": 0,
+      "vy": 0,
+      "z": 50,
+      "vz": 0,
+      "rotation": 0,
+      "vr": 0
+    },
+    {
+      "type": "currency_big",
+      "mass": 0.5,
+      "x": 4.485102992962186,
+      "y": 3.1245995680535774,
+      "vx": 0,
+      "vy": 0,
+      "z": 50,
+      "vz": 0,
+      "rotation": 0,
+      "vr": 0
+    },
+    {
+      "type": "currency",
+      "mass": 0.5,
+      "x": 3.8208556943335186,
+      "y": 3.0329278608455343,
+      "vx": 0,
+      "vy": 0,
+      "z": 50,
+      "vz": 0,
+      "rotation": 0,
+      "vr": 0
+    }
+  ],
+  "chatHistory": [
+    {
+      "user": "Alumni OSM9",
+      "text": "hey",
+      "id": "OSM9TH83hF4yWB8ZAAAR",
+      "time": 1767480181074
+    },
+    {
+      "user": "Alumni WGKw",
+      "text": "hey",
+      "id": "WGKwectvoYvI_uA4AAAH",
+      "time": 1767480186624
+    }
+  ],
+  "mapW": 5,
+  "mapH": 5,
+  "tileColors": {},
+  "wallColors": {
+    "left_2": "#555555",
+    "left_3": "#555555",
+    "left_1": "#555555",
+    "left_4": "#555555",
+    "left_0": "#555555"
+  },
+  "maxPlayers": 10,
+  "settings": {
+    "doorbell": false,
+    "alwaysOnline": true
+  }
+}

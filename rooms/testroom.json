@@ -1,0 +1,323 @@
+{
+  "objects": [
+    {
+      "x": 2,
+      "y": 16,
+      "height": 1,
+      "width": 2,
+      "depth": 1,
+      "flipped": false,
+      "name": "Tafel"
+    },
+    {
+      "x": 2,
+      "y": 13,
+      "height": 1,
+      "flipped": false,
+      "moveable": true,
+      "name": "Verplaatsbaar Blok"
+    },
+    {
+      "x": 2,
+      "y": 19,
+      "height": 2,
+      "flipped": false,
+      "name": "Hoge Blok"
+    },
+    {
+      "name": "Blok",
+      "height": 1,
+      "image": "http://localhost:3000/object_template.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 10,
+      "x": 2,
+      "y": 22,
+      "flipped": false,
+      "ownerId": "i_F0DHBgvugglA4oAAAN"
+    },
+    {
+      "name": "Verplaatsbare Tafel",
+      "height": 1,
+      "width": 2,
+      "depth": 1,
+      "image": "http://localhost:3000/object_moveable_template_96_B.png",
+      "category": "objecten",
+      "subCategory": "moveable",
+      "placement": "floor",
+      "moveable": true,
+      "isTemplate": true,
+      "price": 75,
+      "x": 2,
+      "y": 10,
+      "flipped": false,
+      "ownerId": "i_F0DHBgvugglA4oAAAN"
+    },
+    {
+      "name": "Winkel",
+      "height": 2,
+      "image": "http://localhost:3000/winkel_template_96.png",
+      "category": "objecten",
+      "subCategory": "shop",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 500,
+      "x": 2,
+      "y": 7,
+      "flipped": false,
+      "ownerId": "i_F0DHBgvugglA4oAAAN"
+    },
+    {
+      "name": "Container",
+      "height": 1,
+      "image": "http://localhost:3000/container_template.png",
+      "category": "objecten",
+      "subCategory": "containers",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 100,
+      "x": 2,
+      "y": 4,
+      "flipped": false,
+      "ownerId": "i_F0DHBgvugglA4oAAAN"
+    },
+    {
+      "name": "Grote Container",
+      "height": 2,
+      "image": "http://localhost:3000/container_template_96.png",
+      "category": "objecten",
+      "subCategory": "containers",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 200,
+      "x": 2,
+      "y": 1,
+      "flipped": false,
+      "ownerId": "i_F0DHBgvugglA4oAAAN"
+    },
+    {
+      "name": "Brede Container",
+      "height": 1,
+      "width": 2,
+      "depth": 1,
+      "image": "http://localhost:3000/container_template_96_B.png",
+      "category": "objecten",
+      "subCategory": "containers",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 150,
+      "x": 5,
+      "y": 1,
+      "flipped": false,
+      "ownerId": "i_F0DHBgvugglA4oAAAN"
+    },
+    {
+      "name": "Brede Prullenbak",
+      "height": 1,
+      "width": 2,
+      "depth": 1,
+      "image": "http://localhost:3000/trash_template_96_B.png",
+      "category": "objecten",
+      "subCategory": "trash",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 40,
+      "x": 5,
+      "y": 4,
+      "flipped": false,
+      "ownerId": "i_F0DHBgvugglA4oAAAN"
+    },
+    {
+      "name": "Prullenbak",
+      "height": 1,
+      "image": "http://localhost:3000/trash_template.png",
+      "category": "objecten",
+      "subCategory": "trash",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 25,
+      "x": 5,
+      "y": 7,
+      "flipped": false,
+      "ownerId": "i_F0DHBgvugglA4oAAAN",
+      "items": [],
+      "columns": 2
+    },
+    {
+      "name": "Blok",
+      "height": 1,
+      "image": "http://localhost:3000/object_template.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 10,
+      "x": 8,
+      "y": 19,
+      "flipped": false,
+      "ownerId": "LbAfQZ0PbkZqBrx9AAAB"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 9,
+      "y": 7,
+      "flipped": false,
+      "ownerId": "NKNvl_IaOo6xug66AAAp"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 10,
+      "y": 7,
+      "flipped": false,
+      "ownerId": "px2_z8A79hO7vdziAAAt"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 9,
+      "y": 6,
+      "flipped": false,
+      "ownerId": "px2_z8A79hO7vdziAAAt"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 10,
+      "y": 6,
+      "flipped": false,
+      "ownerId": "px2_z8A79hO7vdziAAAt"
+    },
+    {
+      "name": "Container",
+      "height": 1,
+      "image": "http://localhost:3000/container_template.png",
+      "category": "objecten",
+      "subCategory": "containers",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 100,
+      "x": 9,
+      "y": 6,
+      "flipped": false,
+      "ownerId": "px2_z8A79hO7vdziAAAt"
+    },
+    {
+      "name": "Winkel",
+      "height": 2,
+      "image": "http://localhost:3000/winkel_template_96.png",
+      "category": "objecten",
+      "subCategory": "shop",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 500,
+      "x": 10,
+      "y": 6,
+      "flipped": false,
+      "ownerId": "px2_z8A79hO7vdziAAAt"
+    },
+    {
+      "name": "Pong",
+      "height": 1,
+      "width": 2,
+      "depth": 1,
+      "image": "http://localhost:3000/objects/pong.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 1000,
+      "x": 9,
+      "y": 7,
+      "flipped": false,
+      "ownerId": "i_F0DHBgvugglA4oAAAN"
+    }
+  ],
+  "wallObjects": [
+    {
+      "wallId": "left_22",
+      "name": "Muurdecoratie",
+      "flipped": false,
+      "image": "http://localhost:3000/wall_template.png",
+      "ownerId": "i_F0DHBgvugglA4oAAAN"
+    }
+  ],
+  "items": [
+    {
+      "x": 9.5,
+      "y": 7.5,
+      "vx": 0,
+      "vy": 0,
+      "mass": 0.4,
+      "z": 60,
+      "vz": 0,
+      "rotation": 1.5707963267948966,
+      "vr": 0,
+      "canTopple": true,
+      "name": "Batje Rood",
+      "type": "bat_red",
+      "invX": 318,
+      "invY": 273.5500030517578
+    }
+  ],
+  "chatHistory": [
+    {
+      "user": "Alumni FMaq",
+      "text": "hey!",
+      "id": "FMaqjrmHOTBqdHXWAAAN",
+      "time": 1767474556175
+    },
+    {
+      "user": "Alumni smSu",
+      "text": "hoe maak je het",
+      "id": "smSufYnvNNA5ITZqAAAL",
+      "time": 1767474564414
+    },
+    {
+      "user": "Alumni FMaq",
+      "text": "prima",
+      "id": "FMaqjrmHOTBqdHXWAAAN",
+      "time": 1767474569475
+    }
+  ],
+  "mapW": 25,
+  "mapH": 25,
+  "tileColors": {},
+  "wallColors": {
+    "left_1": "#666666",
+    "top_6": "#666666"
+  },
+  "maxPlayers": 10,
+  "settings": {
+    "doorbell": false,
+    "alwaysOnline": false,
+    "allowBuilding": false
+  }
+}

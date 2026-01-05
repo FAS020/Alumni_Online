@@ -1,0 +1,31 @@
+{
+  "objects": [],
+  "wallObjects": [],
+  "items": [],
+  "chatHistory": [
+    {
+      "user": "Alumni W1SS",
+      "text": "hey dikke",
+      "id": "W1SSjVzS89qgpltUAAAV",
+      "userId": "user_7lcxhy1nq",
+      "time": 1767540211413
+    },
+    {
+      "user": "Alumni Tih_",
+      "text": "pardon",
+      "id": "Tih_vDVLaCZwu6WXAAAR",
+      "userId": "user_644rlnzpa",
+      "time": 1767540215898
+    }
+  ],
+  "mapW": 30,
+  "mapH": 30,
+  "tileColors": {},
+  "wallColors": {},
+  "maxPlayers": 100,
+  "settings": {
+    "doorbell": false,
+    "alwaysOnline": true,
+    "allowBuilding": false
+  }
+}
