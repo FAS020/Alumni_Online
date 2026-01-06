@@ -6823,26 +6823,6 @@ window.addEventListener("mouseup", e => {
                         // Gebruik de selectie uit het menu als die er is
                         if (hoveredObjects.length > 0) {
                             objectToMove = hoveredObjects[moveSelectionIndex];
-                        } else {
-                            // Fallback (zou niet nodig moeten zijn als mousemove werkt)
-                            objectToMove = objects.find(o => {
-                                if (o.isFloor) return false;
-                                const w = o.flipped ? (o.depth || 1) : (o.width || 1);
-                                const d = o.flipped ? (o.width || 1) : (o.depth || 1);
-                                return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
-                            });
-                            if (!objectToMove && hoverTarget && hoverTarget.type === 'wall') {
-                                // Zoek muurobject (fallback als menu leeg is, zou niet moeten gebeuren)
-                                objectToMove = wallObjects.find(o => o.wallId === hoverTarget.id);
-                            }
-                            if (!objectToMove) {
-                                objectToMove = objects.find(o => {
-                                    if (!o.isFloor) return false;
-                                    const w = o.flipped ? (o.depth || 1) : (o.width || 1);
-                                    const d = o.flipped ? (o.width || 1) : (o.depth || 1);
-                                    return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
-                                });
-                            }
                         }
                         
                         if (objectToMove) {
@@ -6866,6 +6846,7 @@ window.addEventListener("mouseup", e => {
 
                                     isBuildObjectFlipped = movingObject.flipped; // Synchroniseer de rotatie-status
                                     socket.emit('removeWallObject', { 
+                                        id: movingObject.id,
                                         wallId: movingObject.wallId, 
                                         name: movingObject.name,
                                         ownerId: movingObject.ownerId,
@@ -6894,22 +6875,6 @@ window.addEventListener("mouseup", e => {
                     // Gebruik de selectie uit het menu als die er is
                     if (hoveredObjects.length > 0) {
                         objectToDelete = hoveredObjects[moveSelectionIndex];
-                    } else {
-                        // Fallback (oude logica)
-                        objectToDelete = objects.find(o => {
-                            if (o.isFloor) return false;
-                            const w = o.flipped ? (o.depth || 1) : (o.width || 1);
-                            const d = o.flipped ? (o.width || 1) : (o.depth || 1);
-                            return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
-                        });
-                        if (!objectToDelete) {
-                            objectToDelete = objects.find(o => {
-                                if (!o.isFloor) return false;
-                                const w = o.flipped ? (o.depth || 1) : (o.width || 1);
-                                const d = o.flipped ? (o.width || 1) : (o.depth || 1);
-                                return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
-                            });
-                        }
                     }
 
                     if (objectToDelete) {
@@ -6924,6 +6889,7 @@ window.addEventListener("mouseup", e => {
                             items.splice(itemIndex, 1);
                         } else if (objectToDelete.wallId) {
                             socket.emit('removeWallObject', { 
+                                id: objectToDelete.id,
                                 wallId: objectToDelete.wallId, 
                                 name: objectToDelete.name,
                                 ownerId: objectToDelete.ownerId,
