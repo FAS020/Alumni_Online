@@ -899,7 +899,7 @@ button img {
 
 <div id="statusBarContainer">
     <div id="statusBarFill"></div>
-    <div id="statusBarText">Actie...</div>
+    <div id="statusBarText">Actie</div>
 </div>
 
 <div id="footer">
@@ -1054,7 +1054,7 @@ button img {
         <span id="closeUploadModalCross" style="cursor:pointer; font-size:24px; line-height:1;">×</span>
     </div>
     
-    <input type="text" id="customObjectName" placeholder="Naam van object (optioneel)">
+    <input type="text" id="customObjectName" placeholder="Naam van object (optioneel)" maxlength="20">
     <input type="number" id="customObjectPrice" placeholder="Prijs (optioneel)" style="width: 100%; padding: 8px; background: #333; border: 1px solid #555; color: white; font-family: Arial, sans-serif; font-size: 14px; border-radius: 4px; box-sizing: border-box; margin-top: 10px;">
     
     <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
@@ -1123,6 +1123,18 @@ button img {
   <div id="inventoryContent">
     <!-- Inventaris items komen hier -->
   </div>
+</div>
+
+<div id="movePreview" style="display: none; position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10000; background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.5); padding: 10px; border-radius: 8px; color: white; font-family: Arial, sans-serif; font-size: 12px; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
+    <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+        <img id="movePreviewImg" src="" style="max-width: 100%; max-height: 100%; object-fit: contain; image-rendering: pixelated;">
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+        <span id="movePreviewName" style="font-size: 10px; text-shadow: 1px 1px 0 #000;"></span>
+        <span id="movePreviewActionText" style="color: #ccc; font-size: 10px; font-style: italic;">Verplaatsen</span>
+        <span id="movePreviewPrice" style="display:none; color: #4cd137; font-size: 10px;"></span>
+        <span id="movePreviewCount" style="display:none; color: #aaa; font-size: 10px; margin-top: 2px;"></span>
+    </div>
 </div>
 
 <div id="pongBackdrop"></div>
@@ -1431,6 +1443,9 @@ try {
                 if (otherPlayers[id].isSmoking) {
                     otherPlayers[id].smokingStartTime = Date.now(); // Fallback starttijd voor nieuwe spelers
                 }
+                if (otherPlayers[id].isDrinking) {
+                    otherPlayers[id].drinkingStartTime = Date.now();
+                }
             }
         });
 
@@ -1710,6 +1725,12 @@ try {
             }
             p.isSmoking = playerInfo.isSmoking; // NIEUW: Update rookstatus van anderen
             p.smokingItemType = playerInfo.smokingItemType; // NIEUW: Update type sigaret
+            
+            if (playerInfo.isDrinking && !p.isDrinking) {
+                p.drinkingStartTime = Date.now();
+            }
+            p.isDrinking = playerInfo.isDrinking;
+            p.drinkingItemType = playerInfo.drinkingItemType;
         }
     });
 
@@ -1802,13 +1823,25 @@ try {
             return;
         }
 
+        // NIEUW: Haal favoriete kamers op uit localStorage
+        let starredRooms = [];
+        try {
+            starredRooms = JSON.parse(localStorage.getItem('habboCloneStarredRooms')) || [];
+        } catch(e) {}
+
         let currentRoom = new URLSearchParams(window.location.search).get('room') || 'testroom';
         const sortType = document.getElementById('roomSortSelect').value;
 
         // Sorteer logica:
-        // 1. Huidige kamer bovenaan
-        // 2. Dan op basis van selectie
+        // 1. Favorieten (Starred) bovenaan
+        // 2. Huidige kamer
+        // 3. Dan op basis van selectie
         rooms.sort((a, b) => {
+            const aStarred = starredRooms.includes(a.id);
+            const bStarred = starredRooms.includes(b.id);
+            if (aStarred && !bStarred) return -1;
+            if (!aStarred && bStarred) return 1;
+
             if (a.id === currentRoom) return -1;
             if (b.id === currentRoom) return 1;
             
@@ -1850,6 +1883,10 @@ try {
             name.style.cursor = 'pointer';
             name.style.flexGrow = '1';
             name.onclick = () => {
+                if (roomData.playerCount >= roomData.maxPlayers) {
+                    showNotification("Kamer is vol!", "icons/player.png");
+                    return;
+                }
                 window.location.search = `?room=${roomId}`;
             };
 
@@ -1869,7 +1906,6 @@ try {
             
             if (roomId === 'testroom') {
                 iconSrc = 'icons/admin.png';
-                maxP = 1;
             }
             
             const playerIcon = document.createElement('img');
@@ -2020,6 +2056,22 @@ try {
                     row.style.padding = '8px';
                     row.style.borderBottom = '1px solid #444';
                     
+                    // NIEUW: Ster icoon voor favorieten
+                    const starIcon = document.createElement('img');
+                    const isStarred = starredRooms.includes(roomId);
+                    starIcon.src = isStarred ? 'icons/star_active.png' : 'icons/star.png';
+                    starIcon.style.width = '16px';
+                    starIcon.style.height = '16px';
+                    starIcon.style.cursor = 'pointer';
+                    starIcon.style.marginRight = '8px';
+                    starIcon.title = isStarred ? 'Verwijder uit favorieten' : 'Markeer als favoriet';
+                    starIcon.onclick = (e) => {
+                        e.stopPropagation(); // Voorkom dat we de kamer joinen
+                        const newStarred = isStarred ? starredRooms.filter(id => id !== roomId) : [...starredRooms, roomId];
+                        localStorage.setItem('habboCloneStarredRooms', JSON.stringify(newStarred));
+                        socket.emit('getRooms'); // Ververs de lijst direct
+                    };
+
                     const name = document.createElement('span');
                     name.textContent = roomId;
                     name.style.cursor = 'pointer';
@@ -2034,6 +2086,10 @@ try {
                             isWaitingForDoorbell = true;
                             showNotification("Aangebeld... wachten op antwoord.");
                         } else {
+                            if (playerCount >= maxPlayers) {
+                                showNotification("Kamer is vol!", "icons/player.png");
+                                return;
+                            }
                             window.location.search = `?room=${roomId}`;
                         }
                     };
@@ -2085,6 +2141,7 @@ try {
                     playerCountDiv.appendChild(playerIcon);
                     playerCountDiv.appendChild(countSpan);
 
+                    row.appendChild(starIcon); // Voeg ster toe
                     row.appendChild(name);
                     row.appendChild(playerCountDiv);
                     roomsContent.appendChild(row);
@@ -2469,6 +2526,15 @@ sigaretHalfImg.src = "items/sigaret_half.png";
 const peukStickImg = new Image();
 peukStickImg.src = "items/peuk_stick.png";
 
+const bottleFullImg = new Image();
+bottleFullImg.src = "items/bottle_W_full.png";
+
+const bottleEmptyImg = new Image();
+bottleEmptyImg.src = "items/bottle_W_empty.png";
+
+const bottleHalfImg = new Image();
+bottleHalfImg.src = "items/bottle_W_50.png";
+
 // Helper om server data om te zetten naar client item (met plaatje)
 function createItemFromData(data) {
     let img = itemImg;
@@ -2484,6 +2550,9 @@ function createItemFromData(data) {
     else if (data.type === 'aansteker') img = aanstekerStickImg;
     else if (data.type === 'sigaret_half') img = sigaretHalfImg;
     else if (data.type === 'peuk') img = peukStickImg;
+    else if (data.type === 'bottle_full') img = bottleFullImg;
+    else if (data.type === 'bottle_empty') img = bottleEmptyImg;
+    else if (data.type === 'bottle_half') img = bottleHalfImg;
     
     // Recursief hydrateren van items in een pouch
     if (data.items && Array.isArray(data.items)) {
@@ -2584,7 +2653,18 @@ function addToWallet(amount) {
     savePlayerData(); // Opslaan bij wijziging van geld
 }
 
+let notificationTimer = null;
+let notificationFadeTimer = null;
+
+function clearNotificationTimers() {
+    if (notificationTimer) clearTimeout(notificationTimer);
+    if (notificationFadeTimer) clearTimeout(notificationFadeTimer);
+    notificationTimer = null;
+    notificationFadeTimer = null;
+}
+
 function showNotification(message, iconSrc = null) {
+    clearNotificationTimers();
     const notif = document.getElementById('notification');
     notif.style.pointerEvents = 'none'; // Default for simple notifications
 
@@ -2603,9 +2683,9 @@ function showNotification(message, iconSrc = null) {
     void notif.offsetWidth;
     notif.style.opacity = '1';
     
-    setTimeout(() => {
+    notificationTimer = setTimeout(() => {
         notif.style.opacity = '0';
-        setTimeout(() => {
+        notificationFadeTimer = setTimeout(() => {
             notif.style.display = 'none';
         }, 500); // Wacht op transitie
     }, 3000);
@@ -2613,6 +2693,7 @@ function showNotification(message, iconSrc = null) {
 
 // NIEUW: Generieke bevestiging pop-up
 function showConfirmation(options) {
+    clearNotificationTimers();
     // options = { message, subMessage, icon, onConfirm, onDeny, confirmText, denyText }
     const notif = document.getElementById('notification');
     notif.style.pointerEvents = 'auto';
@@ -2654,6 +2735,7 @@ function showConfirmation(options) {
 
 // NIEUW: Generieke melding pop-up (één knop)
 function showAlert(options) {
+    clearNotificationTimers();
     const notif = document.getElementById('notification');
     notif.style.pointerEvents = 'auto';
 
@@ -2683,6 +2765,7 @@ function showAlert(options) {
 
 // NIEUW: Generieke input prompt (voor hernoemen etc.)
 function showInputPrompt(options) {
+    clearNotificationTimers();
     const notif = document.getElementById('notification');
     notif.style.pointerEvents = 'auto';
 
@@ -2749,6 +2832,20 @@ const objects = [];
 let isSmoking = false;
 let smokeInterval = null;
 let currentSmokingItemType = null;
+let isDrinking = false;
+let drinkInterval = null;
+let currentDrinkingItemType = null;
+
+// Helper om te checken of er een aansteker is (ook in pouches)
+function hasLighterInInventory(items) {
+    return items.some(i => {
+        if (i.type === 'aansteker' || (i.name && i.name.toLowerCase() === 'aansteker')) return true;
+        if (i.items && Array.isArray(i.items)) {
+            return hasLighterInInventory(i.items);
+        }
+        return false;
+    });
+}
 
 function smokeCigarette(item) {
     if (isSmoking) {
@@ -2756,10 +2853,9 @@ function smokeCigarette(item) {
         return;
     }
 
-    // Check of de speler een aansteker heeft
-    const hasLighter = inventoryItems.some(i => i.type === 'aansteker');
-    if (!hasLighter) {
-        showNotification("Je hebt een aansteker nodig!");
+    // Check of de speler een aansteker heeft (recursief)
+    if (!hasLighterInInventory(inventoryItems)) {
+        showNotification("Je hebt geen aansteker!");
         return;
     }
 
@@ -2788,7 +2884,7 @@ function smokeCigarette(item) {
         const barText = document.getElementById('statusBarText');
         
         barContainer.style.display = 'block';
-        barText.textContent = "Sigaret roken...";
+        barText.textContent = "Roken";
         barFill.style.width = '0%';
 
         let progress = 0;
@@ -2806,7 +2902,7 @@ function smokeCigarette(item) {
             if (currentStep % 10 === 0) {
                 // 10% kans
                 if (Math.random() < 0.1) {
-                    const phrases = ["*ugh*", "*pof*", "*zucht*"];
+                    const phrases = ["*kuch*", "*paf*", "*zucht*"];
                     const phrase = phrases[Math.floor(Math.random() * phrases.length)];
                     if (typeof sendChatMessage === 'function') {
                         sendChatMessage(phrase);
@@ -2839,30 +2935,163 @@ function smokeCigarette(item) {
         }, intervalTime);    
 }
 
-function interruptSmoking() {
-    if (!isSmoking) return;
-    
-    clearInterval(smokeInterval);
-    isSmoking = false;
-    if (socket) socket.emit('playerMovement', { x: ball.x, y: ball.y, isSmoking: false, smokingItemType: null }); // NIEUW: Stop roken op server
-    document.getElementById('statusBarContainer').style.display = 'none';
-    
-    // Geef een halve sigaret terug
-    const halfItem = {
-        type: 'sigaret_half',
-        name: 'Halve Sigaret',
-        mass: 0.05,
-        canTopple: true,
-        image: sigaretHalfImg,
-        vx: 0, vy: 0, vz: 0, rotation: 0, vr: 0 // NIEUW: Physics initialiseren
-    };
-    
-    inventoryItems.push(halfItem);
+function drinkBottle(item) {
+    if (isSmoking || isDrinking || document.getElementById('statusBarContainer').style.display === 'block') {
+        showNotification("Je bent al bezig met iets!");
+        return;
+    }
+
+    const index = inventoryItems.indexOf(item);
+    if (index === -1) return;
+
+    // Verwijder volle fles
+    inventoryItems.splice(index, 1);
     savePlayerData();
     renderInventoryItems();
+
+    currentDrinkingItemType = item.type;
+    ball.drinkingStartTime = Date.now();
+    ball.drinkingItemType = item.type;
+    if (socket) socket.emit('playerMovement', { x: ball.x, y: ball.y, isDrinking: true, drinkingItemType: item.type });
+
+    // UI Setup
+    const barContainer = document.getElementById('statusBarContainer');
+    const barFill = document.getElementById('statusBarFill');
+    const barText = document.getElementById('statusBarText');
     
-    showNotification("Roken onderbroken");
-    currentSmokingItemType = null;
+    barContainer.style.display = 'block';
+    barText.textContent = "Drinken";
+    barFill.style.width = '0%';
+
+    isDrinking = true;
+    let progress = 0;
+    // Volle fles 4 sec, halve fles 2 sec
+    const duration = (item.type === 'bottle_full') ? 4000 : 2000; 
+    const intervalTime = 100;
+    const steps = duration / intervalTime;
+    let currentStep = 0;
+
+    drinkInterval = setInterval(() => {
+        currentStep++;
+        progress = (currentStep / steps) * 100;
+        barFill.style.width = `${progress}%`;
+
+        if (currentStep >= steps) {
+            clearInterval(drinkInterval);
+            isDrinking = false;
+            currentDrinkingItemType = null;
+            if (socket) socket.emit('playerMovement', { x: ball.x, y: ball.y, isDrinking: false, drinkingItemType: null });
+            barContainer.style.display = 'none';
+
+            const emptyBottle = {
+                type: 'bottle_empty',
+                name: 'Leeg flesje',
+                mass: 0.8,
+                image: bottleEmptyImg,
+                vx: 0, vy: 0, vz: 0, rotation: 0, vr: 0,
+                invX: Math.floor(Math.random() * 250) + 20,
+                invY: Math.floor(Math.random() * 200) + 20
+            };
+            inventoryItems.push(emptyBottle);
+            savePlayerData();
+            renderInventoryItems();
+            showNotification("Flesje leeggedronken.");
+        }
+    }, intervalTime);
+}
+
+function interruptAction() {
+    if (isSmoking) {
+        clearInterval(smokeInterval);
+        isSmoking = false;
+        if (socket) socket.emit('playerMovement', { x: ball.x, y: ball.y, isSmoking: false, smokingItemType: null });
+        document.getElementById('statusBarContainer').style.display = 'none';
+        
+        const halfItem = {
+            type: 'sigaret_half',
+            name: 'Halve Sigaret',
+            mass: 0.05,
+            canTopple: true,
+            image: sigaretHalfImg,
+            vx: 0, vy: 0, vz: 0, rotation: 0, vr: 0,
+            invX: Math.floor(Math.random() * 250) + 20,
+            invY: Math.floor(Math.random() * 200) + 20
+        };
+        
+        inventoryItems.push(halfItem);
+        savePlayerData();
+        renderInventoryItems();
+        
+        showNotification("Roken onderbroken");
+        currentSmokingItemType = null;
+    }
+    if (isDrinking) {
+        clearInterval(drinkInterval);
+        isDrinking = false;
+        document.getElementById('statusBarContainer').style.display = 'none';
+        currentDrinkingItemType = null;
+        if (socket) socket.emit('playerMovement', { x: ball.x, y: ball.y, isDrinking: false, drinkingItemType: null });
+        
+        // Als onderbroken, krijg je een halfvol flesje terug (of het nou vol of half was)
+        const halfBottle = {
+            type: 'bottle_half',
+            name: 'Halfvol flesje',
+            mass: 1.0,
+            image: bottleHalfImg,
+            vx: 0, vy: 0, vz: 0, rotation: 0, vr: 0,
+            invX: Math.floor(Math.random() * 250) + 20,
+            invY: Math.floor(Math.random() * 200) + 20
+        };
+        inventoryItems.push(halfBottle);
+        savePlayerData();
+        renderInventoryItems();
+        showNotification("Drinken onderbroken");
+    }
+}
+
+function drawPlacementOutline() {
+    const obj = (selectedBuildObject?.placement === 'floor' && selectedBuildObject) || movingObject || draggedObject || draggedItem;
+    if (obj && hoverCell) {
+        const isFlipped = (obj === selectedBuildObject) ? isBuildObjectFlipped : (obj.flipped || false);
+        const w = isFlipped ? (obj.depth || 1) : (obj.width || 1);
+        const d = isFlipped ? (obj.width || 1) : (obj.depth || 1);
+        
+        let isValidPlacement = true;
+        for(let dx = 0; dx < w; dx++) {
+            for(let dy = 0; dy < d; dy++) {
+                const tx = hoverCell.x + dx;
+                const ty = hoverCell.y + dy;
+                if (tx >= mapW || ty >= mapH) {
+                    isValidPlacement = false;
+                } else if (!obj.isFloor && !obj.isItem && obj !== draggedItem && (isBlocked(tx, ty) || (Math.floor(ball.x) === tx && Math.floor(ball.y) === ty))) {
+                    isValidPlacement = false;
+                }
+            }
+        }
+        
+        // NIEUW: Check afstand voor draggedItem (max 2 tegels)
+        if (obj === draggedItem) {
+             const dist = Math.sqrt(Math.pow(hoverCell.x - Math.floor(ball.x), 2) + Math.pow(hoverCell.y - Math.floor(ball.y), 2));
+             if (dist > 2) isValidPlacement = false;
+        }
+
+        const p0 = toScreen(hoverCell.x, hoverCell.y);
+        const p1 = toScreen(hoverCell.x + w, hoverCell.y);
+        const p2 = toScreen(hoverCell.x + w, hoverCell.y + d);
+        const p3 = toScreen(hoverCell.x, hoverCell.y + d);
+
+        ctx.save();
+        ctx.strokeStyle = isValidPlacement ? "white" : "red";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p0.sx, p0.sy);
+        ctx.lineTo(p1.sx, p1.sy);
+        ctx.lineTo(p2.sx, p2.sy);
+        ctx.lineTo(p3.sx, p3.sy);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+    }
 }
 
 function renderInventoryItems() {
@@ -2897,7 +3126,7 @@ function renderInventoryItems() {
         div.addEventListener("contextmenu", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (item.isPouch || item.type === 'pouch' || item.type === 'sigaret' || item.type === 'sigaret_half') {
+            if (item.isPouch || item.type === 'pouch' || item.type === 'sigaret' || item.type === 'sigaret_half' || item.type === 'bottle_full' || item.type === 'bottle_half') {
                 showItemContextMenu(e.clientX, e.clientY, item);
             }
         });
@@ -2919,6 +3148,8 @@ function renderInventoryItems() {
                     openContainerWindow(item);
                 } else if (item.type === 'sigaret' || item.type === 'sigaret_half') {
                     smokeCigarette(item);
+                } else if (item.type === 'bottle_full' || item.type === 'bottle_half') {
+                    drinkBottle(item);
                 }
                 
                 div.dataset.lastClick = 0; // Reset voor volgende klik
@@ -2967,15 +3198,29 @@ const itemContextMenu = document.getElementById('itemContextMenu');
 const ctxOpenBtn = document.getElementById('ctxOpenBtn');
 const ctxCancelBtn = document.getElementById('ctxCancelBtn');
 let currentCtxItem = null;
+let ctxDynamicButtons = []; // Houdt dynamisch toegevoegde knoppen bij
 
 function showItemContextMenu(x, y, item) {
     currentCtxItem = item;
-    const btn = document.getElementById('ctxOpenBtn');
+    
+    // Verwijder oude dynamische knoppen
+    ctxDynamicButtons.forEach(btn => btn.remove());
+    ctxDynamicButtons = [];
+
+    // Verberg standaard knop tijdelijk
+    ctxOpenBtn.style.display = 'none';
+
     if (item.type === 'sigaret' || item.type === 'sigaret_half') {
-        btn.textContent = "Roken";
+        ctxOpenBtn.textContent = "Roken";
+        ctxOpenBtn.style.display = 'block';
+    } else if (item.type === 'bottle_full' || item.type === 'bottle_half') {
+        ctxOpenBtn.textContent = "Drinken";
+        ctxOpenBtn.style.display = 'block';
     } else {
-        btn.textContent = "Openen";
+        ctxOpenBtn.textContent = "Openen";
+        ctxOpenBtn.style.display = 'block';
     }
+
     itemContextMenu.style.display = 'block';
     itemContextMenu.style.left = x + 'px';
     itemContextMenu.style.top = y + 'px';
@@ -2985,6 +3230,8 @@ ctxOpenBtn.addEventListener('click', () => {
     if (currentCtxItem) {
         if (currentCtxItem.type === 'sigaret' || currentCtxItem.type === 'sigaret_half') {
             smokeCigarette(currentCtxItem);
+        } else if (currentCtxItem.type === 'bottle_full' || currentCtxItem.type === 'bottle_half') {
+            drinkBottle(currentCtxItem);
         } else {
             if (!currentCtxItem.items) currentCtxItem.items = [];
             openContainerWindow(currentCtxItem);
@@ -3098,7 +3345,8 @@ const buildableObjects = [
     { name: "Batje Zwart", image: batjeZwartImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'bat_black', mass: 0.4, canTopple: true, price: 15, isTemplate: true },
     { name: "Pakje sigaretten", image: sigarettenContainerImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'sigaretten_container', isPouch: true, mass: 0.2, price: 12, isTemplate: true },
     { name: "Sigaret", image: sigaretStickImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'sigaret', mass: 0.05, canTopple: true, price: 1, isTemplate: true },
-    { name: "Aansteker", image: aanstekerStickImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'aansteker', mass: 0.1, canTopple: true, price: 2, isTemplate: true }
+    { name: "Aansteker", image: aanstekerStickImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'aansteker', mass: 0.1, canTopple: true, price: 2, isTemplate: true },
+    { name: "Flesje water", image: bottleFullImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'bottle_full', mass: 1.2, price: 3, isTemplate: true }
 ];
 
 function renderBuildItems() {
@@ -3128,7 +3376,7 @@ function renderBuildItems() {
     if (!isUserAdmin && item.price !== undefined) {
         priceHtml = `<div style="color: #4cd137; font-size: 10px;">€${item.price}</div>`;
     }
-    div.innerHTML = `<img src="${item.image}" alt="${item.name}"><div>${item.name}</div>${priceHtml}`;
+    div.innerHTML = `<img src="${item.image}" alt="${item.name}"><div style="text-align: center; width: 100%; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.name}</div>${priceHtml}`;
     
     // NIEUW: Delete knop voor admins bij custom objecten
     if (activeMenuContext === 'admin' && item.isCustom) {
@@ -4565,56 +4813,7 @@ function drawTiles() {
     }
 
     // Bouwmodus hover (plaatsen & verplaatsen)
-    if ((selectedBuildObject?.placement === 'floor' || movingObject || draggedObject) && hoverCell) {
-        const obj = selectedBuildObject || movingObject || draggedObject;
-        const isFlipped = (obj === selectedBuildObject) ? isBuildObjectFlipped : (obj.flipped || false);
-        const w = isFlipped ? (obj.depth || 1) : (obj.width || 1);
-        const d = isFlipped ? (obj.width || 1) : (obj.depth || 1);
-
-        // Check geldigheid voor ALLE tegels die het object zou bedekken
-        let isValidPlacement = true;
-        for(let dx = 0; dx < w; dx++) {
-            for(let dy = 0; dy < d; dy++) {
-                const tx = hoverCell.x + dx;
-                const ty = hoverCell.y + dy;
-                if (tx >= mapW || ty >= mapH || isBlocked(tx, ty) || isItemOccupied(tx, ty) || (Math.floor(ball.x) === tx && Math.floor(ball.y) === ty)) {
-                    isValidPlacement = false;
-                }
-                
-                // Teken overlay voor elke tegel
-                const { sx, sy } = toScreen(tx, ty);
-                ctx.beginPath();
-                ctx.moveTo(sx, sy);
-                ctx.lineTo(sx + tileW / 2, sy + tileH / 2);
-                ctx.lineTo(sx, sy + tileH);
-                ctx.lineTo(sx - tileW / 2, sy + tileH / 2);
-                ctx.closePath();
-                ctx.fillStyle = isValidPlacement ? "rgba(0, 255, 0, 0.5)" : "rgba(255, 0, 0, 0.5)";
-                ctx.fill();
-            }
-        }
-    } else if (isItemDragging && hoverCell) {
-        const x = hoverCell.x;
-        const y = hoverCell.y;
-
-        // Check afstand (max 4 tegels)
-        const dist = Math.sqrt(Math.pow(x - Math.floor(ball.x), 2) + Math.pow(y - Math.floor(ball.y), 2));
-        const playerOnTile = Math.floor(ball.x) === x && Math.floor(ball.y) === y;
-
-        // NIEUW: Items mogen op objecten EN op elkaar (rommelig), dus geen isOccupiedByItem check meer
-        const isValidPlacement = x >= 0 && x < mapW && y >= 0 && y < mapH && !playerOnTile && dist <= 4;
-
-        const { sx, sy } = toScreen(x, y);
-        ctx.beginPath();
-        ctx.moveTo(sx, sy);
-        ctx.lineTo(sx + tileW / 2, sy + tileH / 2);
-        ctx.lineTo(sx, sy + tileH);
-        ctx.lineTo(sx - tileW / 2, sy + tileH / 2);
-        ctx.closePath();
-        ctx.fillStyle = isValidPlacement ? "rgba(0, 255, 0, 0.5)" : "rgba(255, 0, 0, 0.5)";
-        ctx.fill();
-      // De preview van het object zelf wordt nu in de renderList getekend voor correcte diepte.
-    } else if (selectedBuildObject?.placement === 'wall' && hoverTarget?.type === 'wall') {
+    if (selectedBuildObject?.placement === 'wall' && hoverTarget?.type === 'wall') {
         // Preview voor muurobjecten
         const wallId = hoverTarget.id;
         const isValidPlacement = true;
@@ -4631,36 +4830,12 @@ function drawTiles() {
         delete hoverTarget.preview;
     }
 
-    // Verwijder-modus hover
-    if (buildTool === 'delete' && hoverCell) {
-        // Zoek object dat deze tegel bezet (rekening houdend met width/depth)
-        const objectOnTile = objects.find(o => {
-            const w = o.flipped ? (o.depth || 1) : (o.width || 1);
-            const d = o.flipped ? (o.width || 1) : (o.depth || 1);
-            return hoverCell.x >= o.x && hoverCell.x < o.x + w && hoverCell.y >= o.y && hoverCell.y < o.y + d;
-        });
-        
-        const itemOnTile = !objectOnTile ? items.find(item => Math.floor(item.x) === hoverCell.x && Math.floor(item.y) === hoverCell.y) : null;
-        if (objectOnTile || itemOnTile) {
-            const { sx, sy } = toScreen(hoverCell.x, hoverCell.y);
-
-            // Teken een rode overlay op de tegel
-            ctx.beginPath();
-            ctx.moveTo(sx, sy);
-            ctx.lineTo(sx + tileW / 2, sy + tileH / 2);
-            ctx.lineTo(sx, sy + tileH);
-            ctx.lineTo(sx - tileW / 2, sy + tileH / 2);
-            ctx.closePath();
-            ctx.fillStyle = "rgba(255, 0, 0, 0.7)";
-            ctx.fill();
-        }
-    }
 }
 
 
 
 
-function drawCharacter(x, y, isLocal, color = "blue", hop = 0, isSmoking = false, smokingStartTime = 0, smokingItemType = 'sigaret') {
+function drawCharacter(x, y, isLocal, color = "blue", hop = 0, isSmoking = false, smokingStartTime = 0, smokingItemType = 'sigaret', isDrinking = false, drinkingStartTime = 0, drinkingItemType = 'bottle_full') {
     const drawXPos = isLocal ? ball.x : x;
     const drawYPos = isLocal ? ball.y : y;
     const currentHop = isLocal ? hopOffset : hop;
@@ -4726,7 +4901,7 @@ function drawCharacter(x, y, isLocal, color = "blue", hop = 0, isSmoking = false
         const cigTipY = mouthY + (cigImg.width || 16); // Positie van het uiteinde
 
         ctx.save();
-        if (ctx.filter !== undefined) ctx.filter = 'blur(4px)';
+        // if (ctx.filter !== undefined) ctx.filter = 'blur(4px)'; // Blur uit voor grainy effect
 
         const numParticles = 25; // Meer deeltjes voor meer "ruis"
         for (let i = 0; i < numParticles; i++) {
@@ -4755,16 +4930,47 @@ function drawCharacter(x, y, isLocal, color = "blue", hop = 0, isSmoking = false
             const alpha = Math.max(0, 0.4 * (1 - t * t)); // Iets transparanter voor rokeriger effect
             
             ctx.fillStyle = `rgba(220, 220, 220, ${alpha})`;
-            ctx.beginPath();
-            ctx.arc(px, py, size, 0, Math.PI * 2);
-            ctx.fill();
+            
+            // Grainy effect: teken wolkje van losse pixels i.p.v. cirkel
+            const grains = Math.max(1, size * 2); 
+            for(let g=0; g<grains; g++){
+                ctx.fillRect(px + (Math.random()-0.5)*size*2, py + (Math.random()-0.5)*size*2, 2, 2);
+            }
         }
+        ctx.restore();
+    }
+
+    // NIEUW: Drink animatie
+    if (isDrinking) {
+        const mouthX = sx + 10;
+        const mouthY = drawY + 14;
+        
+        const elapsed = Date.now() - (drinkingStartTime || Date.now());
+
+        let bottleImg = bottleFullImg;
+        if (drinkingItemType === 'bottle_half') bottleImg = bottleHalfImg;
+        else if (drinkingItemType === 'bottle_empty') bottleImg = bottleEmptyImg;
+        else if (drinkingItemType === 'bottle_full' && elapsed > 2000) bottleImg = bottleHalfImg;
+
+        // Fles kantelen naar mond
+        const baseAngle = Math.PI * 0.7; // Schuine hoek
+        const wobble = Math.sin(elapsed * 0.008) * 0.1; // Beetje beweging
+        
+        ctx.save();
+        ctx.translate(mouthX, mouthY);
+        ctx.scale(-1, 1);
+        ctx.rotate(baseAngle + wobble);
+        
+        const imgWidth = bottleImg.width || 16;
+        const imgHeight = bottleImg.height || 32;
+        
+        ctx.drawImage(bottleImg, -imgWidth / 2, 0, imgWidth, imgHeight);
         ctx.restore();
     }
 }
 
 function drawBall() {
-    drawCharacter(ball.x, ball.y, true, "blue", 0, isSmoking, ball.smokingStartTime, ball.smokingItemType); // NIEUW: Geef type mee
+    drawCharacter(ball.x, ball.y, true, "blue", 0, isSmoking, ball.smokingStartTime, ball.smokingItemType, isDrinking, ball.drinkingStartTime, ball.drinkingItemType);
 }
 
 // Achterwand
@@ -4800,14 +5006,31 @@ function drawTopWall() {
             const objY = topLeft.sy; // Bovenkant van de vloer (onderkant van de muur)
             const img = wallObject.runtimeImage || wallItemImg; // Gebruik custom plaatje indien beschikbaar
 
+            ctx.save();
+            // Highlight logica voor muurobjecten
+            if (isBuildMode) {
+                let shouldHighlight = false;
+                let highlightFilter = "";
+
+                if ((buildTool === 'move' || buildTool === 'delete') && !movingObject) {
+                    if (hoveredObjects.length > 0 && hoveredObjects[moveSelectionIndex] === wallObject) {
+                        shouldHighlight = true;
+                        highlightFilter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
+                    }
+                }
+
+                if (shouldHighlight) {
+                    ctx.filter = highlightFilter;
+                }
+            }
+
             if (wallObject.flipped) {
-                ctx.save();
                 ctx.scale(-1, 1);
                 ctx.drawImage(img, -objX - img.width / 2, objY - img.height + 16); // 16px omlaag
-                ctx.restore();
             } else {
                 ctx.drawImage(img, objX - img.width / 2, objY - img.height + 16); // 16px omlaag
             }
+            ctx.restore();
         });
 
         // Teken de preview voor een nieuw muurobject
@@ -4864,14 +5087,31 @@ function drawLeftWall() {
             const objY = leftTop.sy; // Bovenkant van de vloer (onderkant van de muur)
             const img = wallObject.runtimeImage || wallItemImg; // Gebruik custom plaatje indien beschikbaar
 
+            ctx.save();
+            // Highlight logica voor muurobjecten
+            if (isBuildMode) {
+                let shouldHighlight = false;
+                let highlightFilter = "";
+
+                if ((buildTool === 'move' || buildTool === 'delete') && !movingObject) {
+                    if (hoveredObjects.length > 0 && hoveredObjects[moveSelectionIndex] === wallObject) {
+                        shouldHighlight = true;
+                        highlightFilter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
+                    }
+                }
+
+                if (shouldHighlight) {
+                    ctx.filter = highlightFilter;
+                }
+            }
+
             if (wallObject.flipped) {
-                ctx.save();
                 ctx.scale(-1, 1);
                 ctx.drawImage(img, -objX - img.width / 2, objY - img.height + 16); // 16px omlaag
-                ctx.restore();
             } else {
                 ctx.drawImage(img, objX - img.width / 2, objY - img.height + 16); // 16px omlaag
             }
+            ctx.restore();
         });
 
         // Teken de preview voor een nieuw muurobject
@@ -4977,6 +5217,7 @@ window.addEventListener("keydown", (e) => {
             if (movingObject) {
                 objects.push(movingObject); // Zet het object terug
                 movingObject = null;
+                movePreview.style.display = 'none';
             }
         }
 
@@ -5031,6 +5272,7 @@ window.addEventListener("keydown", (e) => {
              draggedObject = null;
              draggedObjectOriginalPos = null;
              isObjectDragging = false;
+             movePreview.style.display = 'none';
              
              if (camOriginalPos) {
                 camTargetX = camOriginalPos.x;
@@ -5056,6 +5298,21 @@ window.addEventListener("keydown", (e) => {
                 }
                 windowStatesBeforeDrag = null;
             }
+        }
+    }
+
+    // Selectie in verplaats-menu met pijltjestoetsen
+    if (isBuildMode && (buildTool === 'move' || buildTool === 'delete') && !movingObject && hoveredObjects.length > 1) {
+        if (e.key === 'ArrowUp') {
+            moveSelectionIndex = (moveSelectionIndex - 1 + hoveredObjects.length) % hoveredObjects.length;
+            updateMovePreviewContent();
+            e.preventDefault();
+            return;
+        } else if (e.key === 'ArrowDown') {
+            moveSelectionIndex = (moveSelectionIndex + 1) % hoveredObjects.length;
+            updateMovePreviewContent();
+            e.preventDefault();
+            return;
         }
     }
 
@@ -5501,6 +5758,187 @@ function drawInteractionPrompts() {
     });
 }
 
+// NIEUW: Preview menu voor verplaatsen van objecten
+const movePreview = document.getElementById('movePreview');
+const movePreviewImg = document.getElementById('movePreviewImg');
+const movePreviewName = document.getElementById('movePreviewName');
+const movePreviewCount = document.getElementById('movePreviewCount');
+
+let hoveredObjects = [];
+let moveSelectionIndex = 0;
+let lastHoveredTileKey = "";
+
+function getObjectImageSrc(obj) {
+    if (obj.runtimeImage) return obj.runtimeImage.src;
+    if (obj.image && typeof obj.image === 'string') return obj.image;
+    if (obj.image && obj.image.src) return obj.image.src; // Voor items
+    
+    if (obj.name === "Pong") return "objects/pong.png";
+    if (obj.name === "Winkel") return "winkel_template_96.png";
+    if (obj.name === "Brede Winkel") return "winkel_template_96_B.png";
+    if (obj.name === "Container") return "container_template.png";
+    if (obj.name === "Grote Container") return "container_template_96.png";
+    if (obj.name === "Brede Container") return "container_template_96_B.png";
+    if (obj.name === "Prullenbak") return "trash_template.png";
+    if (obj.name === "Brede Prullenbak") return "trash_template_96_B.png";
+    if (obj.isFloor) return "floor_template.png";
+    
+    const isWide = obj.width === 2;
+    const isTall = obj.height === 2;
+    
+    if (obj.moveable) {
+        return isWide ? "object_moveable_template_96_B.png" : "object_moveable_template.png";
+    }
+    
+    if (isWide) return "object_template_96_B.png";
+    if (isTall) return "object_template_96.png";
+    return "object_template.png";
+}
+
+function updateMovePreviewContent() {
+    const objectToPreview = hoveredObjects[moveSelectionIndex];
+    
+    if (objectToPreview) {
+        movePreview.style.display = 'flex';
+        
+        if (movePreviewName.textContent !== objectToPreview.name) {
+             movePreviewName.textContent = objectToPreview.name;
+             movePreviewImg.src = getObjectImageSrc(objectToPreview);
+        }
+
+        // Update de actie tekst (Verplaatsen of Verwijderen)
+        const actionText = document.getElementById('movePreviewActionText');
+        if (actionText) {
+            actionText.textContent = buildTool === 'delete' ? 'Verwijderen' : 'Verplaatsen';
+            actionText.style.color = buildTool === 'delete' ? '#ff6666' : '#ccc';
+        }
+
+        const priceText = document.getElementById('movePreviewPrice');
+        if (priceText) {
+            priceText.style.display = 'none';
+        }
+        
+        if (hoveredObjects.length > 1) {
+            movePreviewCount.style.display = 'block';
+            movePreviewCount.textContent = `${moveSelectionIndex + 1}/${hoveredObjects.length} ↕`;
+        } else {
+            movePreviewCount.style.display = 'none';
+        }
+    } else {
+        movePreview.style.display = 'none';
+        movePreviewName.textContent = '';
+    }
+}
+
+window.addEventListener('mousemove', (e) => {
+    // Toon de preview alleen als de 'verplaats' tool actief is, we over een object hoveren,
+    // en we niet al een object aan het verplaatsen zijn.
+    if (isBuildMode && (buildTool === 'move' || buildTool === 'delete') && !movingObject) {
+        const x = hoverCell ? hoverCell.x : -1;
+        const y = hoverCell ? hoverCell.y : -1;
+        
+        let tileKey = "";
+        if (hoverTarget && hoverTarget.type === 'wall') {
+            tileKey = hoverTarget.id;
+        } else if (hoverCell) {
+            tileKey = `${x},${y}`;
+        }
+
+        if (tileKey !== lastHoveredTileKey) {
+            const objectsOnTile = hoverCell ? objects.filter(o => {
+                const w = o.flipped ? (o.depth || 1) : (o.width || 1);
+                const d = o.flipped ? (o.width || 1) : (o.depth || 1);
+                return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
+            }) : [];
+            const itemsOnTile = hoverCell ? items.filter(i => Math.floor(i.x) === x && Math.floor(i.y) === y) : [];
+            const wallObjs = (hoverTarget && hoverTarget.type === 'wall') ? wallObjects.filter(o => o.wallId === hoverTarget.id) : [];
+            
+            hoveredObjects = [...objectsOnTile, ...itemsOnTile, ...wallObjs];
+            
+            // Sorteer: Meubels eerst, dan vloeren
+            hoveredObjects.sort((a, b) => {
+                const isItemA = items.includes(a);
+                const isItemB = items.includes(b);
+                if (isItemA && !isItemB) return -1; // Items eerst
+                if (!isItemA && isItemB) return 1;
+                if (a.isFloor && !b.isFloor) return 1;
+                if (!a.isFloor && b.isFloor) return -1;
+                return 0;
+            });
+
+            moveSelectionIndex = 0;
+            lastHoveredTileKey = tileKey;
+        } else {
+            // Check of objecten veranderd zijn (bijv. verwijderd)
+            const currentObjects = hoverCell ? objects.filter(o => {
+                const w = o.flipped ? (o.depth || 1) : (o.width || 1);
+                const d = o.flipped ? (o.width || 1) : (o.depth || 1);
+                return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
+            }) : [];
+            const currentItems = hoverCell ? items.filter(i => Math.floor(i.x) === x && Math.floor(i.y) === y) : [];
+            const currentWallObjs = (hoverTarget && hoverTarget.type === 'wall') ? wallObjects.filter(o => o.wallId === hoverTarget.id) : [];
+            
+            if (currentObjects.length + currentItems.length + currentWallObjs.length !== hoveredObjects.length) {
+                 hoveredObjects = [...currentObjects, ...currentItems, ...currentWallObjs];
+                 hoveredObjects.sort((a, b) => {
+                    const isItemA = items.includes(a);
+                    const isItemB = items.includes(b);
+                    if (isItemA && !isItemB) return -1;
+                    if (!isItemA && isItemB) return 1;
+                    if (a.isFloor && !b.isFloor) return 1;
+                    if (!a.isFloor && b.isFloor) return -1;
+                    return 0;
+                });
+                 if (moveSelectionIndex >= hoveredObjects.length) moveSelectionIndex = 0;
+            }
+        }
+
+        if (hoveredObjects.length > 0) {
+            movePreview.style.left = (e.clientX + 20) + 'px';
+            movePreview.style.top = e.clientY + 'px';
+            updateMovePreviewContent();
+        } else {
+            movePreview.style.display = 'none';
+        }
+    } else if (isBuildMode && (selectedBuildObject || movingObject)) {
+        // NIEUW: Preview tijdens plaatsen (nieuw of verplaatsen)
+        const obj = movingObject || selectedBuildObject;
+        
+        movePreview.style.display = 'flex';
+        movePreview.style.left = (e.clientX + 20) + 'px';
+        movePreview.style.top = e.clientY + 'px';
+        
+        movePreviewName.textContent = obj.name;
+        movePreviewImg.src = getObjectImageSrc(obj);
+
+        const actionText = document.getElementById('movePreviewActionText');
+        if (actionText) {
+            actionText.textContent = "[R] Roteren";
+            actionText.style.color = '#ccc';
+        }
+
+        const priceText = document.getElementById('movePreviewPrice');
+        if (priceText) {
+            // Toon prijs alleen bij nieuw object (niet bij verplaatsen bestaand object)
+            if (!movingObject && !isUserAdmin && obj.price) {
+                priceText.textContent = `€${obj.price}`;
+                priceText.style.display = 'block';
+            } else {
+                priceText.style.display = 'none';
+            }
+        }
+        
+        const countText = document.getElementById('movePreviewCount');
+        if(countText) countText.style.display = 'none';
+    } else {
+        movePreview.style.display = 'none';
+        movePreviewName.textContent = '';
+        hoveredObjects = [];
+        moveSelectionIndex = 0;
+        lastHoveredTileKey = "";
+    }
+});
+
 let mousePos = { x: 0, y: 0 };
 // Event listeners
 canvas.addEventListener("mousemove", e=>{
@@ -5639,6 +6077,19 @@ window.addEventListener("mousemove", e => {
             dragImageElement.style.width = w + 'px';
             dragImageElement.style.left = (e.clientX - w/2) + 'px';
             dragImageElement.style.top = (e.clientY - h/2) + 'px';
+            
+            // NIEUW: Filter logic tijdens slepen
+            const tx = Math.floor(worldPos.x);
+            const ty = Math.floor(worldPos.y);
+            const playerOnTile = Math.floor(ball.x) === tx && Math.floor(ball.y) === ty;
+            const dist = Math.sqrt(Math.pow(tx - Math.floor(ball.x), 2) + Math.pow(ty - Math.floor(ball.y), 2));
+            const isValid = tx >= 0 && tx < mapW && ty >= 0 && ty < mapH && !playerOnTile && dist <= 2;
+
+            if (isValid) {
+                dragImageElement.style.filter = "brightness(1.5)";
+            } else {
+                dragImageElement.style.filter = "sepia(1) hue-rotate(-50deg) saturate(5)";
+            }
         }
     }
 });
@@ -5907,7 +6358,7 @@ window.addEventListener("mouseup", e => {
             dragImageElement = null;
         }
 
-        const {x, y} = toTile(e.clientX, e.clientY);
+        let {x, y} = toTile(e.clientX, e.clientY);
         const inventory = document.getElementById("inventory");
         const containerWindow = document.getElementById("containerWindow");
         let droppedInInventory = false;
@@ -6015,10 +6466,32 @@ window.addEventListener("mouseup", e => {
         if (!droppedInInventory) {
             const playerOnTile = Math.floor(ball.x) === x && Math.floor(ball.y) === y;
             
-            // Check afstand (max 4 tegels)
+            // Check afstand (max 2 tegels)
             const dist = Math.sqrt(Math.pow(x - Math.floor(ball.x), 2) + Math.pow(y - Math.floor(ball.y), 2));
             // NIEUW: Items mogen op objecten en op elkaar
-            const isValidPlacement = x >= 0 && x < mapW && y >= 0 && y < mapH && !playerOnTile && dist <= 4;
+            let isValidPlacement = x >= 0 && x < mapW && y >= 0 && y < mapH && !playerOnTile && dist <= 2;
+
+            // NIEUW: Auto-drop naast speler als plek ongeldig is (bijv. te ver weg)
+            if (!isValidPlacement) {
+                 const px = Math.floor(ball.x);
+                 const py = Math.floor(ball.y);
+                 const offsets = [
+                     {dx: 1, dy: 0}, {dx: -1, dy: 0}, {dx: 0, dy: 1}, {dx: 0, dy: -1},
+                     {dx: 1, dy: 1}, {dx: 1, dy: -1}, {dx: -1, dy: 1}, {dx: -1, dy: -1}
+                 ];
+                 
+                 for (const o of offsets) {
+                     const tx = px + o.dx;
+                     const ty = py + o.dy;
+                     // Check of deze buur-tegel geldig is (binnen map, niet op speler)
+                     if (tx >= 0 && tx < mapW && ty >= 0 && ty < mapH && !(tx === px && ty === py)) {
+                         x = tx;
+                         y = ty;
+                         isValidPlacement = true;
+                         break;
+                     }
+                 }
+            }
 
             if (isValidPlacement) {
                 const surfaceZ = getSurfaceHeight(x, y);
@@ -6229,7 +6702,8 @@ window.addEventListener("mouseup", e => {
                     for(let dy = 0; dy < d; dy++) {
                         const tx = bx + dx;
                         const ty = by + dy;
-                        if (tx >= mapW || ty >= mapH || isBlocked(tx, ty) || isItemOccupied(tx, ty) || (Math.floor(ball.x) === tx && Math.floor(ball.y) === ty)) return false;
+                        if (tx >= mapW || ty >= mapH) return false;
+                        if (!obj.isFloor && (isBlocked(tx, ty) || (Math.floor(ball.x) === tx && Math.floor(ball.y) === ty))) return false;
                     }
                 }
                 return true;
@@ -6276,7 +6750,8 @@ window.addEventListener("mouseup", e => {
                     } else if (selectedBuildObject?.placement === 'floor' && selectedBuildObject.name) {
                         if (checkPlacement(x, y, selectedBuildObject, isBuildObjectFlipped)) {
                             if (!isUserAdmin && selectedBuildObject.price) addToWallet(-selectedBuildObject.price);
-                            socket.emit('placeObject', { ...selectedBuildObject, x: x, y: y, flipped: isBuildObjectFlipped, ownerId: mySocketId });
+                            const { runtimeImage, ...objectToSend } = selectedBuildObject;
+                            socket.emit('placeObject', { ...objectToSend, x: x, y: y, flipped: isBuildObjectFlipped, ownerId: mySocketId });
                         }
                     } else if (selectedBuildObject?.placement === 'wall' && hoverTarget?.type === 'wall') {
                         const wallId = hoverTarget.id; // De ID van de muur waar we op klikken
@@ -6293,44 +6768,159 @@ window.addEventListener("mouseup", e => {
                     break;
                 case 'move':
                     if (movingObject) {
-                        if (checkPlacement(x, y, movingObject, movingObject.flipped)) {
-                            movingObject.x = x;
-                            movingObject.y = y;
-                            socket.emit('placeObject', movingObject); // Stuur naar server
+                        let isValid = false;
+                        if (movingObject.isItem) {
+                             isValid = x >= 0 && x < mapW && y >= 0 && y < mapH;
+                        } else if (movingObject.wallId) { // Het is een muurobject
+                             isValid = hoverTarget && hoverTarget.type === 'wall';
+                        } else {
+                             isValid = checkPlacement(x, y, movingObject, movingObject.flipped);
+                        }
+
+                        if (isValid) {
+                            if (movingObject.isItem) {
+                                movingObject.x = x;
+                                movingObject.y = y;
+                                movingObject.x += 0.5; // Centreer item op tegel
+                                movingObject.y += 0.5;
+                                
+                                // Reset physics state (idle)
+                                movingObject.rotation = 0;
+                                movingObject.vr = 0;
+                                movingObject.vx = 0;
+                                movingObject.vy = 0;
+                                movingObject.vz = 0;
+                                movingObject.z = getSurfaceHeight(x, y);
+
+                                const { image, isItem, ...itemToSend } = movingObject;
+                                socket.emit('placeItem', itemToSend);
+                            } else if (movingObject.wallId) {
+                                // Plaats muurobject
+                                socket.emit('placeWallObject', { 
+                                    wallId: hoverTarget.id, 
+                                    name: movingObject.name, 
+                                    flipped: movingObject.flipped,
+                                    image: movingObject.image,
+                                    isCustom: movingObject.isCustom,
+                                    ownerId: mySocketId 
+                                });
+                            } else {
+                                movingObject.x = x;
+                                movingObject.y = y;
+                                const { runtimeImage, ...objectToSend } = movingObject;
+                                socket.emit('placeObject', objectToSend); // Stuur naar server
+                            }
                             movingObject = null; // Stop met verplaatsen
+                            movePreview.style.display = 'none';
                         }
                     } else { // Anders, pak een object op
-                        const objectToMoveIndex = objects.findIndex(o => {
-                            const w = o.flipped ? (o.depth || 1) : (o.width || 1);
-                            const d = o.flipped ? (o.width || 1) : (o.depth || 1);
-                            return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
-                        });
-                        if (objectToMoveIndex > -1) {
-                            movingObject = objects.splice(objectToMoveIndex, 1)[0];
-                            socket.emit('removeObject', { x: movingObject.x, y: movingObject.y }); // Verwijder tijdelijk van server (zodat anderen zien dat je het vast hebt)
-                            closeSecondaryWindows(); // Sluit andere vensters bij het oppakken
-                            isBuildObjectFlipped = movingObject.flipped; // Synchroniseer de rotatie-status
+                        let objectToMove = null;
+                        
+                        // Gebruik de selectie uit het menu als die er is
+                        if (hoveredObjects.length > 0) {
+                            objectToMove = hoveredObjects[moveSelectionIndex];
+                        } else {
+                            // Fallback (zou niet nodig moeten zijn als mousemove werkt)
+                            objectToMove = objects.find(o => {
+                                if (o.isFloor) return false;
+                                const w = o.flipped ? (o.depth || 1) : (o.width || 1);
+                                const d = o.flipped ? (o.width || 1) : (o.depth || 1);
+                                return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
+                            });
+                            if (!objectToMove && hoverTarget && hoverTarget.type === 'wall') {
+                                // Zoek muurobject (fallback als menu leeg is, zou niet moeten gebeuren)
+                                objectToMove = wallObjects.find(o => o.wallId === hoverTarget.id);
+                            }
+                            if (!objectToMove) {
+                                objectToMove = objects.find(o => {
+                                    if (!o.isFloor) return false;
+                                    const w = o.flipped ? (o.depth || 1) : (o.width || 1);
+                                    const d = o.flipped ? (o.width || 1) : (o.depth || 1);
+                                    return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
+                                });
+                            }
+                        }
+                        
+                        if (objectToMove) {
+                            const itemIndex = items.indexOf(objectToMove);
+                            if (itemIndex > -1) {
+                                movingObject = items.splice(itemIndex, 1)[0];
+                                movingObject.isItem = true; // Markeer als item
+                                socket.emit('removeItem', { 
+                                    x: Math.floor(movingObject.x), 
+                                    y: Math.floor(movingObject.y),
+                                    type: movingObject.type,
+                                    name: movingObject.name
+                                });
+                                closeSecondaryWindows();
+                            } else if (objectToMove.wallId) {
+                                // Muurobject oppakken
+                                movingObject = objectToMove;
+                                socket.emit('removeWallObject', { wallId: movingObject.wallId, name: movingObject.name });
+                                closeSecondaryWindows();
+                            } else {
+                                const objectToMoveIndex = objects.indexOf(objectToMove);
+                                if (objectToMoveIndex > -1) {
+                                    movingObject = objects.splice(objectToMoveIndex, 1)[0];
+                                    // Maak een schoon object zonder runtime properties voor de server
+                                    const { runtimeImage, ...objectToSend } = movingObject;
+                                    socket.emit('removeObject', objectToSend); 
+                                    closeSecondaryWindows(); // Sluit andere vensters bij het oppakken
+                                    isBuildObjectFlipped = movingObject.flipped; // Synchroniseer de rotatie-status
+                                }
+                            }
                         }
                     }
                     break;
                 case 'delete':
-                    const objectToDeleteIndex = objects.findIndex(o => {
-                        const w = o.flipped ? (o.depth || 1) : (o.width || 1);
-                        const d = o.flipped ? (o.width || 1) : (o.depth || 1);
-                        return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
-                    });
-                    if (objectToDeleteIndex > -1) {
-                        const obj = objects[objectToDeleteIndex];
-                        socket.emit('removeObject', { x: obj.x, y: obj.y });
+                    let objectToDelete = null;
+
+                    // Gebruik de selectie uit het menu als die er is
+                    if (hoveredObjects.length > 0) {
+                        objectToDelete = hoveredObjects[moveSelectionIndex];
+                    } else {
+                        // Fallback (oude logica)
+                        objectToDelete = objects.find(o => {
+                            if (o.isFloor) return false;
+                            const w = o.flipped ? (o.depth || 1) : (o.width || 1);
+                            const d = o.flipped ? (o.width || 1) : (o.depth || 1);
+                            return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
+                        });
+                        if (!objectToDelete) {
+                            objectToDelete = objects.find(o => {
+                                if (!o.isFloor) return false;
+                                const w = o.flipped ? (o.depth || 1) : (o.width || 1);
+                                const d = o.flipped ? (o.width || 1) : (o.depth || 1);
+                                return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
+                            });
+                        }
+                    }
+
+                    if (objectToDelete) {
+                        const itemIndex = items.indexOf(objectToDelete);
+                        if (itemIndex > -1) {
+                            socket.emit('removeItem', { 
+                                x: Math.floor(objectToDelete.x), 
+                                y: Math.floor(objectToDelete.y),
+                                type: objectToDelete.type,
+                                name: objectToDelete.name
+                            });
+                            items.splice(itemIndex, 1);
+                        } else if (objectToDelete.wallId) {
+                            socket.emit('removeWallObject', { wallId: objectToDelete.wallId, name: objectToDelete.name });
+                        } else {
+                            const { runtimeImage, ...objectToSend } = objectToDelete;
+                            socket.emit('removeObject', objectToSend);
+                        }
+                        movePreview.style.display = 'none'; // Verberg menu na verwijderen
                     } else if (hoverTarget?.type === 'wall') {
                         socket.emit('removeWallObject', hoverTarget.id);
                     } else {
                         // Check of we een item verwijderen
-                        if (itemOnTile) {
-                            socket.emit('removeItem', { x: Math.floor(itemOnTile.x), y: Math.floor(itemOnTile.y) });
-                        }
                         const itemToDeleteIndex = items.findIndex(item => Math.floor(item.x) === x && Math.floor(item.y) === y);
                         if (itemToDeleteIndex > -1) {
+                            const itemToDelete = items[itemToDeleteIndex];
+                            socket.emit('removeItem', { x: Math.floor(itemToDelete.x), y: Math.floor(itemToDelete.y) });
                             items.splice(itemToDeleteIndex, 1);
                         }
                     }
@@ -6442,8 +7032,8 @@ window.addEventListener("mouseup", e => {
 
         if(x >= 0 && x < mapW && y >= 0 && y < mapH && !isBlocked(x, y)){
             // NIEUW: Onderbreek roken bij verplaatsen
-            if (isSmoking) {
-                interruptSmoking();
+            if (isSmoking || isDrinking) {
+                interruptAction();
             }
 
             const startTile = { x: Math.floor(ball.x), y: Math.floor(ball.y) };
@@ -6465,6 +7055,11 @@ window.addEventListener("mouseup", e => {
 canvas.addEventListener("mouseleave", e => {
     isCameraDragging = false;
     isObjectDragging = false;
+    
+    // Reset hovers zodat highlights verdwijnen als je over UI gaat
+    hoverCell = null;
+    hoverTarget = null;
+
     // Item dragging wordt niet gereset bij mouseleave, zodat we naar de inventory kunnen slepen
     
     // NIEUW: Als we de canvas verlaten terwijl we wachten op pickup, annuleer pickup
@@ -6497,6 +7092,7 @@ canvas.addEventListener("contextmenu", e => {
         if (isBuildMode && movingObject) {
             socket.emit('placeObject', movingObject); // Zet het object terug via server
             movingObject = null;
+            movePreview.style.display = 'none';
         }
         // NIEUW: Annuleer item slepen met rechtermuisklik
         if (isItemDragging && draggedItem) {
@@ -6553,7 +7149,8 @@ const shopCatalog = [
     { name: "Batje Rood", image: batjeRoodImg, price: 15.00, mass: 0.4, canTopple: true, type: 'bat_red' },
     { name: "Batje Zwart", image: batjeZwartImg, price: 15.00, mass: 0.4, canTopple: true, type: 'bat_black' },
     { name: "Pakje sigaretten", image: sigarettenContainerImg, price: 20.00, mass: 0.2, type: 'sigaretten_container', isPouch: true },
-    { name: "Aansteker", image: aanstekerStickImg, price: 2.50, mass: 0.1, canTopple: true, type: 'aansteker' }
+    { name: "Aansteker", image: aanstekerStickImg, price: 2.50, mass: 0.1, canTopple: true, type: 'aansteker' },
+    { name: "Flesje water", image: bottleFullImg, price: 3.00, mass: 1.2, type: 'bottle_full' }
 ];
 
 let currentOpenShop = null;
@@ -7490,6 +8087,12 @@ function updateItems(delta) {
         const tileY = Math.floor(item.y);
         const groundZ = getSurfaceHeight(tileX, tileY);
 
+        // NIEUW: Forceer item omhoog als het onder de grond zit (bijv. object geplaatst)
+        if ((item.z || 0) < groundZ) {
+            item.z = groundZ;
+            item.vz = 0;
+        }
+
         // Pas zwaartekracht toe als het item in de lucht is of snelheid heeft
         if ((item.z !== undefined && item.z > groundZ) || (item.vz && item.vz !== 0)) {
             item.vz -= 2.0 * delta; // Zwaartekracht
@@ -7915,6 +8518,7 @@ window.addEventListener("mouseup", (e) => {
         draggedObject = null;
         draggedObjectOriginalPos = null;
         isObjectDragging = false;
+        movePreview.style.display = 'none';
 
         // Start het soepel terugkeren van de camera als deze was meebewogen
         if (camOriginalPos) {
@@ -8102,6 +8706,7 @@ function loop(time) {
     );
 
     drawTiles();
+    drawPlacementOutline();
     drawTopWall();
     drawLeftWall();
     updateItems(delta); // Update de positie en snelheid van de items
@@ -8170,8 +8775,41 @@ function loop(time) {
                 const centerX = obj.x + (w - 1) / 2;
                 const centerY = obj.y + (d - 1) / 2;
                 const { sx, sy } = toScreen(centerX, centerY);
+                
+                ctx.save();
+
                 // Maak object transparant als de speler erachter staat OF erin staat (behalve vloeren)
                 ctx.globalAlpha = (!obj.isFloor && (isPlayerBehind || isPlayerInside || isItemBehind)) ? 0.5 : 1;
+                
+                // Highlight logica
+                if (isBuildMode) {
+                    let shouldHighlight = false;
+                    let highlightFilter = "";
+
+                    // Selectie highlight (Verplaatsen/Verwijderen)
+                    if ((buildTool === 'move' || buildTool === 'delete') && !movingObject) {
+                        if (hoveredObjects.length > 0 && hoveredObjects[moveSelectionIndex] === obj) {
+                            shouldHighlight = true;
+                            highlightFilter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
+                        }
+                    }
+                    // Stacking highlight (Plaatsen)
+                    else if ((buildTool === 'place' || movingObject) && hoverCell) {
+                         const w = obj.flipped ? (obj.depth || 1) : (obj.width || 1);
+                         const d = obj.flipped ? (obj.width || 1) : (obj.depth || 1);
+                         if (hoverCell.x >= obj.x && hoverCell.x < obj.x + w && 
+                             hoverCell.y >= obj.y && hoverCell.y < obj.y + d) {
+                             if (obj !== movingObject && !obj.isFloor) {
+                                 shouldHighlight = true;
+                                 highlightFilter = "brightness(1.5)";
+                             }
+                         }
+                    }
+
+                    if (shouldHighlight) {
+                        ctx.filter = highlightFilter;
+                    }
+                }
 
                 const isTall = obj.height === 2;
                 const isWide = obj.width === 2; // Check voor brede objecten
@@ -8217,7 +8855,6 @@ function loop(time) {
                 const imgHeight = finalImg.height || (isTall ? 96 : 64); // Gebruik de werkelijke hoogte
 
                 if (obj.flipped) {
-                    ctx.save();
                     ctx.scale(-1, 1);
                 }
 
@@ -8251,10 +8888,7 @@ function loop(time) {
                     );
                 }
 
-                ctx.globalAlpha = 1;
-                if (obj.flipped) {
-                    ctx.restore();
-                }
+                ctx.restore();
             }
         });
     });
@@ -8294,6 +8928,59 @@ function loop(time) {
                 const drawY = sy - (item.z || 0);
 
                 ctx.save();
+                
+                // Highlight logica voor items
+                let shouldHighlight = false;
+                let highlightFilter = "";
+
+                // 1. Verwijderen (Rood)
+                if (isBuildMode && buildTool === 'delete' && hoverCell) {
+                    if (Math.floor(item.x) === hoverCell.x && Math.floor(item.y) === hoverCell.y) {
+                        // Check of er een object bovenop ligt (objecten hebben voorrang bij verwijderen)
+                        const objectOnTile = objects.find(o => {
+                            const w = o.flipped ? (o.depth || 1) : (o.width || 1);
+                            const d = o.flipped ? (o.width || 1) : (o.depth || 1);
+                            return hoverCell.x >= o.x && hoverCell.x < o.x + w && hoverCell.y >= o.y && hoverCell.y < o.y + d;
+                        });
+                        
+                        // Gebruik de selectie uit het menu als die er is (hoveredObjects)
+                        if (hoveredObjects.length > 0) {
+                            if (hoveredObjects[moveSelectionIndex] === item) {
+                                shouldHighlight = true;
+                                highlightFilter = "sepia(1) hue-rotate(-50deg) saturate(5)";
+                            }
+                        } 
+                        // Fallback voor als menu nog niet geupdate is of leeg is (zou niet moeten gebeuren met mousemove logic)
+                        else if (!objectOnTile) {
+                            shouldHighlight = true;
+                            highlightFilter = "sepia(1) hue-rotate(-50deg) saturate(5)";
+                        }
+                    }
+                }
+                // 2. Oppakken (Wit) - Alleen in speelmodus
+                else if (!isBuildMode && !isItemDragging && !isObjectDragging && hoverCell) {
+                    if (Math.floor(item.x) === hoverCell.x && Math.floor(item.y) === hoverCell.y) {
+                        const dist = Math.sqrt(Math.pow(Math.floor(ball.x) - Math.floor(item.x), 2) + Math.pow(Math.floor(ball.y) - Math.floor(item.y), 2));
+                        shouldHighlight = true;
+                        if (dist <= 2) {
+                            highlightFilter = "brightness(1.5)";
+                        } else {
+                            highlightFilter = "sepia(1) hue-rotate(-50deg) saturate(5)";
+                        }
+                    }
+                }
+                // 3. Verplaatsen (Wit) - Bouwmodus
+                else if (isBuildMode && buildTool === 'move' && !movingObject && hoveredObjects.length > 0) {
+                    if (hoveredObjects[moveSelectionIndex] === item) {
+                        shouldHighlight = true;
+                        highlightFilter = "brightness(2)";
+                    }
+                }
+
+                if (shouldHighlight && highlightFilter) {
+                    ctx.filter = highlightFilter;
+                }
+
                 // Verplaats naar het midden van waar het item getekend moet worden
                 ctx.translate(sx, drawY);
                 // Roteer als het item dat kan
@@ -8318,6 +9005,7 @@ function loop(time) {
                         -item.image.height / 2
                     );
                 }
+
                 ctx.restore();
             }
         });
@@ -8330,7 +9018,7 @@ function loop(time) {
             type: 'otherPlayer',
             sortKey: Math.floor(p.x) + Math.floor(p.y),
             draw: () => {
-                drawCharacter(p.x, p.y, false, p.color || "green", p.hopOffset || 0, p.isSmoking, p.smokingStartTime, p.smokingItemType); // NIEUW: Geef type mee
+                drawCharacter(p.x, p.y, false, p.color || "green", p.hopOffset || 0, p.isSmoking, p.smokingStartTime, p.smokingItemType, p.isDrinking, p.drinkingStartTime, p.drinkingItemType);
             }
         });
     });
@@ -8354,14 +9042,15 @@ function loop(time) {
             for(let dy = 0; dy < d; dy++) {
                 const tx = hoverCell.x + dx;
                 const ty = hoverCell.y + dy;
-                if (tx >= mapW || ty >= mapH || isBlocked(tx, ty) || isItemOccupied(tx, ty) || (Math.floor(ball.x) === tx && Math.floor(ball.y) === ty)) {
+                if (tx >= mapW || ty >= mapH) {
+                    isValidPlacement = false;
+                } else if (!objectToPreview.isFloor && !objectToPreview.isItem && (isBlocked(tx, ty) || (Math.floor(ball.x) === tx && Math.floor(ball.y) === ty))) {
                     isValidPlacement = false;
                 }
             }
         }
 
-        if (isValidPlacement) {
-            renderList.push({
+        renderList.push({
                 type: 'preview',
                 sortKey: (hoverCell.x + (w - 1) / 2) + (hoverCell.y + (d - 1) / 2),
                 draw: () => {
@@ -8374,6 +9063,8 @@ function loop(time) {
 
                     if (objectToPreview.runtimeImage) {
                         finalImg = objectToPreview.runtimeImage;
+                    } else if (objectToPreview.image && objectToPreview.image.src) {
+                        finalImg = objectToPreview.image;
                     } else if (objectToPreview.name === "Pong") {
                         finalImg = pongImg;
                     } else if (objectToPreview.name === "Winkel") {
@@ -8410,21 +9101,30 @@ function loop(time) {
                     const totalDim = (objectToPreview.width || 1) + (objectToPreview.depth || 1);
                     const verticalOffset = totalDim * 8 + 16;
 
-                    ctx.globalAlpha = 0.7; // Maak de preview half-transparant
-                    if (isFlipped) {
-                        ctx.save();
-                        ctx.scale(-1, 1);
-                    }
-                    ctx.drawImage(finalImg, isFlipped ? -sx - imgWidth/2 : sx - imgWidth/2, sy - imgHeight + verticalOffset, imgWidth, imgHeight);
-                    
-                    if (isFlipped) {
-                        ctx.restore();
+                    // NIEUW: Hoogte correctie voor items op objecten
+                    let zOffset = 0;
+                    if (objectToPreview.isItem) {
+                        zOffset = getSurfaceHeight(hoverCell.x, hoverCell.y);
                     }
 
-                    ctx.globalAlpha = 1; // Reset alpha
+                    ctx.save();
+                    
+                    // Kleur overlay logic
+                    if (isValidPlacement) {
+                        ctx.filter = "sepia(1) hue-rotate(90deg) saturate(3)"; // Groene gloed
+                    } else {
+                        ctx.filter = "sepia(1) hue-rotate(-50deg) saturate(5)"; // Rode gloed
+                    }
+                    ctx.globalAlpha = 0.6;
+
+                    if (isFlipped) {
+                        ctx.scale(-1, 1);
+                    }
+                    ctx.drawImage(finalImg, isFlipped ? -sx - imgWidth/2 : sx - imgWidth/2, sy - imgHeight + verticalOffset - zOffset, imgWidth, imgHeight);
+                    
+                    ctx.restore();
                 }
             });
-        }
     }
     
     // Sorteer op x+y voor isometrische diepte
