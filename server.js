@@ -130,14 +130,24 @@ function generateRoomId() {
 
 // Helper: Maak een nieuwe lege kamer aan
 function createRoom(id, options = {}) {
-    const size = options.size || 25;
+    const size = options.size || '25'; // Kan nu een string zijn
+    
+    let mapW, mapH;
+    if (typeof size === 'string' && size.includes('x')) {
+        [mapW, mapH] = size.split('x').map(Number);
+    } else {
+        mapW = Number(size);
+        mapH = Number(size);
+    }
     
     // Bepaal limiet op basis van grootte
+    const area = mapW * mapH;
     let maxPlayers = 10;
-    if (size === 5) maxPlayers = 10;
-    else if (size === 10) maxPlayers = 25;
-    else if (size === 20) maxPlayers = 50;
-    else if (size === 30) maxPlayers = 100;
+    if (area <= 25) maxPlayers = 10;       // 5x5
+    else if (area <= 50) maxPlayers = 25;  // 5x10
+    else if (area <= 100) maxPlayers = 25; // 10x10
+    else if (area <= 400) maxPlayers = 50; // 20x20
+    else if (area <= 900) maxPlayers = 100;// 30x30
 
     rooms[id] = {
         objects: [], // Start met een lege lijst
@@ -145,13 +155,13 @@ function createRoom(id, options = {}) {
         items: [], // Start met een lege lijst
         players: {},
         chatHistory: [],
-        mapW: size,
-        mapH: size,
+        mapW: mapW,
+        mapH: mapH,
         tileColors: {},
         wallColors: {},
         maxPlayers: maxPlayers,
         ownerId: options.ownerId || null, // Eigenaar ID
-        settings: { doorbell: false, alwaysOnline: options.alwaysOnline || false, allowBuilding: options.allowBuilding || false } // Standaard instellingen
+        settings: { doorbell: false, alwaysOnline: options.alwaysOnline || false, allowBuilding: options.allowBuilding || false, noSmoking: options.noSmoking || false } // Standaard instellingen
     };
 
     // Als we testroom aanmaken (of herstellen), vul hem met defaults
@@ -167,11 +177,16 @@ function createRoom(id, options = {}) {
                 if (defaultData.objects) rooms[id].objects = defaultData.objects;
                 if (defaultData.items) rooms[id].items = defaultData.items;
                 if (defaultData.wallObjects) rooms[id].wallObjects = defaultData.wallObjects;
+                // Zorg dat geladen items ook IDs hebben
+                rooms[id].items.forEach(i => { if(!i.id) i.id = Date.now().toString(36) + Math.random().toString(36).substr(2); });
             } catch (e) {
                 console.error("Kon default.json niet laden voor testroom:", e);
             }
         }
     }
+
+    // Zorg dat alle items een ID hebben (ook defaults)
+    rooms[id].items.forEach(i => { if(!i.id) i.id = Date.now().toString(36) + Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2); });
 
     saveRoom(id);
     return rooms[id];
@@ -233,16 +248,19 @@ function getRoom(id) {
             
             // Zorg dat maxPlayers bestaat (voor oude kamers)
             if (!data.maxPlayers) {
-                if (data.mapW === 5) data.maxPlayers = 10;
-                else if (data.mapW === 10) data.maxPlayers = 25;
-                else if (data.mapW === 20) data.maxPlayers = 50;
-                else if (data.mapW === 30) data.maxPlayers = 100;
-                else data.maxPlayers = 10;
+                const area = (data.mapW || 25) * (data.mapH || 25);
+                if (area <= 25) data.maxPlayers = 10;
+                else if (area <= 50) data.maxPlayers = 25;
+                else if (area <= 100) data.maxPlayers = 25;
+                else if (area <= 400) data.maxPlayers = 50;
+                else if (area <= 900) data.maxPlayers = 100;
+                else data.maxPlayers = 10; // Fallback
             }
             
             // Zorg dat settings bestaan
             if (!data.settings) data.settings = { doorbell: false, alwaysOnline: false, allowBuilding: false };
             if (data.settings.allowBuilding === undefined) data.settings.allowBuilding = false;
+            if (data.settings.noSmoking === undefined) data.settings.noSmoking = false;
 
             // Extra check: als testroom leeg is geladen, vul hem alsnog
             if (id === 'testroom' && (!data.objects || data.objects.length === 0)) {
@@ -261,6 +279,12 @@ function getRoom(id) {
             }
 
             rooms[id] = data;
+            // NIEUW: Zorg dat alle items een ID hebben na het laden
+            if (rooms[id].items && Array.isArray(rooms[id].items)) {
+                rooms[id].items.forEach(i => {
+                    if (!i.id) i.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+                });
+            }
             return data;
         } catch (e) {
             console.error(`Fout bij laden kamer ${id}:`, e);
@@ -376,6 +400,7 @@ io.on('connection', (socket) => {
               const hasDoorbell = room && room.settings ? room.settings.doorbell : false;
               const isAlwaysOnline = room && room.settings ? room.settings.alwaysOnline : false;
               const allowBuilding = room && room.settings ? room.settings.allowBuilding : false;
+              const noSmoking = room && room.settings ? room.settings.noSmoking : false;
               const isOwnerOnline = id === 'testroom' || (room && room.ownerId && onlineUserIds.has(room.ownerId));
               const friendCount = room && room.players ? Object.values(room.players).filter(p => myFriendIds.has(p.userId)).length : 0;
               
@@ -386,6 +411,7 @@ io.on('connection', (socket) => {
                   hasDoorbell: hasDoorbell,
                   isAlwaysOnline: isAlwaysOnline,
                   allowBuilding: allowBuilding,
+                  noSmoking: noSmoking,
                   isOwnerOnline: isOwnerOnline,
                   friendCount: friendCount
               };
@@ -407,13 +433,14 @@ io.on('connection', (socket) => {
       socket.userId = userId; // Store on socket for easy access
       let room = getRoom(roomId);
       if (!room) {
-          room = createRoom(roomId, { size: data.size, ownerId: userId, alwaysOnline: data.alwaysOnline === true, allowBuilding: data.allowBuilding === true });
+          room = createRoom(roomId, { size: data.size, ownerId: userId, alwaysOnline: data.alwaysOnline === true, allowBuilding: data.allowBuilding === true, noSmoking: data.noSmoking === true });
       } else if (room.ownerId === userId) {
           // Update bestaande kamer als eigenaar joint met specifieke instelling (via create menu)
           if (!room.settings) room.settings = {};
           let changed = false;
           if (data.alwaysOnline !== null && data.alwaysOnline !== undefined) { room.settings.alwaysOnline = data.alwaysOnline; changed = true; }
           if (data.allowBuilding !== null && data.allowBuilding !== undefined) { room.settings.allowBuilding = data.allowBuilding; changed = true; }
+          if (data.noSmoking !== null && data.noSmoking !== undefined) { room.settings.noSmoking = data.noSmoking; changed = true; }
           
           if (changed) saveRoom(roomId);
       }
@@ -514,6 +541,8 @@ io.on('connection', (socket) => {
       const roomId = socketRoomMap[socket.id];
       if (!roomId || !rooms[roomId]) return;
       const room = rooms[roomId];
+      if (!item.id) item.id = Date.now().toString(36) + Math.random().toString(36).substr(2); // NIEUW: ID toewijzen
+      item.lastTouchedBy = socket.id; // NIEUW: De plaatser is de eigenaar
       room.items.push(item);
       io.to(roomId).emit('updateItems', room.items);
       saveRoom(roomId);
@@ -566,6 +595,36 @@ io.on('connection', (socket) => {
       saveRoom(roomId);
   });
 
+  // NIEUW: Live physics updates (beweging van items)
+  socket.on('updateItemPhysics', (data) => {
+      const roomId = socketRoomMap[socket.id];
+      if (!roomId || !rooms[roomId]) return;
+      const room = rooms[roomId];
+      
+      // data is een array van updates: [{id, x, y, z, vx, vy, vz, rotation, vr}, ...]
+      let changed = false;
+      data.forEach(update => {
+          const item = room.items.find(i => i.id === update.id);
+          if (item) {
+              item.x = update.x;
+              item.y = update.y;
+              item.z = update.z;
+              item.vx = update.vx;
+              item.vy = update.vy;
+              item.vz = update.vz;
+              item.rotation = update.rotation;
+              item.vr = update.vr;
+              item.lastTouchedBy = update.lastTouchedBy; // NIEUW: Update eigenaar
+              changed = true;
+          }
+      });
+      
+      if (changed) {
+          // Stuur door naar anderen (niet naar jezelf, want jij simuleert het al)
+          socket.to(roomId).emit('updateItemPhysics', data);
+      }
+  });
+
   socket.on('removeWallObject', (data) => {
       const roomId = socketRoomMap[socket.id];
       if (!roomId || !rooms[roomId]) return;
@@ -596,9 +655,13 @@ io.on('connection', (socket) => {
       const roomId = socketRoomMap[socket.id];
       if (!roomId || !rooms[roomId]) return;
       const room = rooms[roomId];
-      room.items.length = 0;
-      newItems.forEach(i => room.items.push(i));
-      socket.to(roomId).emit('updateItems', room.items);
+      // NIEUW: Safety check - zorg dat alles een ID heeft
+      newItems.forEach(i => {
+          if (!i.id) i.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+      });
+      room.items = newItems; // Directe vervanging
+      // Broadcast naar IEDEREEN, inclusief de zender, voor consistentie.
+      io.to(roomId).emit('updateItems', room.items);
       saveRoom(roomId);
   });
 
@@ -651,6 +714,11 @@ io.on('connection', (socket) => {
       // Stuur update naar iedereen in de kamer (voor UI updates indien nodig)
       io.to(targetRoomId).emit('roomSettingsUpdated', rooms[targetRoomId].settings);
       socket.emit('myRoomSettingsUpdated', { roomId: targetRoomId, settings: rooms[targetRoomId].settings });
+
+      // NIEUW: Zorg dat de room list ook een seintje krijgt voor de UI update
+      if (newSettings.noSmoking !== undefined) {
+          io.emit('roomNoSmokingToggled', targetRoomId);
+      }
   });
 
   // NIEUW: Iemand belt aan
@@ -1047,6 +1115,19 @@ io.on('connection', (socket) => {
       
       saveRoom(roomId);
       io.emit('roomAllowBuildingToggled', roomId);
+  });
+
+  // NIEUW: Toggle No Smoking status
+  socket.on('toggleNoSmoking', (roomId) => {
+      if (!roomId || !rooms[roomId]) return;
+      
+      if (!rooms[roomId].settings) rooms[roomId].settings = {};
+      if (rooms[roomId].settings.noSmoking === undefined) rooms[roomId].settings.noSmoking = false;
+      rooms[roomId].settings.noSmoking = !rooms[roomId].settings.noSmoking;
+      
+      saveRoom(roomId);
+      io.emit('roomNoSmokingToggled', roomId);
+      io.to(roomId).emit('roomSettingsUpdated', rooms[roomId].settings);
   });
 
   // NIEUW: Verwijder een kamer
