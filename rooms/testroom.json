@@ -1,30 +1,6 @@
 {
   "objects": [
     {
-      "x": 2,
-      "y": 16,
-      "height": 1,
-      "width": 2,
-      "depth": 1,
-      "flipped": false,
-      "name": "Tafel"
-    },
-    {
-      "x": 2,
-      "y": 13,
-      "height": 1,
-      "flipped": false,
-      "moveable": true,
-      "name": "Verplaatsbaar Blok"
-    },
-    {
-      "x": 2,
-      "y": 19,
-      "height": 2,
-      "flipped": false,
-      "name": "Hoge Blok"
-    },
-    {
       "name": "Blok",
       "height": 1,
       "image": "http://localhost:3000/object_template.png",
@@ -33,10 +9,59 @@
       "placement": "floor",
       "isTemplate": true,
       "price": 10,
-      "x": 2,
-      "y": 22,
+      "x": 0,
+      "y": 0,
       "flipped": false,
-      "ownerId": "i_F0DHBgvugglA4oAAAN"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zupykv9co8az7rz"
+    },
+    {
+      "name": "Hoge Blok",
+      "height": 2,
+      "image": "http://localhost:3000/object_template_96.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 20,
+      "x": 0,
+      "y": 2,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zw80fsjd6f1fokdh"
+    },
+    {
+      "name": "Tafel",
+      "height": 1,
+      "width": 2,
+      "depth": 1,
+      "image": "http://localhost:3000/object_template_96_B.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 50,
+      "x": 0,
+      "y": 4,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zw9jkja3p4nfode"
+    },
+    {
+      "name": "Verplaatsbaar Blok",
+      "height": 1,
+      "image": "http://localhost:3000/object_moveable_template.png",
+      "category": "objecten",
+      "subCategory": "moveable",
+      "placement": "floor",
+      "moveable": true,
+      "isTemplate": true,
+      "price": 30,
+      "x": 0,
+      "y": 6,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zwbmiswtmif5mndn"
     },
     {
       "name": "Verplaatsbare Tafel",
@@ -50,10 +75,11 @@
       "moveable": true,
       "isTemplate": true,
       "price": 75,
-      "x": 2,
-      "y": 10,
+      "x": 0,
+      "y": 8,
       "flipped": false,
-      "ownerId": "i_F0DHBgvugglA4oAAAN"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zwdcjek86pe9umma"
     },
     {
       "name": "Winkel",
@@ -64,10 +90,28 @@
       "placement": "floor",
       "isTemplate": true,
       "price": 500,
-      "x": 2,
-      "y": 7,
+      "x": 0,
+      "y": 10,
       "flipped": false,
-      "ownerId": "i_F0DHBgvugglA4oAAAN"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zwfi9hxndqbgo5l"
+    },
+    {
+      "name": "Brede Winkel",
+      "height": 1,
+      "width": 2,
+      "depth": 1,
+      "image": "http://localhost:3000/winkel_template_96_B.png",
+      "category": "objecten",
+      "subCategory": "shop",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 750,
+      "x": 0,
+      "y": 12,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zwhvg35e1k1jr5h8"
     },
     {
       "name": "Container",
@@ -78,10 +122,11 @@
       "placement": "floor",
       "isTemplate": true,
       "price": 100,
-      "x": 2,
-      "y": 4,
+      "x": 0,
+      "y": 14,
       "flipped": false,
-      "ownerId": "i_F0DHBgvugglA4oAAAN"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zwjzv6hpgvfak894"
     },
     {
       "name": "Grote Container",
@@ -92,10 +137,11 @@
       "placement": "floor",
       "isTemplate": true,
       "price": 200,
-      "x": 2,
-      "y": 1,
+      "x": 0,
+      "y": 16,
       "flipped": false,
-      "ownerId": "i_F0DHBgvugglA4oAAAN"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zwlra3pgc3lcepwg"
     },
     {
       "name": "Brede Container",
@@ -108,10 +154,26 @@
       "placement": "floor",
       "isTemplate": true,
       "price": 150,
-      "x": 5,
-      "y": 1,
+      "x": 0,
+      "y": 18,
       "flipped": false,
-      "ownerId": "i_F0DHBgvugglA4oAAAN"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zwnhep7la5nzrgo"
+    },
+    {
+      "name": "Prullenbak",
+      "height": 1,
+      "image": "http://localhost:3000/trash_template.png",
+      "category": "objecten",
+      "subCategory": "trash",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 25,
+      "x": 0,
+      "y": 20,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zwqt62jje5fi0zea"
     },
     {
       "name": "Brede Prullenbak",
@@ -124,40 +186,281 @@
       "placement": "floor",
       "isTemplate": true,
       "price": 40,
-      "x": 5,
+      "x": 0,
+      "y": 22,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zwsjrggttipqas16"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 0,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zx45sz661pshnxpd"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 1,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zx5ajdbp7jzrt43t"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 2,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zx6708tuq2tc2mg9"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 3,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zx5s56sl2u0em97q"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
       "y": 4,
       "flipped": false,
-      "ownerId": "i_F0DHBgvugglA4oAAAN"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxc9wi54bzvtuhb"
     },
     {
-      "name": "Prullenbak",
-      "height": 1,
-      "image": "http://localhost:3000/trash_template.png",
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
       "category": "objecten",
-      "subCategory": "trash",
+      "subCategory": "floor",
       "placement": "floor",
       "isTemplate": true,
-      "price": 25,
-      "x": 5,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 5,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxcshb6vlhh9rrl"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 6,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxd871kz7n2v0cb9"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
       "y": 7,
       "flipped": false,
-      "ownerId": "i_F0DHBgvugglA4oAAAN",
-      "items": [],
-      "columns": 2
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxdrjrag0z1fpit"
     },
     {
-      "name": "Blok",
-      "height": 1,
-      "image": "http://localhost:3000/object_template.png",
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
       "category": "objecten",
-      "subCategory": "objects",
+      "subCategory": "floor",
       "placement": "floor",
       "isTemplate": true,
-      "price": 10,
-      "x": 8,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 8,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxe7viene2mqll1c"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 9,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxeokjsh2lq0q61"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 10,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxf63ar5bygcj22v"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 11,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxfmazuk3w7h68"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 12,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxg2lfuznzgtr9l"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 13,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxgkifq57iy2xvp"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 15,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxiixs4lin973i1a"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 17,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxjmqwjktg8a7bt"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 18,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxm7trt85i5u17u"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
       "y": 19,
       "flipped": false,
-      "ownerId": "LbAfQZ0PbkZqBrx9AAAB"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxmwtdcshheg5yg"
     },
     {
       "name": "Vloer",
@@ -168,10 +471,11 @@
       "isTemplate": true,
       "price": 5,
       "isFloor": true,
-      "x": 9,
-      "y": 7,
+      "x": 4,
+      "y": 20,
       "flipped": false,
-      "ownerId": "NKNvl_IaOo6xug66AAAp"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxntofytv108w6t5"
     },
     {
       "name": "Vloer",
@@ -182,10 +486,11 @@
       "isTemplate": true,
       "price": 5,
       "isFloor": true,
-      "x": 10,
-      "y": 7,
+      "x": 4,
+      "y": 21,
       "flipped": false,
-      "ownerId": "px2_z8A79hO7vdziAAAt"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxohbtmp1m8h1dne"
     },
     {
       "name": "Vloer",
@@ -196,10 +501,11 @@
       "isTemplate": true,
       "price": 5,
       "isFloor": true,
-      "x": 9,
-      "y": 6,
+      "x": 4,
+      "y": 22,
       "flipped": false,
-      "ownerId": "px2_z8A79hO7vdziAAAt"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxp4w5bd6fi4lxjj"
     },
     {
       "name": "Vloer",
@@ -210,38 +516,56 @@
       "isTemplate": true,
       "price": 5,
       "isFloor": true,
-      "x": 10,
-      "y": 6,
+      "x": 4,
+      "y": 23,
       "flipped": false,
-      "ownerId": "px2_z8A79hO7vdziAAAt"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxpq6gxh4edwn35"
     },
     {
-      "name": "Container",
-      "height": 1,
-      "image": "http://localhost:3000/container_template.png",
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
       "category": "objecten",
-      "subCategory": "containers",
+      "subCategory": "floor",
       "placement": "floor",
       "isTemplate": true,
-      "price": 100,
-      "x": 9,
-      "y": 6,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 24,
       "flipped": false,
-      "ownerId": "px2_z8A79hO7vdziAAAt"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxqdcdr8jqzvyq5l"
     },
     {
-      "name": "Winkel",
-      "height": 2,
-      "image": "http://localhost:3000/winkel_template_96.png",
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
       "category": "objecten",
-      "subCategory": "shop",
+      "subCategory": "floor",
       "placement": "floor",
       "isTemplate": true,
-      "price": 500,
-      "x": 10,
-      "y": 6,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 14,
       "flipped": false,
-      "ownerId": "px2_z8A79hO7vdziAAAt"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxh4fu3x8rb9x07k"
+    },
+    {
+      "name": "Vloer",
+      "image": "http://localhost:3000/floor_template.png",
+      "category": "objecten",
+      "subCategory": "floor",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 5,
+      "isFloor": true,
+      "x": 4,
+      "y": 16,
+      "flipped": false,
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zxi3npfal3mhvfkf"
     },
     {
       "name": "Pong",
@@ -254,57 +578,461 @@
       "placement": "floor",
       "isTemplate": true,
       "price": 1000,
-      "x": 9,
-      "y": 7,
+      "interactionType": "pong",
+      "x": 6,
+      "y": 4,
       "flipped": false,
-      "ownerId": "i_F0DHBgvugglA4oAAAN"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "id": "mk2zy351ji204nzkur"
     }
   ],
   "wallObjects": [
     {
-      "wallId": "left_22",
+      "wallId": "top_4",
       "name": "Muurdecoratie",
-      "flipped": false,
+      "flipped": true,
       "image": "http://localhost:3000/wall_template.png",
-      "ownerId": "i_F0DHBgvugglA4oAAAN"
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "width": 1,
+      "id": "mk2zywe865fybyhp5ob"
+    },
+    {
+      "wallId": "top_6",
+      "name": "Brede Muurdecoratie",
+      "flipped": true,
+      "image": "http://localhost:3000/wall_2_template.png",
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "width": 2,
+      "id": "mk2zyzriivwsu532gnh"
+    },
+    {
+      "wallId": "top_9",
+      "name": "Muurdecoratie",
+      "flipped": true,
+      "image": "http://localhost:3000/wall_template.png",
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "width": 1,
+      "id": "mk2zz2lerv2ypurnqug"
+    },
+    {
+      "wallId": "top_9",
+      "name": "Vrije Muurdecoratie",
+      "flipped": true,
+      "image": "http://localhost:3000/wall_free_template.png",
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "isFree": true,
+      "freeX": 319,
+      "freeY": 41.25,
+      "wallSide": "top",
+      "isTemplate": true,
+      "width": 1,
+      "id": "mk2zzan7prnq6fsmvq"
+    },
+    {
+      "wallId": "top_5",
+      "name": "Brede Vrije Muurdecoratie",
+      "flipped": true,
+      "image": "http://localhost:3000/wall_2_free_template.png",
+      "ownerId": "m-_1rcBi84-qmKc1AACk",
+      "isFree": true,
+      "freeX": 176,
+      "freeY": 12.25,
+      "wallSide": "top",
+      "isTemplate": true,
+      "width": 2,
+      "id": "mk2zzfqi7qfqutdbhff"
     }
   ],
   "items": [
     {
-      "x": 9.5,
-      "y": 7.5,
+      "type": "bat_red",
+      "name": "Batje Rood",
+      "x": 6.707798842949945,
+      "y": 4.589632782642244,
+      "z": 32,
       "vx": 0,
       "vy": 0,
-      "mass": 0.4,
-      "z": 60,
       "vz": 0,
-      "rotation": 1.5707963267948966,
+      "rotation": 0,
       "vr": 0,
+      "mass": 0.4,
+      "canRotate": false,
       "canTopple": true,
-      "name": "Batje Rood",
-      "type": "bat_red",
-      "invX": 318,
-      "invY": 273.5500030517578
+      "isPouch": false,
+      "id": "mk2zy6p99s2id7mys9",
+      "lastTouchedBy": "m-_1rcBi84-qmKc1AACk",
+      "isResting": true
+    },
+    {
+      "type": "bat_black",
+      "name": "Batje Zwart",
+      "x": 7.596975730563541,
+      "y": 4.281673430041005,
+      "z": 32,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "rotation": 0,
+      "vr": 0,
+      "mass": 0.4,
+      "canRotate": false,
+      "canTopple": true,
+      "isPouch": false,
+      "id": "mk2zy9fxcfz1c06bwp",
+      "lastTouchedBy": "m-_1rcBi84-qmKc1AACk",
+      "isResting": true
     }
   ],
   "chatHistory": [
     {
-      "user": "Alumni FMaq",
-      "text": "hey!",
-      "id": "FMaqjrmHOTBqdHXWAAAN",
-      "time": 1767474556175
+      "user": "Alumni pQBL",
+      "text": "*steekt een sigaret op*",
+      "id": "pQBLubRYJvRmLcJkAAAT",
+      "userId": "user_0mi99cwq1",
+      "time": 1767636973250
     },
     {
-      "user": "Alumni smSu",
-      "text": "hoe maak je het",
-      "id": "smSufYnvNNA5ITZqAAAL",
-      "time": 1767474564414
+      "user": "Alumni g_EY",
+      "text": "*steekt een sigaret op*",
+      "id": "g_EYTxmKX2t9veS7AAAV",
+      "userId": "user_0mi99cwq1",
+      "time": 1767637212847
     },
     {
-      "user": "Alumni FMaq",
-      "text": "prima",
-      "id": "FMaqjrmHOTBqdHXWAAAN",
-      "time": 1767474569475
+      "user": "Alumni g_EY",
+      "text": "*ugh*",
+      "id": "g_EYTxmKX2t9veS7AAAV",
+      "userId": "user_0mi99cwq1",
+      "time": 1767637217026
+    },
+    {
+      "user": "Alumni g_EY",
+      "text": "*zucht*",
+      "id": "g_EYTxmKX2t9veS7AAAV",
+      "userId": "user_0mi99cwq1",
+      "time": 1767637222241
+    },
+    {
+      "user": "Alumni g_EY",
+      "text": "*steekt een sigaret op*",
+      "id": "g_EYTxmKX2t9veS7AAAV",
+      "userId": "user_0mi99cwq1",
+      "time": 1767637228894
+    },
+    {
+      "user": "Alumni g_EY",
+      "text": "*zucht*",
+      "id": "g_EYTxmKX2t9veS7AAAV",
+      "userId": "user_0mi99cwq1",
+      "time": 1767637239094
+    },
+    {
+      "user": "Alumni deLQ",
+      "text": "*steekt een sigaret op*",
+      "id": "deLQM2RgRTTGp-pHAAAP",
+      "userId": "user_0mi99cwq1",
+      "time": 1767638928904
+    },
+    {
+      "user": "Alumni deLQ",
+      "text": "*kuch*",
+      "id": "deLQM2RgRTTGp-pHAAAP",
+      "userId": "user_0mi99cwq1",
+      "time": 1767638936153
+    },
+    {
+      "user": "Alumni deLQ",
+      "text": "*steekt een sigaret op*",
+      "id": "deLQM2RgRTTGp-pHAAAP",
+      "userId": "user_0mi99cwq1",
+      "time": 1767638967567
+    },
+    {
+      "user": "Alumni RfXn",
+      "text": "*steekt een sigaret op*",
+      "id": "RfXncGwoOPxxNj90AAAD",
+      "userId": "user_0mi99cwq1",
+      "time": 1767640570774
+    },
+    {
+      "user": "Alumni RfXn",
+      "text": "*kuch*",
+      "id": "RfXncGwoOPxxNj90AAAD",
+      "userId": "user_0mi99cwq1",
+      "time": 1767640578012
+    },
+    {
+      "user": "Alumni Guov",
+      "text": "*steekt een sigaret op*",
+      "id": "GuovO-mEothJa_N5AAAD",
+      "userId": "user_0mi99cwq1",
+      "time": 1767641751343
+    },
+    {
+      "user": "Alumni FnMV",
+      "text": "*glug glug*",
+      "id": "FnMV6pvxMwKLtlimAAAP",
+      "userId": "user_0mi99cwq1",
+      "time": 1767643362578
+    },
+    {
+      "user": "Alumni sZXa",
+      "text": "*steekt een sigaret op*",
+      "id": "sZXa2rc1QcL2ZFWCAAAT",
+      "userId": "user_0mi99cwq1",
+      "time": 1767643780892
+    },
+    {
+      "user": "Alumni sZXa",
+      "text": "*zucht*",
+      "id": "sZXa2rc1QcL2ZFWCAAAT",
+      "userId": "user_0mi99cwq1",
+      "time": 1767643783958
+    },
+    {
+      "user": "Alumni 48Rm",
+      "text": "*steekt een sigaret op*",
+      "id": "48RmWWJ5lskDiZWGAAAV",
+      "userId": "user_0mi99cwq1",
+      "time": 1767644005341
+    },
+    {
+      "user": "Alumni 48Rm",
+      "text": "*glug glug*",
+      "id": "48RmWWJ5lskDiZWGAAAV",
+      "userId": "user_0mi99cwq1",
+      "time": 1767644019919
+    },
+    {
+      "user": "Alumni 48Rm",
+      "text": "*steekt een sigaret op*",
+      "id": "48RmWWJ5lskDiZWGAAAV",
+      "userId": "user_0mi99cwq1",
+      "time": 1767644035360
+    },
+    {
+      "user": "Alumni gSQ1",
+      "text": "*glug glug*",
+      "id": "gSQ1OvQsxKjCoQYXAAAd",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767644273058
+    },
+    {
+      "user": "Alumni gSQ1",
+      "text": "*glug glug*",
+      "id": "gSQ1OvQsxKjCoQYXAAAd",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767644274090
+    },
+    {
+      "user": "Alumni gSQ1",
+      "text": "*glug glug*",
+      "id": "gSQ1OvQsxKjCoQYXAAAd",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767644290802
+    },
+    {
+      "user": "Alumni aXg9",
+      "text": "*glug glug*",
+      "id": "aXg9LNYwpnhcULEkAAAf",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767644465828
+    },
+    {
+      "user": "Alumni Wi0X",
+      "text": "*steekt een sigaret op*",
+      "id": "Wi0XqfUFE2inpf--AAAr",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767647474507
+    },
+    {
+      "user": "Alumni Wi0X",
+      "text": "*kuch*",
+      "id": "Wi0XqfUFE2inpf--AAAr",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767647481646
+    },
+    {
+      "user": "Alumni Wi0X",
+      "text": "*steekt een sigaret op*",
+      "id": "Wi0XqfUFE2inpf--AAAr",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767647491970
+    },
+    {
+      "user": "Alumni nAs_",
+      "text": "*steekt een sigaret op*",
+      "id": "nAs_x-etHb4kVXWZAAAD",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767656440513
+    },
+    {
+      "user": "Alumni nAs_",
+      "text": "*zucht*",
+      "id": "nAs_x-etHb4kVXWZAAAD",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767656443562
+    },
+    {
+      "user": "Alumni nAs_",
+      "text": "*zucht*",
+      "id": "nAs_x-etHb4kVXWZAAAD",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767656448649
+    },
+    {
+      "user": "Alumni Or0E",
+      "text": "*steekt een sigaret op*",
+      "id": "Or0EQDXvRT-TpL3vAAAN",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767657643499
+    },
+    {
+      "user": "Alumni Or0E",
+      "text": "*zucht*",
+      "id": "Or0EQDXvRT-TpL3vAAAN",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767657648587
+    },
+    {
+      "user": "Alumni Or0E",
+      "text": "*steekt een sigaret op*",
+      "id": "Or0EQDXvRT-TpL3vAAAN",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767657660718
+    },
+    {
+      "user": "Alumni Or0E",
+      "text": "*paf*",
+      "id": "Or0EQDXvRT-TpL3vAAAN",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767657661737
+    },
+    {
+      "user": "Alumni Or0E",
+      "text": "*paf*",
+      "id": "Or0EQDXvRT-TpL3vAAAN",
+      "userId": "user_2e7r9ut6j",
+      "time": 1767657665853
+    },
+    {
+      "user": "Alumni IXeG",
+      "text": "*steekt een sigaret op*",
+      "id": "IXeGFbUP6IKklJyjAABb",
+      "userId": "user_u7c0ly608",
+      "time": 1767722820579
+    },
+    {
+      "user": "Alumni Kx2W",
+      "text": "*steekt een sigaret op*",
+      "id": "Kx2WPBP-KVsuEyHJAABl",
+      "userId": "user_u7c0ly608",
+      "time": 1767723849690
+    },
+    {
+      "user": "Alumni nHBp",
+      "text": "*steekt een sigaret op*",
+      "id": "nHBpgi1ThLXS26iQAABn",
+      "userId": "user_u7c0ly608",
+      "time": 1767723973992
+    },
+    {
+      "user": "Alumni LDIe",
+      "text": "*steekt een sigaret op*",
+      "id": "LDIe24T0iHZwaKcdAABp",
+      "userId": "user_u7c0ly608",
+      "time": 1767724575254
+    },
+    {
+      "user": "Alumni B_Qa",
+      "text": "*steekt een sigaret op*",
+      "id": "B_QatoqbWWubZE-RAAB3",
+      "userId": "user_u7c0ly608",
+      "time": 1767725637703
+    },
+    {
+      "user": "Alumni B_Qa",
+      "text": "*steekt een sigaret op*",
+      "id": "B_QatoqbWWubZE-RAAB3",
+      "userId": "user_u7c0ly608",
+      "time": 1767725641948
+    },
+    {
+      "user": "Alumni B_Qa",
+      "text": "*steekt een sigaret op*",
+      "id": "B_QatoqbWWubZE-RAAB3",
+      "userId": "user_u7c0ly608",
+      "time": 1767725650512
+    },
+    {
+      "user": "Alumni B_Qa",
+      "text": "*steekt een sigaret op*",
+      "id": "B_QatoqbWWubZE-RAAB3",
+      "userId": "user_u7c0ly608",
+      "time": 1767725662880
+    },
+    {
+      "user": "Alumni B_Qa",
+      "text": "*steekt een sigaret op*",
+      "id": "B_QatoqbWWubZE-RAAB3",
+      "userId": "user_u7c0ly608",
+      "time": 1767725665560
+    },
+    {
+      "user": "Alumni 349j",
+      "text": "*steekt een sigaret op*",
+      "id": "349j7cZhSkxiEXFkAAB8",
+      "userId": "user_u7c0ly608",
+      "time": 1767726591982
+    },
+    {
+      "user": "Alumni Oa2A",
+      "text": "*steekt een sigaret op*",
+      "id": "Oa2As_PSdhEv6mdfAAB-",
+      "userId": "user_u7c0ly608",
+      "time": 1767726633756
+    },
+    {
+      "user": "Alumni 8EwY",
+      "text": "*steekt een sigaret op*",
+      "id": "8EwYeX8GsnRINV-RAACA",
+      "userId": "user_u7c0ly608",
+      "time": 1767726713252
+    },
+    {
+      "user": "Alumni H-kd",
+      "text": "*steekt een sigaret op*",
+      "id": "H-kdzpRrVrExvZaiAACG",
+      "userId": "user_u7c0ly608",
+      "time": 1767726965191
+    },
+    {
+      "user": "Alumni H-kd",
+      "text": "*steekt een sigaret op*",
+      "id": "H-kdzpRrVrExvZaiAACG",
+      "userId": "user_u7c0ly608",
+      "time": 1767726972972
+    },
+    {
+      "user": "Alumni JY9S",
+      "text": "*steekt een sigaret op*",
+      "id": "JY9SEAguxDD-efTrAACI",
+      "userId": "user_u7c0ly608",
+      "time": 1767727019941
+    },
+    {
+      "user": "Alumni JY9S",
+      "text": "*paf*",
+      "id": "JY9SEAguxDD-efTrAACI",
+      "userId": "user_u7c0ly608",
+      "time": 1767727023128
+    },
+    {
+      "user": "Alumni kjCL",
+      "text": "*steekt een sigaret op*",
+      "id": "kjCLaWXz6ZTsrinpAACK",
+      "userId": "user_u7c0ly608",
+      "time": 1767727062942
     }
   ],
   "mapW": 25,
@@ -312,12 +1040,14 @@
   "tileColors": {},
   "wallColors": {
     "left_1": "#666666",
-    "top_6": "#666666"
+    "top_6": "#555555",
+    "top_7": "#555555"
   },
   "maxPlayers": 10,
   "settings": {
     "doorbell": false,
     "alwaysOnline": false,
-    "allowBuilding": false
+    "allowBuilding": false,
+    "noSmoking": false
   }
 }

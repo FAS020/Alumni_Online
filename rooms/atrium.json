@@ -1,21 +1,573 @@
 {
-  "objects": [],
-  "wallObjects": [],
-  "items": [],
-  "chatHistory": [
+  "objects": [
     {
-      "user": "Alumni W1SS",
-      "text": "hey dikke",
-      "id": "W1SSjVzS89qgpltUAAAV",
-      "userId": "user_7lcxhy1nq",
-      "time": 1767540211413
+      "name": "Pong",
+      "height": 1,
+      "width": 2,
+      "depth": 1,
+      "image": "http://localhost:3000/objects/pong.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 1000,
+      "interactionType": "pong",
+      "x": 5,
+      "y": 4,
+      "flipped": false,
+      "ownerId": "IsX_ZC10VcTr-nQzAAAJ"
+    }
+  ],
+  "wallObjects": [],
+  "items": [
+    {
+      "type": "peuk",
+      "name": "Peuk",
+      "x": 0.6729907474057428,
+      "y": 7.1961036561763585,
+      "z": 0,
+      "rotation": 1.5707963267948966,
+      "mass": 0.01,
+      "canTopple": true,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "vr": 0,
+      "id": "mk2g1orcel7lvwtj69m"
     },
     {
-      "user": "Alumni Tih_",
-      "text": "pardon",
-      "id": "Tih_vDVLaCZwu6WXAAAR",
-      "userId": "user_644rlnzpa",
-      "time": 1767540215898
+      "type": "bat_red",
+      "name": "Batje Rood",
+      "mass": 0.4,
+      "canTopple": true,
+      "x": 4.639846529443045,
+      "y": 10.493014313859188,
+      "vx": 0,
+      "vy": 0,
+      "z": 0,
+      "vz": 0,
+      "rotation": 1.5707963267948966,
+      "vr": 0,
+      "invX": 332,
+      "invY": 118.55000305175781,
+      "id": "mk2g1orcemo4juhzc7",
+      "lastTouchedBy": "s9qboDjJaqGAQARYAAAR",
+      "isResting": true
+    },
+    {
+      "type": "bat_red",
+      "name": "Batje Rood",
+      "mass": 0.4,
+      "canTopple": true,
+      "x": 6.0543498564982725,
+      "y": 4.90844736483847,
+      "vx": 0,
+      "vy": 0,
+      "z": 32,
+      "vz": 0,
+      "rotation": -1.5707963267948966,
+      "vr": 0,
+      "id": "mk2geiopdi3n72ms5r",
+      "lastTouchedBy": "YoUD9XMb--8ndGoxAAAX"
+    },
+    {
+      "type": "currency_big",
+      "mass": 0.5,
+      "x": 7.2338933757392745,
+      "y": 2.6565058064101126,
+      "vx": 0,
+      "vy": 0,
+      "z": 0,
+      "vz": 0,
+      "rotation": 0,
+      "vr": 0,
+      "id": "mk2geiopcvbtze2e6pj",
+      "lastTouchedBy": "YoUD9XMb--8ndGoxAAAX"
+    },
+    {
+      "type": "currency",
+      "mass": 0.5,
+      "x": 5.072718262361612,
+      "y": 1.2623715704945067,
+      "vx": 0,
+      "vy": 0,
+      "z": 0,
+      "vz": 0,
+      "rotation": 0,
+      "vr": 0,
+      "id": "mk2geioqzo7oklc9j7j",
+      "lastTouchedBy": "YoUD9XMb--8ndGoxAAAX",
+      "isResting": true
+    },
+    {
+      "type": "bottle_empty",
+      "name": "Waterfles (Leeg)",
+      "mass": 1.2,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "rotation": 0,
+      "vr": 0,
+      "invX": 350,
+      "invY": 84.55000305175781,
+      "x": 2.5805797079955606,
+      "y": 1.4103739907203012,
+      "z": 0,
+      "id": "mk2g1orcjtkp0jtdtfa",
+      "lastTouchedBy": "s9qboDjJaqGAQARYAAAR",
+      "isResting": true
+    },
+    {
+      "type": "bat_black",
+      "name": "Batje Zwart",
+      "mass": 0.4,
+      "canTopple": true,
+      "x": 3.5649712212229563,
+      "y": 6.443161132763115,
+      "vx": 0,
+      "vy": 0,
+      "z": 0,
+      "vz": 0,
+      "rotation": 1.5707963267948966,
+      "vr": 0,
+      "id": "mk2geiopni5at9sxc2",
+      "lastTouchedBy": "mthjwEL3mHamlL3OAAAJ",
+      "isResting": true,
+      "invX": 316,
+      "invY": 109.55000305175781
+    },
+    {
+      "type": "peuk",
+      "name": "Peuk",
+      "x": 5.332757144680682,
+      "y": 0.500000000000003,
+      "z": 0,
+      "rotation": 1.5707963267948966,
+      "mass": 0.01,
+      "canTopple": true,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "vr": 0,
+      "id": "mk2h2duq8y9smi92vqs",
+      "lastTouchedBy": "mthjwEL3mHamlL3OAAAJ",
+      "isResting": true
+    },
+    {
+      "type": "peuk",
+      "name": "Peuk",
+      "x": 11.394219886628044,
+      "y": 25.398975641138755,
+      "z": 0,
+      "rotation": 1.5707963267948966,
+      "mass": 0.01,
+      "canTopple": true,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "vr": 0,
+      "id": "mk2h2oqdq4n15r7cr4",
+      "lastTouchedBy": "S5W738vLJR_9gS_cAAAZ"
+    },
+    {
+      "type": "peuk",
+      "name": "Peuk",
+      "x": 7.80463276015419,
+      "y": 1.9201482809844141,
+      "z": 0,
+      "rotation": 1.5707963267948966,
+      "mass": 0.01,
+      "canTopple": true,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "vr": 0,
+      "id": "mk2jk66dkzafss1764",
+      "lastTouchedBy": "sf8s8cFOKrathx16AAAD"
+    },
+    {
+      "type": "peuk",
+      "name": "Peuk",
+      "x": 13.880063005220254,
+      "y": 8.605019891408359,
+      "z": 0,
+      "rotation": 1.5707963267948966,
+      "mass": 0.01,
+      "canTopple": true,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "vr": 0,
+      "id": "mk2jkqw8sa9jcyrgeb9",
+      "lastTouchedBy": "sf8s8cFOKrathx16AAAD"
+    },
+    {
+      "type": "peuk",
+      "name": "Peuk",
+      "x": 9.673669625543283,
+      "y": 5.48744493325398,
+      "z": 0,
+      "rotation": 1.5707963267948966,
+      "mass": 0.01,
+      "canTopple": true,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "vr": 0,
+      "id": "mk2jo5dw53q4c43913t",
+      "lastTouchedBy": "mthjwEL3mHamlL3OAAAJ"
+    }
+  ],
+  "chatHistory": [
+    {
+      "user": "Alumni S5W7",
+      "text": "*zucht*",
+      "id": "S5W738vLJR_9gS_cAAAZ",
+      "userId": "user_198nak43a",
+      "time": 1767696918026
+    },
+    {
+      "user": "Alumni S5W7",
+      "text": "*paf*",
+      "id": "S5W738vLJR_9gS_cAAAZ",
+      "userId": "user_198nak43a",
+      "time": 1767696919027
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*steekt een sigaret op*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701032994
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701034207
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701036437
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701036740
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*kuch*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701036840
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701037041
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701038759
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701038858
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*kuch*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701039566
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701040073
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701040275
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701040376
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701040477
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701040578
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701041090
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701041293
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701042096
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*kuch*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701042607
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*steekt een sigaret op*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701059826
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*kuch*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701060427
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701060737
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701061546
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*kuch*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701062055
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*kuch*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701063775
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*kuch*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701063978
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701064078
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701064786
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701064987
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701065694
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701066201
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*kuch*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701066318
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701066408
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701066508
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701067118
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*zucht*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701067530
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*paf*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701068242
+    },
+    {
+      "user": "Alumni sf8s",
+      "text": "*kuch*",
+      "id": "sf8s8cFOKrathx16AAAD",
+      "userId": "user_198nak43a",
+      "time": 1767701069863
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*steekt een sigaret op*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701218604
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*paf*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701222045
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*zucht*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701222758
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*kuch*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701223061
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*kuch*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701225146
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*paf*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701225351
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*zucht*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701226874
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*kuch*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701227593
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*paf*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701227999
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*zucht*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701228203
+    },
+    {
+      "user": "Alumni mthj",
+      "text": "*zucht*",
+      "id": "mthjwEL3mHamlL3OAAAJ",
+      "userId": "user_uialqiai0",
+      "time": 1767701228609
     }
   ],
   "mapW": 30,
@@ -26,6 +578,7 @@
   "settings": {
     "doorbell": false,
     "alwaysOnline": true,
-    "allowBuilding": false
+    "allowBuilding": false,
+    "noSmoking": true
   }
 }
