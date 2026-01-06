@@ -502,6 +502,8 @@ io.on('connection', (socket) => {
       const roomId = socketRoomMap[socket.id];
       if (!roomId || !rooms[roomId]) return;
       const room = rooms[roomId];
+      // NIEUW: Ken uniek ID toe
+      if (!obj.id) obj.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
       room.objects.push(obj);
       io.to(roomId).emit('updateObjects', room.objects); 
       saveRoom(roomId);
@@ -541,6 +543,7 @@ io.on('connection', (socket) => {
       const room = rooms[roomId];
       // FIX: Check ook op naam als die is meegegeven, om te voorkomen dat we de vloer verwijderen ipv een object
       const idx = room.objects.findIndex(o => {
+          if (coords.id && o.id) return o.id === coords.id; // NIEUW: Zoek op ID indien beschikbaar
           if (o.x !== coords.x || o.y !== coords.y) return false;
           if (coords.name && o.name !== coords.name) return false;
           return true;
@@ -556,6 +559,8 @@ io.on('connection', (socket) => {
       const roomId = socketRoomMap[socket.id];
       if (!roomId || !rooms[roomId]) return;
       const room = rooms[roomId];
+      // NIEUW: Ken uniek ID toe
+      if (!obj.id) obj.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
       room.wallObjects.push(obj);
       io.to(roomId).emit('updateWallObjects', room.wallObjects);
       saveRoom(roomId);
@@ -566,15 +571,17 @@ io.on('connection', (socket) => {
       if (!roomId || !rooms[roomId]) return;
       const room = rooms[roomId];
       
-      let wallId, name;
+      let wallId, name, id;
       if (typeof data === 'string') {
           wallId = data; // Backwards compatibility
       } else {
           wallId = data.wallId;
           name = data.name;
+          id = data.id;
       }
 
       const idx = room.wallObjects.findIndex(o => {
+          if (id && o.id) return o.id === id; // NIEUW: Zoek op ID indien beschikbaar
           return o.wallId === wallId && (!name || o.name === name);
       });
 
