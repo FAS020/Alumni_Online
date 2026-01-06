@@ -93,7 +93,7 @@ button img {
     gap: 10px;
 }
 
-#openChatLog, #buildBtn, #inventoryBtn, #adminBtn, #roomsBtn, #myRoomBtn, #friendsBtn, #zoomIn, #zoomOut, #centerCam {
+#openChatLog, #buildBtn, #inventoryBtn, #adminBtn, #cheatBtn, #roomsBtn, #myRoomBtn, #friendsBtn, #zoomIn, #zoomOut, #centerCam {
   width: 24px;
   height: 24px;
 }
@@ -335,21 +335,43 @@ button img {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
-  padding: 5px;
+  width: auto;
+  height: auto;
+  padding: 0;
   box-sizing: border-box;
   user-select: none;
+  transform: scale(6);
+  transform-origin: top left;
 }
 .inventory-item:hover {
   background: transparent;
 }
 .inventory-item img {
+  display: block;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+/* Fix voor shop output items zodat ze zichtbaar blijven */
+#shopOutput .inventory-item {
+  transform: scale(1);
+  margin: 0 2px;
+}
+#shopOutput .inventory-item img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  pointer-events: none;
-  image-rendering: pixelated;
+}
+/* Fix voor vicinity items zodat ze netjes in rijen staan */
+#vicinityContent .inventory-item {
+  transform: scale(1);
+  margin: 0;
+  width: 100% !important;
+  height: 64px !important;
+}
+#vicinityContent .inventory-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 #chatLog {
@@ -403,7 +425,7 @@ button img {
   user-select: none;
 }
 
-#inventoryHeader, #pongHeader, #shopHeader, #containerHeader, #pouchHeader {
+#inventoryHeader, #pongHeader, #shopHeader, #containerHeader, #pouchHeader, #vicinityHeader {
   height: 36px;
   line-height: 36px;
   padding: 0 12px;
@@ -558,11 +580,12 @@ button img {
   padding: 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  grid-auto-rows: max-content;
   gap: 5px;
   overflow-y: auto;
+  overflow-x: hidden;
   justify-items: center;
-  height: 360px;
+  height: 300px;
 }
 
 /* ───── Kamers Venster ───── */
@@ -698,7 +721,7 @@ button img {
 #shopOutput {
   flex-grow: 1;
   background: rgba(0,0,0,0.3);
-  border: 2px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.2);
   padding: 10px;
   display: flex;
   align-items: center;
@@ -706,6 +729,7 @@ button img {
   position: relative;
   margin: 10px;
   border-radius: 6px;
+  min-height: 100px;
 }
 
 /* ───── Container Venster ───── */
@@ -756,28 +780,53 @@ button img {
   flex-direction: column;
 }
 
+/* ───── Vicinity Venster ───── */
+#vicinityWindow {
+  position: absolute;
+  left: 560px; /* Rechts van inventory (150 + 400 + 10) */
+  top: 120px;
+  width: 400px;
+  height: 450px; /* Zelfde hoogte als inventory */
+  background: rgba(17, 17, 17, 0.85);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: none;
+  overflow: hidden;
+  z-index: 20;
+  flex-direction: column;
+}
+
 /* ───── Custom scrollbar (WebKit) voor Chat & Bouwmenu ───── */
 #chatLogContent::-webkit-scrollbar,
 #buildMenuContent::-webkit-scrollbar,
 #inventoryContent::-webkit-scrollbar,
+#vicinityContent::-webkit-scrollbar,
 #roomCategoryView::-webkit-scrollbar,
-#roomList::-webkit-scrollbar {
+#roomList::-webkit-scrollbar,
+#shopContent::-webkit-scrollbar {
   width: 6px;
 }
 
 #chatLogContent::-webkit-scrollbar-track,
 #buildMenuContent::-webkit-scrollbar-track,
 #inventoryContent::-webkit-scrollbar-track,
+#vicinityContent::-webkit-scrollbar-track,
 #roomCategoryView::-webkit-scrollbar-track,
-#roomList::-webkit-scrollbar-track {
+#roomList::-webkit-scrollbar-track,
+#shopContent::-webkit-scrollbar-track {
   background: transparent;
 }
 
 #chatLogContent::-webkit-scrollbar-thumb,
 #buildMenuContent::-webkit-scrollbar-thumb,
 #inventoryContent::-webkit-scrollbar-thumb,
+#vicinityContent::-webkit-scrollbar-thumb,
 #roomCategoryView::-webkit-scrollbar-thumb,
-#roomList::-webkit-scrollbar-thumb {
+#roomList::-webkit-scrollbar-thumb,
+#shopContent::-webkit-scrollbar-thumb {
   background: white;
   border-radius: 6px;
 }
@@ -786,8 +835,10 @@ button img {
 #chatLogContent,
 #buildMenuContent,
 #inventoryContent,
+#vicinityContent,
 #roomCategoryView,
-#roomList {
+#roomList,
+#shopContent {
   scrollbar-width: thin;
   scrollbar-color: white transparent;
 }
@@ -863,8 +914,8 @@ button img {
   width: 300px;
   height: 20px;
   background: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 10px;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 8px;
   display: none; /* Start verborgen */
   overflow: hidden;
   z-index: 90;
@@ -872,7 +923,7 @@ button img {
 #statusBarFill {
   height: 100%;
   width: 0%;
-  background: #4CAF50;
+  background: #7bff00;
   transition: width 0.1s linear;
 }
 #statusBarText {
@@ -886,7 +937,7 @@ button img {
   justify-content: center;
   color: white;
   font-family: Arial, sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   text-shadow: 1px 1px 0 #000;
 }
 
@@ -906,7 +957,7 @@ button img {
 
   <div class="footer-left">
     <button id="adminBtn" title="Admin"><img src="icons/admin.png"></button>
-    <button id="cheatBtn" title="Cheats" style="font-size: 24px;">🎁</button>
+    <button id="cheatBtn" title="Cheats"><img src="icons/cheat.png"></button>
     <div style="display:flex; gap:10px; align-items:center;">
         <button id="zoomOut" title="Zoom Out"><img src="icons/min.png"></button>
         <button id="centerCam" title="Center"><img src="icons/center.png"></button>
@@ -939,7 +990,7 @@ button img {
   <div id="buildCategoryMenu">
     <button class="category-btn selected" data-category="objecten" title="Objecten"><img src="icons/object_active.png"></button>
     <button class="category-btn" data-category="kleur" title="Kleur"><img src="icons/color.png"></button>
-    <button class="category-btn" id="adminRoomBtn" data-category="kamers" title="Kamers" style="display: none; font-size: 18px;">🏠</button>
+    <button class="category-btn" id="adminRoomBtn" data-category="kamers" title="Kamers" style="display: none;"><img src="icons/new_room.png"></button>
   </div>
 
   <div id="buildMainContent">
@@ -970,7 +1021,7 @@ button img {
       <div id="colorTools">
         <button class="tool-btn selected" data-tool="brush" title="Kwast"><img src="icons/paint_active.png"></button> 
         <button class="tool-btn" data-tool="bucket" title="Verfemmer"><img src="icons/fill.png"></button>
-        <button class="tool-btn" data-tool="picker" title="Pipet"><img src="icons/picker.png"></button>
+        <button class="tool-btn" data-tool="picker" title="Pipet"><img src="icons/pipet.png"></button>
       </div>
       <div id="colorPickerWrapper">
         <div id="color-picker-container"></div>
@@ -983,35 +1034,57 @@ button img {
 
     <!-- Weergave voor Kamers Categorie -->
     <div id="roomCategoryView" style="display: none; padding: 20px; color: white; font-family: Arial; flex-direction: column; gap: 15px; height: calc(100% - 36px); overflow-y: auto; box-sizing: border-box;">
-        <h3 style="margin: 0 0 5px 0; font-weight: normal;">Nieuwe Kamer Aanmaken</h3>
+        <h4 style="margin: 0 0 5px 0; font-weight: normal;">Kamer Aanmaken</h4>
         
-        <div>
-            <label for="roomNameInput" style="display: block; margin-bottom: 5px; font-size: 14px;">Kamer Naam:</label>
-            <input type="text" id="roomNameInput" placeholder="Naam van de kamer" style="width: 90%; padding: 8px; background: #333; border: 1px solid #666; color: white; border-radius: 4px; font-size: 14px;">
+        <div style="margin-bottom: 15px;">
+            <input type="text" id="roomNameInput" placeholder="Naam" style="width: 50%; padding: 8px; background: #333; border: 1px solid #666; color: white; border-radius: 4px; font-size: 14px;">
         </div>
 
-        <div>
-            <label style="display: block; margin-bottom: 5px; font-size: 14px;">Kamer Grootte:</label>
-            <div id="roomSizeSelector" style="display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px;">
-                <label style="cursor:pointer;"><input type="radio" name="roomSize" value="5"> 5x5</label>
-                <label style="cursor:pointer;"><input type="radio" name="roomSize" value="10" checked> 10x10</label>
-                <label style="cursor:pointer;"><input type="radio" name="roomSize" value="20"> 20x20</label>
-                <label style="cursor:pointer;"><input type="radio" name="roomSize" value="30"> 30x30</label>
+        <div style="margin-bottom: 15px;">
+            <select id="roomSizeSelect" style="width: 25%; padding: 8px; background: #333; border: 1px solid #666; color: white; border-radius: 4px; font-size: 10px;">
+                <option value="5">5x5</option>
+                <option value="5x10">5x10</option>
+                <option value="10" selected>10x10</option>
+                <option value="20">20x20</option>
+                <option value="30">30x30</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+            <!-- Always Online Toggle -->
+            <div style="display:flex; align-items:center; gap:5px;">
+                <span style="font-size:14px;">Online</span>
+                <img id="adminAlwaysOnlineToggle" src="icons/rood.png" style="width:24px; height:24px; cursor:pointer;" title="Altijd Online">
             </div>
-        </div>
-
-        <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 15px;">
-            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size: 14px;">
-                <input type="checkbox" id="roomAlwaysOnline"> Altijd Online (Beschikbaar zonder eigenaar)
-            </label>
             
             <!-- Build Permission Toggle -->
             <div style="display:flex; align-items:center; gap:5px;">
-                <span style="font-size:14px;">Bouwen:</span>
+                <span style="font-size:14px;">Bouwen</span>
                 <img id="adminBuildToggle" src="icons/buildmenu_inactive.png" style="width:24px; height:24px; cursor:pointer;" title="Spelers mogen bouwen">
             </div>
+
+            <!-- No Smoking Toggle -->
+            <div style="display:flex; align-items:center; gap:5px;">
+                <span style="font-size:14px;">Roken</span>
+                <img id="adminNoSmokingToggle" src="icons/verboden.png" style="width:24px; height:24px; cursor:pointer;" title="Roken verboden">
+            </div>
+
+            <!-- Tile Numbers Toggle -->
+            <div style="display:flex; align-items:center; gap:5px;">
+                <span style="font-size:14px;">Nummers</span>
+                <img id="adminTileNumbersToggle" src="icons/numbers.png" style="width:24px; height:24px; cursor:pointer;" title="Toon Tegel Nummers">
+            </div>
+
             <script>
                 // Inline script voor admin toggle logica
+                const adminAlwaysOnlineToggle = document.getElementById('adminAlwaysOnlineToggle');
+                adminAlwaysOnlineToggle.dataset.active = "false";
+                adminAlwaysOnlineToggle.onclick = () => {
+                    const current = adminAlwaysOnlineToggle.dataset.active === "true";
+                    adminAlwaysOnlineToggle.dataset.active = !current;
+                    adminAlwaysOnlineToggle.src = !current ? "icons/wit.png" : "icons/rood.png";
+                };
+
                 const adminBuildToggle = document.getElementById('adminBuildToggle');
                 adminBuildToggle.dataset.allowed = "false";
                 adminBuildToggle.onclick = () => {
@@ -1019,22 +1092,26 @@ button img {
                     adminBuildToggle.dataset.allowed = !current;
                     adminBuildToggle.src = !current ? "icons/buildmenu_active.png" : "icons/buildmenu_inactive.png";
                 };
+
+                const adminNoSmokingToggle = document.getElementById('adminNoSmokingToggle');
+                adminNoSmokingToggle.dataset.forbidden = "false";
+                adminNoSmokingToggle.onclick = () => {
+                    const current = adminNoSmokingToggle.dataset.forbidden === "true";
+                    adminNoSmokingToggle.dataset.forbidden = !current;
+                    adminNoSmokingToggle.src = !current ? "icons/verboden_active.png" : "icons/verboden.png";
+                };
             </script>
         </div>
 
-        <div style="margin-top: 5px;">
-            <button id="toggleTileNumbersBtn" style="padding: 10px 15px; background: #607D8B; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">Toon Tegel Nummers: UIT</button>
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button id="createRoomBtn" style="padding: 10px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Kamer Aanmaken</button>
-            <button id="saveRoomBtn" style="padding: 10px 15px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">💾 Huidige Opslaan</button>
-            <button id="clearRoomBtn" style="padding: 10px 15px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">🧹 Kamer Leegmaken</button>
+        <div style="display: flex; gap: 10px; margin-top: 10px; width: 100%;">
+            <button id="createRoomBtn" style="flex: 1; padding: 10px 15px; border: white 1px solid; color: white; border-radius: 0px; cursor: pointer;">Aanmaken</button>
+            <button id="saveRoomBtn" style="flex: 1; padding: 10px 15px; border: #7bff00 1px solid; color: #7bff00; border-radius: 0px; cursor: pointer;">Opslaan</button>
+            <button id="clearRoomBtn" style="flex: 1; padding: 10px 15px; border: #f44336 1px solid; color: #f44336; border-radius: 0px; cursor: pointer;">Legen</button>
         </div>
 
         <hr style="width: 100%; border: 0; border-top: 1px solid #555; margin: 10px 0;">
-        <h3 style="margin: 0 0 5px 0; font-weight: normal;">Bestaande Kamers</h3>
-        <div id="roomList" style="flex-grow: 1; overflow-y: auto; background: rgba(0,0,0,0.2); border: 1px solid #444; padding: 5px; border-radius: 4px; min-height: 100px;"></div>
+        <h4 style="margin: 0 0 5px 0; font-weight: normal;">Kamers</h4>
+        <div id="roomList" style="flex-grow: 1; overflow-y: auto; background: rgba(0,0,0,0.2); border: 1px solid #444; padding: 5px; min-height: 100px;"></div>
 
     </div>
   </div>
@@ -1050,7 +1127,7 @@ button img {
 
 <div id="uploadModal">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">Custom Object Uploaden</h3>
+        <h4 style="margin:0;">Object Uploaden</h4>
         <span id="closeUploadModalCross" style="cursor:pointer; font-size:24px; line-height:1;">×</span>
     </div>
     
@@ -1118,11 +1195,18 @@ button img {
       <div id="wallet">€0.00</div>
       <div id="transactionFeed"></div>
     </div>
-    <button id="diaryBtn" class="tool-btn" title="Dagboek">📓</button>
+    <button id="vicinityBtn" class="tool-btn" title="Omgeving"><img src="icons/vicinity.png"></button>
   </div>
   <div id="inventoryContent">
     <!-- Inventaris items komen hier -->
   </div>
+</div>
+
+<div id="vicinityWindow">
+  <div id="vicinityHeader">
+    <span>Omgeving</span>
+  </div>
+  <div id="vicinityContent" style="padding: 10px; overflow-y: auto; height: calc(100% - 36px); display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 10px; padding-bottom: 20px; align-content: start;"></div>
 </div>
 
 <div id="movePreview" style="display: none; position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10000; background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.5); padding: 10px; border-radius: 8px; color: white; font-family: Arial, sans-serif; font-size: 12px; align-items: center; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
@@ -1146,6 +1230,15 @@ button img {
   <div id="shopHeader">
     <span>Winkel</span>
     <span class="close-btn" id="closeShopBtn">×</span>
+  </div>
+  <div id="shopTools" style="padding: 10px; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 8px;">
+      <input type="text" id="shopSearchInput" placeholder="Zoeken..." style="padding: 6px; border-radius: 4px; border: 1px solid #555; background: #222; color: white; font-family: Arial, sans-serif; font-size: 12px;">
+      <select id="shopSortSelect" style="padding: 6px; border-radius: 4px; border: 1px solid #555; background: #222; color: white; font-family: Arial, sans-serif; font-size: 12px;">
+          <option value="name_asc">Naam (A-Z)</option>
+          <option value="name_desc">Naam (Z-A)</option>
+          <option value="price_asc">Prijs (Laag - Hoog)</option>
+          <option value="price_desc">Prijs (Hoog - Laag)</option>
+      </select>
   </div>
   <div id="shopContent"></div>
   <div id="shopOutput"></div>
@@ -1244,8 +1337,8 @@ let isUserAdmin = false; // NIEUW: Houdt bij of de gebruiker admin is
 const nameHoverStates = {}; // NIEUW: Houdt hover status bij voor fade-out
 let isRoomOwner = false; // Ben ik de eigenaar van de huidige kamer?
 let myRoomId = null; // ID van MIJN kamer (ongeacht waar ik ben)
-let myRoomSettings = { doorbell: false, alwaysOnline: false, allowBuilding: false }; // Instellingen van MIJN kamer
-let currentRoomSettings = { doorbell: false, alwaysOnline: false, allowBuilding: false }; // Instellingen van huidige kamer
+let myRoomSettings = { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false }; // Instellingen van MIJN kamer
+let currentRoomSettings = { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false }; // Instellingen van huidige kamer
 
 // NIEUW: Vriendenlijst
 let myFriends = [];
@@ -1288,6 +1381,8 @@ try {
         const alwaysOnlineParam = aoVal === null ? null : (aoVal === 'true');
         const abVal = urlParams.get('allowBuilding');
         const allowBuildingParam = abVal === null ? null : (abVal === 'true');
+        const nsVal = urlParams.get('noSmoking');
+        const noSmokingParam = nsVal === null ? null : (nsVal === 'true');
 
         try {
             const stored = localStorage.getItem(`habboCloneLastPos_${roomId}`);
@@ -1295,7 +1390,8 @@ try {
         } catch(e) {}
 
         // Vraag om mee te doen op deze positie
-        socket.emit('joinRoom', { roomId: roomId, ...savedPos, size: sizeParam ? parseInt(sizeParam) : null, userId: myUserId, alwaysOnline: alwaysOnlineParam, allowBuilding: allowBuildingParam });
+        const sizeToSend = sizeParam && sizeParam.includes('x') ? sizeParam : (sizeParam ? parseInt(sizeParam) : null);
+        socket.emit('joinRoom', { roomId: roomId, ...savedPos, size: sizeToSend, userId: myUserId, alwaysOnline: alwaysOnlineParam, allowBuilding: allowBuildingParam, noSmoking: noSmokingParam });
 
         // NIEUW: Vraag data van MIJN kamer op
         socket.emit('getMyRoomData', myUserId);
@@ -1319,7 +1415,7 @@ try {
     socket.on('myRoomData', (data) => {
         if (data.roomId) {
             myRoomId = data.roomId;
-            myRoomSettings = data.settings || { doorbell: false, alwaysOnline: false, allowBuilding: false };
+            myRoomSettings = data.settings || { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false };
             if (document.getElementById('myRoomWindow').style.display === 'flex') {
                 renderMyRoomSettings();
             }
@@ -1358,7 +1454,7 @@ try {
 
         // Check eigenaarschap
         isRoomOwner = data.isOwner || false;
-        currentRoomSettings = data.roomSettings || { doorbell: false, alwaysOnline: false, allowBuilding: false };
+        currentRoomSettings = data.roomSettings || { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false };
         updateBuildButton(); // Update footer button state
         
         // Overschrijf onze lokale lijsten met die van de server
@@ -1421,8 +1517,38 @@ try {
     
     // Luister naar item updates (verplaatsingen door anderen)
     socket.on('updateItems', (serverItems) => {
+        // Maak een map van huidige items om lokale state te behouden
+        const currentMap = new Map(items.map(i => [i.id, i]));
+        
         items.length = 0;
-        serverItems.forEach(i => items.push(createItemFromData(i)));
+        serverItems.forEach(serverItem => {
+            const localItem = currentMap.get(serverItem.id);
+            
+            // Als we dit item al hebben EN wij zijn de eigenaar, behoud lokale physics state
+            if (localItem && localItem.lastTouchedBy === mySocketId && serverItem.lastTouchedBy === mySocketId) {
+                items.push(localItem);
+            } else {
+                items.push(createItemFromData(serverItem));
+            }
+        });
+    });
+
+    // NIEUW: Ontvang live physics updates van andere spelers
+    socket.on('updateItemPhysics', (updates) => {
+        updates.forEach(u => {
+            const item = items.find(i => i.id === u.id);
+            if (item && item !== draggedItem) { // Update niet als wij het zelf slepen
+                item.x = u.x;
+                item.y = u.y;
+                item.z = u.z;
+                item.vx = u.vx;
+                item.vy = u.vy;
+                item.vz = u.vz;
+                item.rotation = u.rotation;
+                item.vr = u.vr;
+                item.lastTouchedBy = u.lastTouchedBy; // Neem eigenaar over van server
+            }
+        });
     });
 
     // Synchroniseer de spelerslijst (vervangt newPlayer/playerDisconnected)
@@ -1491,6 +1617,12 @@ try {
     socket.on('customObjectDeleted', (data) => {
         const { name, price } = data;
         
+        // NIEUW: Deselecteer het object als het momenteel geselecteerd is
+        if (selectedBuildObject && selectedBuildObject.name === name && selectedBuildObject.isCustom) {
+            selectedBuildObject = null;
+            // De renderBuildItems() hieronder zal de visuele deselectie afhandelen
+        }
+
         // Verwijder uit bouwmenu lijst
         const idx = buildableObjects.findIndex(b => b.name === name && b.isCustom);
         if (idx > -1) {
@@ -1518,7 +1650,7 @@ try {
     // NIEUW: Refund ontvangen (voor geplaatste items)
     socket.on('refund', (data) => {
         addToWallet(data.amount);
-        showNotification(`€${data.amount.toFixed(2)} terugbetaald aan portemonnee. (${data.reason})`);
+        showNotification(`<span style="color: #4cd137;">+€${data.amount.toFixed(2).replace('.', ',')}</span> (${data.reason})`);
     });
 
     // NIEUW: Resultaat van aanbellen (voor bezoeker)
@@ -1898,8 +2030,26 @@ try {
             const playerCountDiv = document.createElement('div');
             playerCountDiv.style.display = 'flex';
             playerCountDiv.style.alignItems = 'center';
-            playerCountDiv.style.gap = '5px';
+            // Geen gap, we gebruiken vaste slots voor uitlijning
             playerCountDiv.style.marginRight = '10px';
+
+            // Helper voor vaste slots
+            const createSlot = (src, title) => {
+                const slot = document.createElement('div');
+                slot.style.width = '15px'; // Vaste breedte per icoon
+                slot.style.display = 'flex';
+                slot.style.justifyContent = 'center';
+                if (src) {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.style.width = '12px';
+                    img.style.height = '12px';
+                    if (title) img.title = title;
+                    slot.appendChild(img);
+                }
+                return slot;
+            };
+
             
             let iconSrc = 'icons/player.png';
             let maxP = roomData.maxPlayers;
@@ -1908,13 +2058,13 @@ try {
                 iconSrc = 'icons/admin.png';
             }
             
-            const playerIcon = document.createElement('img');
-            playerIcon.src = iconSrc;
-            playerIcon.style.width = '12px';
-            playerIcon.style.height = '12px';
-            
+            // Slot 4: Player Icon
+            playerCountDiv.appendChild(createSlot(iconSrc, 'Spelers'));
+
             const countSpan = document.createElement('span');
             countSpan.textContent = `${roomData.playerCount}/${maxP}`;
+            countSpan.style.width = '35px'; // Vaste breedte voor tekst
+            countSpan.style.textAlign = 'right';
             
             if (roomData.playerCount >= maxP) {
                 countSpan.style.color = '#f44336';
@@ -1922,23 +2072,6 @@ try {
                 countSpan.style.color = '#aaa';
             }
 
-            if (roomData.friendCount > 0) {
-                const heartIcon = document.createElement('img');
-                heartIcon.src = 'icons/heart.png';
-                heartIcon.style.width = '12px';
-                heartIcon.style.height = '12px';
-                playerCountDiv.appendChild(heartIcon);
-            }
-
-            if (roomData.hasDoorbell) {
-                const bellIcon = document.createElement('img');
-                bellIcon.src = 'icons/bel.png';
-                bellIcon.style.width = '12px';
-                bellIcon.style.height = '12px';
-                playerCountDiv.appendChild(bellIcon);
-            }
-
-            playerCountDiv.appendChild(playerIcon);
             playerCountDiv.appendChild(countSpan);
 
             const btnGroup = document.createElement('div');
@@ -1973,6 +2106,18 @@ try {
                     socket.emit('toggleAllowBuilding', roomId);
                 };
 
+                // No Smoking knop
+                const smokeBtn = document.createElement('button');
+                const smokeImg = document.createElement('img');
+                smokeImg.src = roomData.noSmoking ? 'icons/verboden_active.png' : 'icons/verboden.png';
+                smokeImg.style.width = '16px';
+                smokeImg.style.height = '16px';
+                smokeBtn.appendChild(smokeImg);
+                smokeBtn.title = roomData.noSmoking ? 'Roken verboden' : 'Roken toegestaan';
+                smokeBtn.style.padding = '4px';
+                smokeBtn.style.cursor = 'pointer';
+                smokeBtn.onclick = () => socket.emit('toggleNoSmoking', roomId);
+
                 // Hernoem knop
                 const renameBtn = document.createElement('button');
                 const renameImg = document.createElement('img');
@@ -1986,7 +2131,7 @@ try {
 
                 renameBtn.onclick = () => {
                     showInputPrompt({
-                        message: `Voer de nieuwe naam in voor kamer "${roomId}":`,
+                        message: `Hernoem "${roomId}":`,
                         defaultValue: roomId,
                         onConfirm: (newName) => {
                             if (newName && newName.trim() && newName.trim() !== roomId) {
@@ -2021,6 +2166,7 @@ try {
 
                 btnGroup.appendChild(aoBtn);
                 btnGroup.appendChild(buildBtn);
+                btnGroup.appendChild(smokeBtn);
                 btnGroup.appendChild(renameBtn);
                 btnGroup.appendChild(delBtn);
             }
@@ -2101,33 +2247,42 @@ try {
                     const playerCountDiv = document.createElement('div');
                     playerCountDiv.style.display = 'flex';
                     playerCountDiv.style.alignItems = 'center';
-                    playerCountDiv.style.gap = '5px';
                     playerCountDiv.style.color = '#aaa';
+
+                    // Helper voor vaste slots
+                    const createSlot = (src, title) => {
+                        const slot = document.createElement('div');
+                        slot.style.width = '15px'; // Vaste breedte
+                        slot.style.display = 'flex';
+                        slot.style.justifyContent = 'center';
+                        if (src) {
+                            const img = document.createElement('img');
+                            img.src = src;
+                            img.style.width = '12px';
+                            img.style.height = '12px';
+                            if (title) img.title = title;
+                            slot.appendChild(img);
+                        }
+                        return slot;
+                    };
+
+                    // Slot 1: No Smoking
+                    playerCountDiv.appendChild(createSlot(roomData.noSmoking ? 'icons/verboden_active.png' : null, 'Roken niet toegestaan'));
                     
-                    if (roomData.friendCount > 0) {
-                        const heartIcon = document.createElement('img');
-                        heartIcon.src = 'icons/heart.png';
-                        heartIcon.style.width = '12px';
-                        heartIcon.style.height = '12px';
-                        playerCountDiv.appendChild(heartIcon);
-                    }
+                    // Slot 2: Heart
+                    playerCountDiv.appendChild(createSlot(roomData.friendCount > 0 ? 'icons/heart.png' : null, 'Vrienden'));
 
-                    if (hasDoorbell) {
-                        const bellIcon = document.createElement('img');
-                        bellIcon.src = 'icons/bel.png';
-                        bellIcon.style.width = '12px';
-                        bellIcon.style.height = '12px';
-                        playerCountDiv.appendChild(bellIcon);
-                    }
-
-                    const playerIcon = document.createElement('img');
-                    playerIcon.src = 'icons/player.png';
-                    playerIcon.style.width = '12px';
-                    playerIcon.style.height = '12px';
+                    // Slot 3: Bell
+                    const bellSlot = createSlot(hasDoorbell ? 'icons/bel.png' : null, 'Deurbel');
+                    bellSlot.style.marginRight = '8px';
+                    playerCountDiv.appendChild(bellSlot);
                     
                     // Klikken op poppetje opent spelerslijst van die kamer
+                    const playerSlot = createSlot('icons/player.png', 'Bekijk spelers');
+                    const playerIcon = playerSlot.querySelector('img');
                     playerIcon.style.cursor = 'pointer';
-                    playerIcon.title = 'Bekijk spelers';
+                    playerIcon.onmouseover = () => { playerIcon.src = 'icons/player_active.png'; };
+                    playerIcon.onmouseout = () => { playerIcon.src = 'icons/player.png'; };
                     playerIcon.onclick = () => {
                         const roomPlayersWindow = document.getElementById('roomPlayersWindow');
                         roomPlayersWindow.style.display = 'flex';
@@ -2135,10 +2290,12 @@ try {
                         // Vraag spelers op voor deze kamer
                         socket.emit('getRoomPlayers', roomId);
                     };
+                    playerCountDiv.appendChild(playerSlot);
 
                     const countSpan = document.createElement('span');
                     countSpan.textContent = `${playerCount}/${maxPlayers}`;
-                    playerCountDiv.appendChild(playerIcon);
+                    countSpan.style.width = '35px'; // Vaste breedte
+                    countSpan.style.textAlign = 'right';
                     playerCountDiv.appendChild(countSpan);
 
                     row.appendChild(starIcon); // Voeg ster toe
@@ -2173,6 +2330,12 @@ try {
     });
 
     socket.on('roomAllowBuildingToggled', () => {
+        if (document.getElementById('roomCategoryView').style.display === 'block') {
+            socket.emit('getRooms');
+        }
+    });
+
+    socket.on('roomNoSmokingToggled', () => {
         if (document.getElementById('roomCategoryView').style.display === 'block') {
             socket.emit('getRooms');
         }
@@ -2314,14 +2477,26 @@ let tileH = 32;
 let mapW = 25;
 let mapH = 25;
 
-if (sizeParam && !isNaN(parseInt(sizeParam)) && [5, 10, 15, 20, 30].includes(parseInt(sizeParam))) {
-    const newSize = parseInt(sizeParam);
-    mapW = newSize;
-    mapH = newSize;
+if (sizeParam) {
+    if (sizeParam.includes('x')) {
+        const parts = sizeParam.split('x');
+        const w = parseInt(parts[0]);
+        const h = parseInt(parts[1]);
+        if (!isNaN(w) && !isNaN(h)) {
+            mapW = w;
+            mapH = h;
+        }
+    } else {
+        const newSize = parseInt(sizeParam);
+        if (!isNaN(newSize) && [5, 10, 15, 20, 30].includes(newSize)) {
+            mapW = newSize;
+            mapH = newSize;
+        }
+    }
 }
 
 // Snelheid speler FPS Hz
-let lastTime = performance.now();
+let lastLogicTime = Date.now(); // NIEUW: Voor de logic loop
 
 // Speler
 const ball = { x:0.5, y:0.5 };
@@ -2349,6 +2524,8 @@ let scale = zoomLevels[currentZoomIndex];
 // Camera
 let camX = 0; 
 let camY = 0;
+let mouseWorldX = 0; // NIEUW: Globale muis wereldcoördinaten
+let mouseWorldY = 0; // NIEUW: Globale muis wereldcoördinaten
 
 // Drag-camera
 let isCameraDragging = false; // Nieuwe variabele voor camera slepen
@@ -2356,6 +2533,7 @@ let isObjectDragging = false; // Nieuwe variabele voor object slepen
 let isItemDragging = false;   // NIEUW: Variabele voor het slepen van items
 let isDraggingFromInventory = false; // NIEUW: Houdt bij of we vanuit de inventaris slepen
 let isDraggingFromShop = false; // NIEUW: Houdt bij of we vanuit de winkel slepen
+let isDraggingFromVicinity = false; // NIEUW: Houdt bij of we vanuit de omgeving slepen
 let isDraggingFromContainer = false; // NIEUW: Houdt bij of we vanuit een container slepen
 let isRearrangingInventory = false; // NIEUW: Voor het verplaatsen binnen de inventaris
 let isRearrangingContainer = false; // NIEUW: Voor het verplaatsen binnen de container
@@ -2384,6 +2562,7 @@ function bringToFront(element) {
     document.getElementById('pouchWindow').style.zIndex = 20;
     document.getElementById('chatLog').style.zIndex = 20;
     document.getElementById('inventory').style.zIndex = 20;
+    document.getElementById('vicinityWindow').style.zIndex = 20;
     document.getElementById('shopWindow').style.zIndex = 20;
     document.getElementById('containerWindow').style.zIndex = 20;
     document.getElementById('roomsWindow').style.zIndex = 20;
@@ -2397,6 +2576,7 @@ function bringToFront(element) {
 function closeSecondaryWindows() {
     document.getElementById('chatLog').style.display = 'none';
     document.getElementById('inventory').style.display = 'none';
+    document.getElementById('vicinityWindow').style.display = 'none';
     document.getElementById('pouchWindow').style.display = 'none';
     document.getElementById('shopWindow').style.display = 'none';
     document.getElementById('containerWindow').style.display = 'none';
@@ -2455,6 +2635,12 @@ const moveableObjectImg96B = new Image();
 moveableObjectImg96B.src = "object_moveable_template_96_B.png";
 const wallItemImg = new Image();
 wallItemImg.src = "wall_template.png";
+const wallItem2Img = new Image(); // NIEUW
+wallItem2Img.src = "wall_2_template.png"; // NIEUW
+const wallFreeImg = new Image(); // NIEUW
+wallFreeImg.src = "wall_free_template.png"; // NIEUW
+const wallFree2Img = new Image(); // NIEUW
+wallFree2Img.src = "wall_2_free_template.png"; // NIEUW
 const floorImg = new Image();
 floorImg.src = "floor_template.png";
 
@@ -2774,7 +2960,7 @@ function showInputPrompt(options) {
             <div class="popup-header">${options.message}</div>
             <input type="text" id="promptInput" value="${options.defaultValue || ''}" class="popup-input">
             <div class="popup-actions">
-                <button id="promptOk" class="popup-btn confirm">Oké</button>
+                <button id="promptOk" class="popup-btn confirm">Bevestigen</button>
                 <button id="promptCancel" class="popup-btn deny">Annuleren</button>
             </div>
         </div>
@@ -2847,14 +3033,62 @@ function hasLighterInInventory(items) {
     });
 }
 
+// NIEUW: Functie om een aansteker te vinden en te gebruiken
+function findAndUseLighter(items) {
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.type === 'aansteker') {
+            // Initialiseer 'uses' als het niet bestaat
+            if (item.uses === undefined) {
+                item.uses = 50; // AANGEPAST: 50 uses default
+            }
+
+            if (item.uses > 0) {
+                item.uses--; // Verminder gebruik
+                if (item.uses <= 0) {
+                    showNotification("Je aansteker is leeg!");
+                }
+                
+                savePlayerData(); // Sla wijzigingen op
+                renderInventoryItems(); // Her-render om wijziging te tonen
+                return true; // Aansteker gevonden en gebruikt
+            }
+        }
+
+        // Recursief zoeken in pouches
+        if (item.items && Array.isArray(item.items)) {
+            if (findAndUseLighter(item.items)) {
+                // Als gevonden in een sub-pouch, her-render de relevante UI
+                if (openPouch) renderPouchItems();
+                if (openContainer) renderContainerItems();
+                return true;
+            }
+        }
+    }
+    return false; // Geen aansteker gevonden
+}
+
 function smokeCigarette(item) {
     if (isSmoking) {
         showNotification("Je bent al aan het roken!");
         return;
     }
 
-    // Check of de speler een aansteker heeft (recursief)
-    if (!hasLighterInInventory(inventoryItems)) {
+    // NIEUW: Check of roken is toegestaan in deze kamer
+    if (currentRoomSettings.noSmoking && !isUserAdmin && !isRoomOwner) {
+        showConfirmation({
+            message: "Verboden te roken in deze ruimte.",
+            subMessage: "Wil je naar buiten?",
+            icon: 'icons/verboden_active.png',
+            confirmText: 'Ja',
+            denyText: 'Nee',
+            onConfirm: () => { window.location.search = '?room=buiten'; }
+        });
+        return;
+    }
+
+    // Check of de speler een aansteker heeft en gebruik deze
+    if (!findAndUseLighter(inventoryItems)) {
         showNotification("Je hebt geen aansteker!");
         return;
     }
@@ -2887,30 +3121,29 @@ function smokeCigarette(item) {
         barText.textContent = "Roken";
         barFill.style.width = '0%';
 
-        let progress = 0;
         const duration = (item.type === 'sigaret_half') ? 5000 : 10000; // 5s voor half, 10s voor heel
-        const intervalTime = 100; // update elke 100ms
-        const steps = duration / intervalTime;
-        let currentStep = 0;
 
-        smokeInterval = setInterval(() => {
-            currentStep++;
-            progress = (currentStep / steps) * 100;
-            barFill.style.width = `${progress}%`;
-
-            // Elke seconde (elke 10 stappen van 100ms) kans op tekst
-            if (currentStep % 10 === 0) {
-                // 10% kans
-                if (Math.random() < 0.1) {
+        // NIEUW: 10% kans op een opmerking tijdens het roken
+        if (Math.random() < 0.1) {
+            const randomTime = Math.random() * (duration - 2000) + 1000; // Zeg iets tussen 1s en (duur-1)s
+            setTimeout(() => {
+                if (isSmoking && currentSmokingItemType === item.type) { // Alleen als we nog roken
                     const phrases = ["*kuch*", "*paf*", "*zucht*"];
                     const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-                    if (typeof sendChatMessage === 'function') {
-                        sendChatMessage(phrase);
-                    }
+                    if (typeof sendChatMessage === 'function') sendChatMessage(phrase);
                 }
-            }
+            }, randomTime);
+        }
 
-            if (currentStep >= steps) {
+        const startTime = Date.now();
+        const intervalTime = 100; // update elke 100ms
+
+        smokeInterval = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(100, (elapsed / duration) * 100);
+            barFill.style.width = `${progress}%`;
+
+            if (elapsed >= duration) {
                 clearInterval(smokeInterval);
                 isSmoking = false;
                 barContainer.style.display = 'none';
@@ -2964,19 +3197,17 @@ function drinkBottle(item) {
     barFill.style.width = '0%';
 
     isDrinking = true;
-    let progress = 0;
+    const startTime = Date.now(); // NIEUW: Gebruik tijdstempel
     // Volle fles 4 sec, halve fles 2 sec
     const duration = (item.type === 'bottle_full') ? 4000 : 2000; 
     const intervalTime = 100;
-    const steps = duration / intervalTime;
-    let currentStep = 0;
 
     drinkInterval = setInterval(() => {
-        currentStep++;
-        progress = (currentStep / steps) * 100;
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(100, (elapsed / duration) * 100);
         barFill.style.width = `${progress}%`;
 
-        if (currentStep >= steps) {
+        if (elapsed >= duration) {
             clearInterval(drinkInterval);
             isDrinking = false;
             currentDrinkingItemType = null;
@@ -2995,7 +3226,6 @@ function drinkBottle(item) {
             inventoryItems.push(emptyBottle);
             savePlayerData();
             renderInventoryItems();
-            showNotification("Flesje leeggedronken.");
         }
     }, intervalTime);
 }
@@ -3007,22 +3237,38 @@ function interruptAction() {
         if (socket) socket.emit('playerMovement', { x: ball.x, y: ball.y, isSmoking: false, smokingItemType: null });
         document.getElementById('statusBarContainer').style.display = 'none';
         
-        const halfItem = {
-            type: 'sigaret_half',
-            name: 'Halve Sigaret',
-            mass: 0.05,
-            canTopple: true,
-            image: sigaretHalfImg,
-            vx: 0, vy: 0, vz: 0, rotation: 0, vr: 0,
-            invX: Math.floor(Math.random() * 250) + 20,
-            invY: Math.floor(Math.random() * 200) + 20
-        };
+        if (currentSmokingItemType === 'sigaret') {
+            const halfItem = {
+                type: 'sigaret_half',
+                name: 'Halve Sigaret',
+                mass: 0.05,
+                canTopple: true,
+                image: sigaretHalfImg,
+                vx: 0, vy: 0, vz: 0, rotation: 0, vr: 0,
+                invX: Math.floor(Math.random() * 250) + 20,
+                invY: Math.floor(Math.random() * 200) + 20
+            };
+            
+            inventoryItems.push(halfItem);
+            savePlayerData();
+            renderInventoryItems();
+            showNotification("Roken onderbroken");
+        } else if (currentSmokingItemType === 'sigaret_half') {
+            const buttItem = {
+                type: 'peuk',
+                name: 'Peuk',
+                x: ball.x + (Math.random() * 0.4 - 0.2),
+                y: ball.y + (Math.random() * 0.4 - 0.2),
+                z: 20,
+                rotation: Math.random() * Math.PI * 2,
+                mass: 0.01,
+                canTopple: true,
+                vx: 0, vy: 0, vz: 0, vr: 0
+            };
+            if (socket) socket.emit('placeItem', buttItem);
+            showNotification("Roken onderbroken");
+        }
         
-        inventoryItems.push(halfItem);
-        savePlayerData();
-        renderInventoryItems();
-        
-        showNotification("Roken onderbroken");
         currentSmokingItemType = null;
     }
     if (isDrinking) {
@@ -3260,7 +3506,30 @@ inventoryBtn.addEventListener("click", () => {
     inventory.style.display = inventory.style.display === 'flex' ? 'none' : 'flex';
     inventoryBtn.querySelector('img').src = inventory.style.display === 'flex' ? "icons/inventory_active.png" : "icons/inventory.png";
     renderInventoryItems(); // Update de inventaris wanneer deze wordt geopend
+
+    if (inventory.style.display === 'none') {
+        document.getElementById('vicinityWindow').style.display = 'none';
+        if (vicinityInterval) clearInterval(vicinityInterval);
+        document.querySelector('#vicinityBtn img').src = "icons/vicinity.png";
+    }
 });
+
+// Vicinity knop logica (visueel)
+const vicinityBtn = document.getElementById('vicinityBtn');
+if (vicinityBtn) {
+    vicinityBtn.addEventListener('click', () => {
+        if (vicinityWindow.style.display === 'flex') {
+            vicinityWindow.style.display = 'none';
+            vicinityBtn.querySelector('img').src = "icons/vicinity.png";
+            if (vicinityInterval) clearInterval(vicinityInterval);
+        } else {
+            vicinityWindow.style.display = 'flex';
+            vicinityBtn.querySelector('img').src = "icons/vicinity_active.png";
+            renderVicinityItems();
+            vicinityInterval = setInterval(renderVicinityItems, 500); // Update elke 500ms
+        }
+    });
+}
 
 // NIEUW: Functie om de hoogte van het oppervlak op een tegel te bepalen
 function getSurfaceHeight(x, y) {
@@ -3329,6 +3598,9 @@ const buildableObjects = [
 
     // subCategory: 'wall' (was muur)
     { name: "Muurdecoratie", image: wallItemImg.src, category: 'objecten', subCategory: 'wall', placement: 'wall', isTemplate: true, price: 15 },
+    { name: "Brede Muurdecoratie", image: wallItem2Img.src, category: 'objecten', subCategory: 'wall', placement: 'wall', isTemplate: true, price: 30, width: 2 },
+    { name: "Vrije Muurdecoratie", image: wallFreeImg.src, category: 'objecten', subCategory: 'wall', placement: 'wall', isTemplate: true, price: 20, isFree: true },
+    { name: "Brede Vrije Muurdecoratie", image: wallFree2Img.src, category: 'objecten', subCategory: 'wall', placement: 'wall', isTemplate: true, price: 40, isFree: true, width: 2 },
 
     // subCategory: 'floor'
     { name: "Vloer", image: floorImg.src, category: 'objecten', subCategory: 'floor', placement: 'floor', isTemplate: true, price: 5, isFloor: true },
@@ -3345,7 +3617,7 @@ const buildableObjects = [
     { name: "Batje Zwart", image: batjeZwartImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'bat_black', mass: 0.4, canTopple: true, price: 15, isTemplate: true },
     { name: "Pakje sigaretten", image: sigarettenContainerImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'sigaretten_container', isPouch: true, mass: 0.2, price: 12, isTemplate: true },
     { name: "Sigaret", image: sigaretStickImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'sigaret', mass: 0.05, canTopple: true, price: 1, isTemplate: true },
-    { name: "Aansteker", image: aanstekerStickImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'aansteker', mass: 0.1, canTopple: true, price: 2, isTemplate: true },
+    { name: "Aansteker", image: aanstekerStickImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'aansteker', mass: 0.1, canTopple: true, price: 2, isTemplate: true, uses: 50 },
     { name: "Flesje water", image: bottleFullImg.src, category: 'objecten', subCategory: 'items', placement: 'floor', isItem: true, itemType: 'bottle_full', mass: 1.2, price: 3, isTemplate: true }
 ];
 
@@ -3460,7 +3732,15 @@ function renderObjectSubCategories() {
         } else if (subCat === 'floor') {
             btn.innerHTML = `<img src="icons/floor${isActive ? '_active' : ''}.png">`;
         } else if (subCat === 'items') {
-            btn.innerHTML = `<img src="items/item_block.png" style="width: 20px; height: 20px;">`; // Gebruik item plaatje als icoon
+            btn.innerHTML = `<img src="icons/items${isActive ? '_active' : ''}.png">`;
+        } else if (subCat === 'moveable') {
+            btn.innerHTML = `<img src="icons/moveable${isActive ? '_active' : ''}.png">`;
+        } else if (subCat === 'shop') {
+            btn.innerHTML = `<img src="icons/winkel${isActive ? '_active' : ''}.png">`;
+        } else if (subCat === 'containers') {
+            btn.innerHTML = `<img src="icons/inventory${isActive ? '_active' : ''}.png">`;
+        } else if (subCat === 'trash') {
+            btn.innerHTML = `<img src="icons/trash_buildmenu${isActive ? '_active' : ''}.png">`;
         } else {
             // Fallback icoon voor nieuwe categorieën (moveable, shop, etc.)
             // Je kunt hier specifieke iconen toevoegen zoals 'icons/shop.png' als je die hebt.
@@ -3525,6 +3805,10 @@ document.getElementById('closeChatLogBtn').addEventListener('click', () => {
 document.getElementById('closeInventoryBtn').addEventListener('click', () => {
     inventory.style.display = 'none';
     document.querySelector('#inventoryBtn img').src = "icons/inventory.png";
+
+    document.getElementById('vicinityWindow').style.display = 'none';
+    if (vicinityInterval) clearInterval(vicinityInterval);
+    document.querySelector('#vicinityBtn img').src = "icons/vicinity.png";
 });
 
 buildCategoryMenu.addEventListener('click', (e) => {
@@ -3538,6 +3822,7 @@ buildCategoryMenu.addEventListener('click', (e) => {
             if (img) {
                 if (b.dataset.category === 'objecten') img.src = "icons/object.png";
                 if (b.dataset.category === 'kleur') img.src = "icons/color.png";
+                if (b.dataset.category === 'kamers') img.src = "icons/new_room.png";
             }
         });
         // Deselecteer de losse tools
@@ -3570,6 +3855,7 @@ buildCategoryMenu.addEventListener('click', (e) => {
         if (activeImg) {
             if (activeBuildCategory === 'objecten') activeImg.src = "icons/object_active.png";
             if (activeBuildCategory === 'kleur') activeImg.src = "icons/color_active.png";
+            if (activeBuildCategory === 'kamers') activeImg.src = "icons/new_room_active.png";
         }
 
         // Wissel de zichtbare content
@@ -3605,14 +3891,14 @@ colorToolsContainer.addEventListener('click', (e) => {
         const img = btn.querySelector('img');
         if (btn.dataset.tool === 'brush') img.src = "icons/paint.png";
         if (btn.dataset.tool === 'bucket') img.src = "icons/fill.png";
-        if (btn.dataset.tool === 'picker') img.src = "icons/picker.png";
+        if (btn.dataset.tool === 'picker') img.src = "icons/pipet.png";
     });
     clickedButton.classList.add('selected');
     // Set active icon
     const activeImg = clickedButton.querySelector('img');
     if (colorTool === 'brush') activeImg.src = "icons/paint_active.png";
     if (colorTool === 'bucket') activeImg.src = "icons/fill_active.png";
-    if (colorTool === 'picker') activeImg.src = "icons/picker_active.png";
+    if (colorTool === 'picker') activeImg.src = "icons/pipet_active.png";
 });
 
 // --- iro.js Color Picker Initialisatie ---
@@ -3724,20 +4010,15 @@ adminBtn.addEventListener("click", () => openBuildAdminMenu('admin'));
 document.getElementById('createRoomBtn').addEventListener('click', () => {
     const roomNameInput = document.getElementById('roomNameInput');
     const roomName = roomNameInput.value.trim();
-    const selectedSizeRadio = document.querySelector('input[name="roomSize"]:checked');
-    const alwaysOnline = document.getElementById('roomAlwaysOnline').checked;
+    const selectedSize = document.getElementById('roomSizeSelect').value;
+    const alwaysOnline = document.getElementById('adminAlwaysOnlineToggle').dataset.active === "true";
     const allowBuilding = document.getElementById('adminBuildToggle').dataset.allowed === "true";
+    const noSmoking = document.getElementById('adminNoSmokingToggle').dataset.forbidden === "true";
 
     if (!roomName) {
-        showNotification("Voer een naam in voor de kamer.");
+        showNotification("Benoem de kamer.");
         return;
     }
-    if (!selectedSizeRadio) {
-        showNotification("Selecteer een kamergrootte.");
-        return;
-    }
-
-    const selectedSize = selectedSizeRadio.value;
     // Maak een URL-vriendelijke naam
     const sanitizedName = roomName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
@@ -3748,7 +4029,7 @@ document.getElementById('createRoomBtn').addEventListener('click', () => {
 
     // Omdat we geen bestanden kunnen schrijven (browser security), gebruiken we URL parameters.
     // Dit herlaadt de pagina met de nieuwe instellingen (naam en grootte).
-    window.location.search = `?room=${sanitizedName}&size=${selectedSize}&alwaysOnline=${alwaysOnline}&allowBuilding=${allowBuilding}`;
+    window.location.search = `?room=${sanitizedName}&size=${selectedSize}&alwaysOnline=${alwaysOnline}&allowBuilding=${allowBuilding}&noSmoking=${noSmoking}`;
 });
 
 document.getElementById('saveRoomBtn').addEventListener('click', () => {
@@ -3762,17 +4043,24 @@ document.getElementById('saveRoomBtn').addEventListener('click', () => {
     showNotification("Kamer opgeslagen!");
 });
 
-document.getElementById('toggleTileNumbersBtn').addEventListener('click', () => {
+document.getElementById('adminTileNumbersToggle').addEventListener('click', () => {
     showTileNumbers = !showTileNumbers;
-    const btn = document.getElementById('toggleTileNumbersBtn');
-    btn.textContent = `Toon Tegel Nummers: ${showTileNumbers ? 'AAN' : 'UIT'}`;
-    btn.style.background = showTileNumbers ? '#4CAF50' : '#607D8B';
+    const img = document.getElementById('adminTileNumbersToggle');
+    img.src = showTileNumbers ? 'icons/numbers_active.png' : 'icons/numbers.png';
 });
 
 document.getElementById('clearRoomBtn').addEventListener('click', () => {
-    if (confirm("Weet je zeker dat je de hele kamer wilt leegmaken? Alle objecten en items worden verwijderd.")) {
-        socket.emit('clearRoom');
-        showNotification("Kamer leeggemaakt!");
+    if (confirm("Weet je zeker dat je alle losse items wilt verwijderen? Geplaatste objecten blijven staan.")) {
+        [...items].forEach(item => {
+            socket.emit('removeItem', { 
+                x: Math.floor(item.x), 
+                y: Math.floor(item.y),
+                type: item.type,
+                name: item.name,
+                id: item.id
+            });
+        });
+        showNotification("Alle items verwijderd!");
     }
 });
 
@@ -4530,6 +4818,7 @@ function receiveChatMessage(data) {
         text: data.text,
         user: data.user,
         id: data.id,
+        userId: data.userId,
         time: data.time || now, // Gebruik server tijd indien beschikbaar
         duration: 5000
     };
@@ -4892,6 +5181,7 @@ function drawCharacter(x, y, isLocal, color = "blue", hop = 0, isSmoking = false
 
         // Teken de sigaret in de mond, -90 graden gedraaid
         ctx.save();
+        ctx.imageSmoothingEnabled = false;
         ctx.translate(mouthX, mouthY);
         ctx.rotate(-Math.PI / 2); // -90 graden
         // Teken gecentreerd en met de bovenkant op het rotatiepunt
@@ -4960,6 +5250,7 @@ function drawCharacter(x, y, isLocal, color = "blue", hop = 0, isSmoking = false
         const wobble = Math.sin(elapsed * 0.008) * 0.1; // Beetje beweging
         
         ctx.save();
+        ctx.imageSmoothingEnabled = false;
         ctx.translate(mouthX, mouthY);
         ctx.scale(-1, 1);
         ctx.rotate(baseAngle + wobble);
@@ -5002,58 +5293,73 @@ function drawTopWall() {
         }
 
         // Teken een eventueel muurobject
-        const objectsOnWall = wallObjects.filter(wo => wo.wallId === wallId);
-        objectsOnWall.forEach(wallObject => {
-            // Centreer het object op het muursegment
-            const objX = (topLeft.sx + topRight.sx) / 2;
-            const objY = topLeft.sy; // Bovenkant van de vloer (onderkant van de muur)
-            const img = wallObject.runtimeImage || wallItemImg; // Gebruik custom plaatje indien beschikbaar
+        const objectsStartingOnWall = wallObjects.filter(wo => wo.wallId === wallId);
+        objectsStartingOnWall.forEach(wallObject => {
+            if (!wallObject.isFree) {
+                // Grid-based tekening
+                const width = wallObject.width || 1;
+                const endSegmentX = x + width - 1;
+                if (endSegmentX >= mapW) return; // Object gaat buiten de map
 
-            ctx.save();
-            // Highlight logica voor muurobjecten
-            if (isBuildMode) {
-                let shouldHighlight = false;
-                let highlightFilter = "";
+                const endTopRight = toScreen(endSegmentX + 1, 0);
+                const objX = (topLeft.sx + endTopRight.sx) / 2;
+                const objY = topLeft.sy;
+                const img = wallObject.runtimeImage || (width > 1 ? wallItem2Img : wallItemImg);
+                const yOffset = (width > 1) ? 32 : 16;
 
-                if ((buildTool === 'move' || buildTool === 'delete') && !movingObject) {
-                    if (hoveredObjects.length > 0 && hoveredObjects[moveSelectionIndex] === wallObject) {
-                        shouldHighlight = true;
-                        highlightFilter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
-                    }
+                ctx.save();
+                if (isBuildMode && (buildTool === 'move' || buildTool === 'delete') && !movingObject && hoveredObjects[moveSelectionIndex] === wallObject) {
+                    ctx.filter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
                 }
 
-                if (shouldHighlight) {
-                    ctx.filter = highlightFilter;
+                if (wallObject.flipped) {
+                    ctx.scale(-1, 1);
+                    ctx.drawImage(img, -objX - img.width / 2, objY - img.height + yOffset);
+                } else {
+                    ctx.drawImage(img, objX - img.width / 2, objY - img.height + yOffset);
                 }
+                ctx.restore();
             }
-
-            if (wallObject.flipped) {
-                ctx.scale(-1, 1);
-                ctx.drawImage(img, -objX - img.width / 2, objY - img.height + 16); // 16px omlaag
-            } else {
-                ctx.drawImage(img, objX - img.width / 2, objY - img.height + 16); // 16px omlaag
-            }
-            ctx.restore();
         });
 
         // Teken de preview voor een nieuw muurobject
-        if (hoverTarget?.preview && hoverTarget.id === wallId) {
-            ctx.fillStyle = hoverTarget.preview.color;
-            ctx.fill();
-            // Teken nu ook de afbeelding van de preview
-            const objX = (topLeft.sx + topRight.sx) / 2;
-            const objY = topLeft.sy; // Bovenkant van de vloer (onderkant van de muur)
-            ctx.globalAlpha = 0.7; // Maak de preview transparant
+        const activeObj = movingObject || selectedBuildObject;
+        const isWallObject = activeObj && ((activeObj.placement === 'wall') || activeObj.wallId);
+        if (isWallObject && hoverTarget?.type === 'wall' && hoverTarget.id === wallId) {
+            if (!activeObj.isFree) {
+                // OUDE LOGICA
+                const width = activeObj.width || 1;
+                const endSegmentX = x + width - 1;
+                if (endSegmentX >= mapW) return;
 
-            if (isBuildObjectFlipped) {
-                ctx.save();
-                ctx.scale(-1, 1);
-                ctx.drawImage(hoverTarget.preview.image, -objX - hoverTarget.preview.image.width / 2, objY - hoverTarget.preview.image.height + 16); // 16px omlaag
-                ctx.restore();
-            } else {
-                ctx.drawImage(hoverTarget.preview.image, objX - hoverTarget.preview.image.width / 2, objY - hoverTarget.preview.image.height + 16); // 16px omlaag
+                const color = "rgba(0, 255, 0, 0.5)";
+                const endTopRight = toScreen(endSegmentX + 1, 0);
+
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(topLeft.sx, topLeft.sy - wallHeight);
+                ctx.lineTo(endTopRight.sx, endTopRight.sy - wallHeight);
+                ctx.lineTo(endTopRight.sx, endTopRight.sy);
+                ctx.lineTo(topLeft.sx, topLeft.sy);
+                ctx.closePath();
+                ctx.fill();
+
+                const objX = (topLeft.sx + endTopRight.sx) / 2;
+                const objY = topLeft.sy;
+                const img = activeObj.runtimeImage || (width > 1 ? wallItem2Img : wallItemImg);
+                const yOffset = (width > 1) ? 32 : 16;
+                ctx.globalAlpha = 0.7;
+
+                if (isBuildObjectFlipped) {
+                    ctx.save();
+                    ctx.scale(-1, 1);
+                    ctx.drawImage(img, -objX - img.width / 2, objY - img.height + yOffset);
+                    ctx.restore();
+                } else {
+                    ctx.drawImage(img, objX - img.width / 2, objY - img.height + yOffset);
+                }
+                ctx.globalAlpha = 1;
             }
-            ctx.globalAlpha = 1; // Reset alpha
         }
     }
 }
@@ -5084,57 +5390,117 @@ function drawLeftWall() {
         }
 
         // Teken een eventueel muurobject
-        const objectsOnWall = wallObjects.filter(wo => wo.wallId === wallId);
-        objectsOnWall.forEach(wallObject => {
-            const objX = (leftTop.sx + leftBottom.sx) / 2; // Horizontaal midden van de muur
-            const objY = leftTop.sy; // Bovenkant van de vloer (onderkant van de muur)
-            const img = wallObject.runtimeImage || wallItemImg; // Gebruik custom plaatje indien beschikbaar
+        const objectsStartingOnWall = wallObjects.filter(wo => wo.wallId === wallId);
+        objectsStartingOnWall.forEach(wallObject => {
+            if (!wallObject.isFree) {
+                // Grid-based tekening
+                const width = wallObject.width || 1;
+                const endSegmentY = y + width - 1;
+                if (endSegmentY >= mapH) return;
 
-            ctx.save();
-            // Highlight logica voor muurobjecten
-            if (isBuildMode) {
-                let shouldHighlight = false;
-                let highlightFilter = "";
+                const endLeftBottom = toScreen(0, endSegmentY + 1);
+                const objX = (leftTop.sx + endLeftBottom.sx) / 2;
+                const objY = leftTop.sy;
+                const img = wallObject.runtimeImage || (width > 1 ? wallItem2Img : wallItemImg);
+                const yOffset = (width > 1) ? 32 : 16;
 
-                if ((buildTool === 'move' || buildTool === 'delete') && !movingObject) {
-                    if (hoveredObjects.length > 0 && hoveredObjects[moveSelectionIndex] === wallObject) {
-                        shouldHighlight = true;
-                        highlightFilter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
-                    }
+                const drawY = leftTop.sy;
+                ctx.save();
+                if (isBuildMode && (buildTool === 'move' || buildTool === 'delete') && !movingObject && hoveredObjects[moveSelectionIndex] === wallObject) {
+                    ctx.filter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
                 }
 
-                if (shouldHighlight) {
-                    ctx.filter = highlightFilter;
+                if (wallObject.flipped) {
+                    ctx.scale(-1, 1);
+                    ctx.drawImage(img, -objX - img.width / 2, drawY - img.height + yOffset);
+                } else {
+                    ctx.drawImage(img, objX - img.width / 2, drawY - img.height + yOffset);
                 }
+                ctx.restore();
             }
-
-            if (wallObject.flipped) {
-                ctx.scale(-1, 1);
-                ctx.drawImage(img, -objX - img.width / 2, objY - img.height + 16); // 16px omlaag
-            } else {
-                ctx.drawImage(img, objX - img.width / 2, objY - img.height + 16); // 16px omlaag
-            }
-            ctx.restore();
         });
 
         // Teken de preview voor een nieuw muurobject
-        if (hoverTarget?.preview && hoverTarget.id === wallId) {
-            ctx.fillStyle = hoverTarget.preview.color;
-            ctx.fill();
-            // Teken nu ook de afbeelding van de preview
-            const objX = (leftTop.sx + leftBottom.sx) / 2;
-            const objY = leftTop.sy; // Bovenkant van de vloer (onderkant van de muur)
-            ctx.globalAlpha = 0.7; // Maak de preview transparant
-            if (isBuildObjectFlipped) {
-                ctx.save();
-                ctx.scale(-1, 1);
-                ctx.drawImage(hoverTarget.preview.image, -objX - hoverTarget.preview.image.width / 2, objY - hoverTarget.preview.image.height + 16); // 16px omlaag
-                ctx.restore();
-            } else {
-                ctx.drawImage(hoverTarget.preview.image, objX - hoverTarget.preview.image.width / 2, objY - hoverTarget.preview.image.height + 16); // 16px omlaag
+        const activeObj = movingObject || selectedBuildObject;
+        const isWallObject = activeObj && ((activeObj.placement === 'wall') || activeObj.wallId);
+        if (isWallObject && hoverTarget?.type === 'wall' && hoverTarget.id === wallId) {
+            if (!activeObj.isFree) {
+                // OUDE LOGICA
+                const width = activeObj.width || 1;
+                const endSegmentY = y + width - 1;
+                if (endSegmentY >= mapH) return;
+
+                const color = "rgba(0, 255, 0, 0.5)";
+                const endLeftBottom = toScreen(0, endSegmentY + 1);
+
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(leftTop.sx, leftTop.sy - wallHeight);
+                ctx.lineTo(endLeftBottom.sx, endLeftBottom.sy - wallHeight);
+                ctx.lineTo(endLeftBottom.sx, endLeftBottom.sy);
+                ctx.lineTo(leftTop.sx, leftTop.sy);
+                ctx.closePath();
+                ctx.fill();
+
+                const objX = (leftTop.sx + endLeftBottom.sx) / 2;
+                const objY = leftTop.sy;
+                const img = activeObj.runtimeImage || (width > 1 ? wallItem2Img : wallItemImg);
+                const yOffset = (width > 1) ? 32 : 16;
+                ctx.globalAlpha = 0.7;
+                if (isBuildObjectFlipped) {
+                    ctx.save();
+                    ctx.scale(-1, 1);
+                    ctx.drawImage(img, -objX - img.width / 2, objY - img.height + yOffset);
+                    ctx.restore();
+                } else {
+                    ctx.drawImage(img, objX - img.width / 2, objY - img.height + yOffset);
+                }
+                ctx.globalAlpha = 1;
             }
-            ctx.globalAlpha = 1; // Reset alpha
         }
+    }
+}
+
+function drawFreeWallObjects() {
+    // 1. Geplaatste vrije objecten
+    const freeObjects = wallObjects.filter(wo => wo.isFree);
+
+    freeObjects.forEach(wallObject => {
+        const objX = wallObject.freeX;
+        const objY = wallObject.freeY;
+        const img = wallObject.runtimeImage || (wallObject.width === 2 ? wallFree2Img : wallFreeImg);
+
+        ctx.save();
+        // Highlight logic
+        if (isBuildMode && (buildTool === 'move' || buildTool === 'delete') && !movingObject && hoveredObjects[moveSelectionIndex] === wallObject) {
+            ctx.filter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
+        }
+
+        if (wallObject.flipped) {
+            ctx.scale(-1, 1);
+            ctx.drawImage(img, -objX - img.width / 2, objY - img.height + 40);
+        } else {
+            ctx.drawImage(img, objX - img.width / 2, objY - img.height + 40);
+        }
+        ctx.restore();
+    });
+
+    // 2. Preview voor vrije objecten
+    const activeObj = movingObject || selectedBuildObject;
+    const isWallObject = activeObj && ((activeObj.placement === 'wall') || activeObj.wallId);
+    
+    if (isWallObject && activeObj.isFree && hoverTarget?.type === 'wall') {
+         const img = activeObj.runtimeImage || (activeObj.width === 2 ? wallFree2Img : wallFreeImg);
+         ctx.globalAlpha = 0.7;
+         if (isBuildObjectFlipped) {
+             ctx.save();
+             ctx.scale(-1, 1);
+             ctx.drawImage(img, -mouseWorldX - img.width / 2, mouseWorldY - img.height + 40);
+             ctx.restore();
+         } else {
+             ctx.drawImage(img, mouseWorldX - img.width / 2, mouseWorldY - img.height + 40);
+         }
+         ctx.globalAlpha = 1;
     }
 }
 
@@ -5144,9 +5510,11 @@ const typingFadeDuration = 1000; // fade tijd 1 seconde
 
 function getActiveBalloonCount() {
     const now = Date.now();
-    return chatMessages.filter(
-        m => now - m.time < m.duration
-    ).length;
+    const currentId = socket ? (socket.id || mySocketId) : 'local';
+    return chatMessages.filter(m => {
+        const isMe = (m.userId && m.userId === myUserId) || (!m.userId && (m.id === currentId || m.id === 'local'));
+        return isMe && (now - m.time < m.duration);
+    }).length;
 }
 
 
@@ -5247,6 +5615,7 @@ window.addEventListener("keydown", (e) => {
             isItemDragging = false;
             isDraggingFromInventory = false;
             isDraggingFromShop = false;
+            isDraggingFromVicinity = false;
             draggedItem = null;
             draggedItemOriginalPos = null;
             
@@ -5254,6 +5623,7 @@ window.addEventListener("keydown", (e) => {
             if (windowStatesBeforeDrag) {
                 if (windowStatesBeforeDrag.chat) document.getElementById('chatLog').style.display = windowStatesBeforeDrag.chat;
                 if (windowStatesBeforeDrag.inventory) document.getElementById('inventory').style.display = windowStatesBeforeDrag.inventory;
+                if (windowStatesBeforeDrag.vicinity) document.getElementById('vicinityWindow').style.display = windowStatesBeforeDrag.vicinity;
                 if (windowStatesBeforeDrag.build === 'flex') {
                     buildBtn.click();
                 }
@@ -5287,6 +5657,7 @@ window.addEventListener("keydown", (e) => {
             if (windowStatesBeforeDrag) {
                 if (windowStatesBeforeDrag.chat) document.getElementById('chatLog').style.display = windowStatesBeforeDrag.chat;
                 if (windowStatesBeforeDrag.inventory) document.getElementById('inventory').style.display = windowStatesBeforeDrag.inventory;
+                if (windowStatesBeforeDrag.vicinity) document.getElementById('vicinityWindow').style.display = windowStatesBeforeDrag.vicinity;
                 if (windowStatesBeforeDrag.build === 'flex') {
                      if (!isBuildMode) buildBtn.click();
                 }
@@ -5854,7 +6225,40 @@ window.addEventListener('mousemove', (e) => {
                 return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
             }) : [];
             const itemsOnTile = hoverCell ? items.filter(i => Math.floor(i.x) === x && Math.floor(i.y) === y) : [];
-            const wallObjs = (hoverTarget && hoverTarget.type === 'wall') ? wallObjects.filter(o => o.wallId === hoverTarget.id) : [];
+            
+            let wallObjs = [];
+            if (hoverTarget && hoverTarget.type === 'wall') {
+                const currentWallSide = hoverTarget.id.split('_')[0];
+
+                wallObjs = wallObjects.filter(o => {
+                    if (o.isFree) {
+                        if (o.wallSide !== currentWallSide) return false;
+
+                        const img = o.runtimeImage || (o.width === 2 ? wallFree2Img : wallFreeImg);
+                        if (!img || !img.width) return false;
+
+                        const w = img.width;
+                        const h = img.height;
+                        const x1 = o.freeX - w / 2;
+                        const y1 = o.freeY - h + 40;
+                        
+                        return (mouseWorldX >= x1 && mouseWorldX < x1 + w && mouseWorldY >= y1 && mouseWorldY < y1 + h);
+                    } else {
+                        if (o.wallId === hoverTarget.id) return true;
+                        const width = o.width || 1;
+                        if (width > 1) {
+                            const [hType, hIndex] = hoverTarget.id.split('_');
+                            const [oType, oIndex] = o.wallId.split('_');
+                            if (hType === oType) {
+                                const hIdx = parseInt(hIndex);
+                                const oIdx = parseInt(oIndex);
+                                return hIdx >= oIdx && hIdx < oIdx + width;
+                            }
+                        }
+                        return false;
+                    }
+                });
+            }
             
             hoveredObjects = [...objectsOnTile, ...itemsOnTile, ...wallObjs];
             
@@ -5879,7 +6283,36 @@ window.addEventListener('mousemove', (e) => {
                 return x >= o.x && x < o.x + w && y >= o.y && y < o.y + d;
             }) : [];
             const currentItems = hoverCell ? items.filter(i => Math.floor(i.x) === x && Math.floor(i.y) === y) : [];
-            const currentWallObjs = (hoverTarget && hoverTarget.type === 'wall') ? wallObjects.filter(o => o.wallId === hoverTarget.id) : [];
+            
+            let currentWallObjs = [];
+            if (hoverTarget && hoverTarget.type === 'wall') {
+                const currentWallSide = hoverTarget.id.split('_')[0];
+                currentWallObjs = wallObjects.filter(o => {
+                    if (o.isFree) {
+                        if (o.wallSide !== currentWallSide) return false;
+                        const img = o.runtimeImage || (o.width === 2 ? wallFree2Img : wallFreeImg);
+                        if (!img || !img.width) return false;
+                        const w = img.width;
+                        const h = img.height;
+                        const x1 = o.freeX - w / 2;
+                        const y1 = o.freeY - h + 40;
+                        return (mouseWorldX >= x1 && mouseWorldX < x1 + w && mouseWorldY >= y1 && mouseWorldY < y1 + h);
+                    } else {
+                        if (o.wallId === hoverTarget.id) return true;
+                        const width = o.width || 1;
+                        if (width > 1) {
+                            const [hType, hIndex] = hoverTarget.id.split('_');
+                            const [oType, oIndex] = o.wallId.split('_');
+                            if (hType === oType) {
+                                const hIdx = parseInt(hIndex);
+                                const oIdx = parseInt(oIndex);
+                                return hIdx >= oIdx && hIdx < oIdx + width;
+                            }
+                        }
+                        return false;
+                    }
+                });
+            }
             
             if (currentObjects.length + currentItems.length + currentWallObjs.length !== hoveredObjects.length) {
                  hoveredObjects = [...currentObjects, ...currentItems, ...currentWallObjs];
@@ -5956,33 +6389,44 @@ canvas.addEventListener("mousemove", e=>{
     // --- Hover detectie voor muren en tegels in bouwmodus ---
     if (isBuildMode) {
         hoverTarget = null;
-        const wallHeight = 150;
-        const mouseWorldX = (e.clientX - (window.innerWidth / 2 + camX)) / scale;
-        const mouseWorldY = (e.clientY - (window.innerHeight / 4 + camY)) / scale;
-
-        // Check top walls (van voor naar achter voor correcte selectie)
-        for (let x = 0; x < mapW; x++) {
-            const p1 = toScreen(x, 0);
-            const p2 = toScreen(x + 1, 0);
-            // Bounding box van het muursegment
-            // We gebruiken een iets complexere check voor de isometrische vorm
-            const inside = isInside(mouseWorldX, mouseWorldY, [p1, p2, {sx: p2.sx, sy: p2.sy - wallHeight}, {sx: p1.sx, sy: p1.sy - wallHeight}]);
-            if (inside) {
-                hoverTarget = { type: 'wall', id: `top_${x}` };
-                break;
-            }
+        
+        // NIEUW: Check of we muren moeten negeren (als we een vloerobject plaatsen)
+        let checkWalls = true;
+        const activeObj = movingObject || selectedBuildObject;
+        if (activeObj) {
+            const isFloorObj = (activeObj.placement === 'floor' && !activeObj.wallId) || activeObj.isItem;
+            if (isFloorObj) checkWalls = false;
         }
 
-        // Als geen top-muur, check linker muren
-        if (!hoverTarget) {
-            for (let y = 0; y < mapH; y++) {
-                const p1 = toScreen(0, y);
-                const p2 = toScreen(0, y + 1);
+        const wallHeight = 150;
+        mouseWorldX = (e.clientX - (window.innerWidth / 2 + camX)) / scale;
+        mouseWorldY = (e.clientY - (window.innerHeight / 4 + camY)) / scale;
+
+        if (checkWalls) {
+            // Check top walls (van voor naar achter voor correcte selectie)
+            for (let x = 0; x < mapW; x++) {
+                const p1 = toScreen(x, 0);
+                const p2 = toScreen(x + 1, 0);
                 // Bounding box van het muursegment
+                // We gebruiken een iets complexere check voor de isometrische vorm
                 const inside = isInside(mouseWorldX, mouseWorldY, [p1, p2, {sx: p2.sx, sy: p2.sy - wallHeight}, {sx: p1.sx, sy: p1.sy - wallHeight}]);
                 if (inside) {
-                    hoverTarget = { type: 'wall', id: `left_${y}` };
+                    hoverTarget = { type: 'wall', id: `top_${x}` };
                     break;
+                }
+            }
+
+            // Als geen top-muur, check linker muren
+            if (!hoverTarget) {
+                for (let y = 0; y < mapH; y++) {
+                    const p1 = toScreen(0, y);
+                    const p2 = toScreen(0, y + 1);
+                    // Bounding box van het muursegment
+                    const inside = isInside(mouseWorldX, mouseWorldY, [p1, p2, {sx: p2.sx, sy: p2.sy - wallHeight}, {sx: p1.sx, sy: p1.sy - wallHeight}]);
+                    if (inside) {
+                        hoverTarget = { type: 'wall', id: `left_${y}` };
+                        break;
+                    }
                 }
             }
         }
@@ -6171,6 +6615,7 @@ function performItemPickup(item, clientX, clientY) {
     windowStatesBeforeDrag = {
         chat: document.getElementById('chatLog').style.display,
         inventory: document.getElementById('inventory').style.display,
+        vicinity: document.getElementById('vicinityWindow').style.display,
         pouch: document.getElementById('pouchWindow').style.display,
         build: document.getElementById('buildMenu').style.display,
         shop: document.getElementById('shopWindow').style.display,
@@ -6185,6 +6630,7 @@ function performItemPickup(item, clientX, clientY) {
     syncItems(); // DIRECT SYNCEN: Vertel server dat item weg is uit de wereld
     isDraggingFromInventory = false; // Komt uit de wereld
     isDraggingFromShop = false;
+    isDraggingFromVicinity = false;
     isDraggingFromContainer = false;
     camSmooth = false;
 
@@ -6270,6 +6716,7 @@ canvas.addEventListener("mousedown", e => {
                 windowStatesBeforeDrag = {
                     chat: document.getElementById('chatLog').style.display,
                     inventory: document.getElementById('inventory').style.display,
+                    vicinity: document.getElementById('vicinityWindow').style.display,
                     pouch: document.getElementById('pouchWindow').style.display,
                     build: document.getElementById('buildMenu').style.display,
                     shop: document.getElementById('shopWindow').style.display,
@@ -6421,6 +6868,12 @@ window.addEventListener("mouseup", e => {
                     } else if (isDraggingFromContainer && openContainer) {
                         openContainer.items.push(draggedItem);
                         renderContainerItems();
+                    } else if (isDraggingFromVicinity) {
+                        // Terug naar wereld (vicinity)
+                        draggedItem.x = draggedItemOriginalPos.x;
+                        draggedItem.y = draggedItemOriginalPos.y;
+                        items.push(draggedItem);
+                        syncItems();
                     } else {
                         draggedItem.x = draggedItemOriginalPos.x;
                         draggedItem.y = draggedItemOriginalPos.y;
@@ -6502,8 +6955,9 @@ window.addEventListener("mouseup", e => {
                 draggedItem.y = y + 0.5 + (Math.random() * 0.6 - 0.3); // Iets meer random
                 
                 // BONUS: Laat het item stuiteren bij plaatsen (vanaf iets boven het oppervlak)
-                draggedItem.z = surfaceZ + 40; 
+                draggedItem.z = surfaceZ + 2; // AANGEPAST: Bijna direct op de grond (was +10)
                 draggedItem.vz = 0; // Start snelheid
+                draggedItem.lastTouchedBy = mySocketId; // NIEUW: Wij zijn eigenaar
                 
                 // NIEUW: Zorg dat physics variabelen bestaan (voorkomt NaN bugs waardoor items verdwijnen)
                 if (draggedItem.vx === undefined) draggedItem.vx = 0;
@@ -6511,9 +6965,11 @@ window.addEventListener("mouseup", e => {
                 if (draggedItem.vr === undefined) draggedItem.vr = 0;
                 if (draggedItem.rotation === undefined) draggedItem.rotation = 0;
                 
-                items.push(draggedItem);
-                console.log("Item teruggeplaatst op kaart:", draggedItem);
-                syncItems(); // Sync met server
+                if (socket) {
+                    socket.emit('placeItem', serializeItem(draggedItem));
+                } else {
+                    items.push(draggedItem); // Fallback voor single player
+                }
             } else {
                 // Als de plaatsing ongeldig is:
                 if (isDraggingFromInventory) {
@@ -6533,6 +6989,12 @@ window.addEventListener("mouseup", e => {
                     // Terug naar container
                     openContainer.items.push(draggedItem);
                     renderContainerItems();
+                } else if (isDraggingFromVicinity) {
+                    // Terug naar wereld
+                    draggedItem.x = draggedItemOriginalPos.x;
+                    draggedItem.y = draggedItemOriginalPos.y;
+                    items.push(draggedItem);
+                    syncItems();
                 } else {
                     // Terug naar oude plek in de wereld
                     draggedItem.x = draggedItemOriginalPos.x;
@@ -6547,6 +7009,7 @@ window.addEventListener("mouseup", e => {
         isItemDragging = false;
         isDraggingFromInventory = false;
         isDraggingFromShop = false;
+        isDraggingFromVicinity = false;
         isDraggingFromContainer = false;
         draggedItem = null;
         draggedItemOriginalPos = null;
@@ -6560,6 +7023,9 @@ window.addEventListener("mouseup", e => {
             } else {
                      if(inventory) { inventory.style.display = 'none'; document.querySelector('#inventoryBtn img').src = "icons/inventory.png"; }
                 }
+            if (windowStatesBeforeDrag.vicinity === 'flex') {
+                document.getElementById('vicinityWindow').style.display = 'flex';
+            }
             if (windowStatesBeforeDrag.pouch === 'flex') {
                 document.getElementById('pouchWindow').style.display = 'flex';
             }
@@ -6718,8 +7184,11 @@ window.addEventListener("mouseup", e => {
                     // NIEUW: Check voor Item Spawns
                     if (selectedBuildObject?.isItem) {
                         // Items negeren object-collision (mogen erop) en item-collision (mogen op elkaar)
-                        if (x >= 0 && x < mapW && y >= 0 && y < mapH) {
-                            if (!isUserAdmin && selectedBuildObject.price) addToWallet(-selectedBuildObject.price);
+                        if (hoverTarget?.type !== 'wall' && x >= 0 && x < mapW && y >= 0 && y < mapH) {
+                            if (!isUserAdmin && selectedBuildObject.price) {
+                                addToWallet(-selectedBuildObject.price);
+                                showNotification(`<span style="color: #ff4757;">-€${selectedBuildObject.price.toFixed(2).replace('.', ',')}</span>`);
+                            }
                             const surfaceZ = getSurfaceHeight(x, y);
                             const newItem = {
                                 type: selectedBuildObject.itemType,
@@ -6731,7 +7200,8 @@ window.addEventListener("mouseup", e => {
                                 mass: selectedBuildObject.mass || 1.0,
                                 canRotate: selectedBuildObject.canRotate || false,
                                 canTopple: selectedBuildObject.canTopple || false,
-                                isPouch: selectedBuildObject.isPouch || false
+                                isPouch: selectedBuildObject.isPouch || false,
+                                uses: selectedBuildObject.uses
                             };
 
                             // NIEUW: Als het een pakje sigaretten is, vul het met random 0-20 sigaretten
@@ -6748,36 +7218,112 @@ window.addEventListener("mouseup", e => {
                                     });
                                 }
                             }
+
+                            // NIEUW: Admin random uses voor aansteker (0-50)
+                            if (isUserAdmin && newItem.type === 'aansteker') {
+                                newItem.uses = Math.floor(Math.random() * 51);
+                            }
+
                             socket.emit('placeItem', newItem);
                         }
                     } else if (selectedBuildObject?.placement === 'floor' && selectedBuildObject.name) {
-                        if (checkPlacement(x, y, selectedBuildObject, isBuildObjectFlipped)) {
-                            if (!isUserAdmin && selectedBuildObject.price) addToWallet(-selectedBuildObject.price);
+                        if (hoverTarget?.type !== 'wall' && checkPlacement(x, y, selectedBuildObject, isBuildObjectFlipped)) {
+                            if (!isUserAdmin && selectedBuildObject.price) {
+                                addToWallet(-selectedBuildObject.price);
+                                showNotification(`<span style="color: #ff4757;">-€${selectedBuildObject.price.toFixed(2).replace('.', ',')}</span>`);
+                            }
                             const { runtimeImage, ...objectToSend } = selectedBuildObject;
                             socket.emit('placeObject', { ...objectToSend, x: x, y: y, flipped: isBuildObjectFlipped, ownerId: mySocketId });
                         }
                     } else if (selectedBuildObject?.placement === 'wall' && hoverTarget?.type === 'wall') {
                         const wallId = hoverTarget.id; // De ID van de muur waar we op klikken
-                        if (!isUserAdmin && selectedBuildObject.price) addToWallet(-selectedBuildObject.price);
-                        socket.emit('placeWallObject', { 
-                            wallId: wallId, 
-                            name: selectedBuildObject.name, 
-                            flipped: isBuildObjectFlipped,
-                            image: selectedBuildObject.image, // Stuur plaatje mee
-                            isCustom: selectedBuildObject.isCustom, // Stuur custom vlag mee
-                            ownerId: mySocketId // Stuur eigenaar mee
-                        });
+                        
+                        if (selectedBuildObject.isFree) {
+                            // NIEUW: Vrije plaatsing
+                            const mouseWorldX = (e.clientX - (window.innerWidth / 2 + camX)) / scale;
+                            const mouseWorldY = (e.clientY - (window.innerHeight / 4 + camY)) / scale;
+                            const wallSide = wallId.split('_')[0];
+
+                            if (!isUserAdmin && selectedBuildObject.price) {
+                                addToWallet(-selectedBuildObject.price);
+                                showNotification(`<span style="color: #ff4757;">-€${selectedBuildObject.price.toFixed(2).replace('.', ',')}</span>`);
+                            }
+                            socket.emit('placeWallObject', { 
+                                wallId: wallId,
+                                name: selectedBuildObject.name, 
+                                flipped: isBuildObjectFlipped,
+                                image: selectedBuildObject.image,
+                                isCustom: selectedBuildObject.isCustom,
+                                ownerId: mySocketId,
+                                isFree: true,
+                                freeX: mouseWorldX,
+                                freeY: mouseWorldY,
+                                wallSide: wallSide,
+                                isTemplate: true, // Markeer dat dit van een template komt
+                                width: selectedBuildObject.width || 1
+                            });
+                        } else {
+                            // OUDE LOGICA voor grid-based
+                            const width = selectedBuildObject.width || 1;
+                            const [type, indexStr] = wallId.split('_');
+                            const startIndex = parseInt(indexStr);
+                            let isValid = true;
+                            for (let i = 0; i < width; i++) {
+                                const currentWallId = `${type}_${startIndex + i}`;
+                                const max = (type === 'top') ? mapW : mapH;
+                                if ((startIndex + i) >= max) {
+                                    isValid = false;
+                                    break;
+                                }
+                            }
+
+                            if (!isValid) {
+                                showNotification("Niet genoeg ruimte voor dit object!");
+                                return;
+                            }
+
+                            if (!isUserAdmin && selectedBuildObject.price) {
+                                addToWallet(-selectedBuildObject.price);
+                                showNotification(`<span style="color: #ff4757;">-€${selectedBuildObject.price.toFixed(2).replace('.', ',')}</span>`);
+                            }
+                            socket.emit('placeWallObject', { 
+                                wallId: wallId, 
+                                name: selectedBuildObject.name, 
+                                flipped: isBuildObjectFlipped,
+                                image: selectedBuildObject.image, // Stuur plaatje mee
+                                isCustom: selectedBuildObject.isCustom, // Stuur custom vlag mee
+                                ownerId: mySocketId, // Stuur eigenaar mee
+                                width: width // Stuur breedte mee
+                            });
+                        }
                     }
                     break;
                 case 'move':
                     if (movingObject) {
                         let isValid = false;
                         if (movingObject.isItem) {
-                             isValid = x >= 0 && x < mapW && y >= 0 && y < mapH;
+                             isValid = hoverTarget?.type !== 'wall' && x >= 0 && x < mapW && y >= 0 && y < mapH;
                         } else if (movingObject.wallId) { // Het is een muurobject
-                             isValid = hoverTarget && hoverTarget.type === 'wall';
+                            isValid = hoverTarget && hoverTarget.type === 'wall';
+                            if (!movingObject.isFree && isValid) {
+                                const wallId = hoverTarget.id;
+                                const width = movingObject.width || 1;
+                                const [type, indexStr] = wallId.split('_');
+                                const startIndex = parseInt(indexStr);
+
+                                let placementValid = true;
+                                for (let i = 0; i < width; i++) {
+                                    const currentWallId = `${type}_${startIndex + i}`;
+                                    const max = (type === 'top') ? mapW : mapH;
+                                    if ((startIndex + i) >= max) {
+                                        placementValid = false;
+                                        break;
+                                    }
+                                }
+                                isValid = placementValid;
+                            }
                         } else {
-                             isValid = checkPlacement(x, y, movingObject, movingObject.flipped);
+                             isValid = hoverTarget?.type !== 'wall' && checkPlacement(x, y, movingObject, movingObject.flipped);
                         }
 
                         if (isValid) {
@@ -6797,16 +7343,37 @@ window.addEventListener("mouseup", e => {
 
                                 const { image, isItem, ...itemToSend } = movingObject;
                                 socket.emit('placeItem', itemToSend);
-                            } else if (movingObject.wallId) {
-                                // Plaats muurobject
-                                socket.emit('placeWallObject', { 
-                                    wallId: hoverTarget.id, 
-                                    name: movingObject.name, 
-                                    flipped: movingObject.flipped,
-                                    image: movingObject.image,
-                                    isCustom: movingObject.isCustom,
-                                    ownerId: mySocketId 
-                                });
+                            } else if (movingObject.wallId) { // Het is een muurobject
+                                if (movingObject.isFree) {
+                                    // NIEUW: Vrije plaatsing
+                                    const mouseWorldX = (e.clientX - (window.innerWidth / 2 + camX)) / scale;
+                                    const mouseWorldY = (e.clientY - (window.innerHeight / 4 + camY)) / scale;
+                                    const wallSide = hoverTarget.id.split('_')[0];
+                                    socket.emit('placeWallObject', { 
+                                        wallId: hoverTarget.id,
+                                        name: movingObject.name, 
+                                        flipped: movingObject.flipped,
+                                        image: movingObject.image,
+                                        isCustom: movingObject.isCustom,
+                                        ownerId: mySocketId,
+                                        isFree: true,
+                                        freeX: mouseWorldX,
+                                        freeY: mouseWorldY,
+                                        wallSide: wallSide,
+                                        width: movingObject.width || 1
+                                    });
+                                } else {
+                                    // OUDE LOGICA
+                                    socket.emit('placeWallObject', { 
+                                        wallId: hoverTarget.id, 
+                                        name: movingObject.name, 
+                                        flipped: movingObject.flipped,
+                                        image: movingObject.image,
+                                        isCustom: movingObject.isCustom,
+                                        ownerId: mySocketId,
+                                        width: movingObject.width || 1
+                                    });
+                                }
                             } else {
                                 movingObject.x = x;
                                 movingObject.y = y;
@@ -6878,6 +7445,13 @@ window.addEventListener("mouseup", e => {
                     }
 
                     if (objectToDelete) {
+                        // NIEUW: Refund logica (50% terug bij verwijderen eigen object)
+                        if (!isUserAdmin && objectToDelete.price && objectToDelete.ownerId === mySocketId) {
+                            const refund = objectToDelete.price / 2;
+                            addToWallet(refund);
+                            showNotification(`<span style="color: #4cd137;">+€${refund.toFixed(2).replace('.', ',')}</span>`);
+                        }
+
                         const itemIndex = items.indexOf(objectToDelete);
                         if (itemIndex > -1) {
                             socket.emit('removeItem', { 
@@ -7123,12 +7697,19 @@ canvas.addEventListener("contextmenu", e => {
                 openContainer.items.push(draggedItem);
                 renderContainerItems();
             }
+            if (isDraggingFromVicinity) {
+                draggedItem.x = draggedItemOriginalPos.x;
+                draggedItem.y = draggedItemOriginalPos.y;
+                items.push(draggedItem);
+                syncItems();
+            }
             draggedItem = null;
             draggedItemOriginalPos = null;
             // Heropen de vensters die open stonden
             if (windowStatesBeforeDrag) {
                 if (windowStatesBeforeDrag.chat) document.getElementById('chatLog').style.display = windowStatesBeforeDrag.chat;
                 if (windowStatesBeforeDrag.inventory) document.getElementById('inventory').style.display = windowStatesBeforeDrag.inventory;
+                if (windowStatesBeforeDrag.vicinity) document.getElementById('vicinityWindow').style.display = windowStatesBeforeDrag.vicinity;
                 if (windowStatesBeforeDrag.build === 'flex') {
                     buildBtn.click();
                 }
@@ -7145,14 +7726,11 @@ canvas.addEventListener("contextmenu", e => {
 // 🏪 WINKEL LOGICA
 // ─────────────────────────────────────────────
 const shopCatalog = [
-    { name: "Blok", image: itemImg, price: 5.00, mass: 1.2, type: 'block' },
-    { name: "Bal", image: itemRoundImg, price: 5.00, mass: 0.8, canRotate: true, type: 'ball' },
-    { name: "Stok", image: itemStickImg, price: 2.50, mass: 0.4, canTopple: true, type: 'stick' },
-    { name: "Batje Rood", image: batjeRoodImg, price: 15.00, mass: 0.4, canTopple: true, type: 'bat_red' },
-    { name: "Batje Zwart", image: batjeZwartImg, price: 15.00, mass: 0.4, canTopple: true, type: 'bat_black' },
-    { name: "Pakje sigaretten", image: sigarettenContainerImg, price: 20.00, mass: 0.2, type: 'sigaretten_container', isPouch: true },
-    { name: "Aansteker", image: aanstekerStickImg, price: 2.50, mass: 0.1, canTopple: true, type: 'aansteker' },
-    { name: "Flesje water", image: bottleFullImg, price: 3.00, mass: 1.2, type: 'bottle_full' }
+    { name: "Batje Rood", image: batjeRoodImg, price: 15.00, mass: 0.4, canTopple: true, type: 'bat_red', keywords: ['sport', 'pingpong', 'racket']},
+    { name: "Batje Zwart", image: batjeZwartImg, price: 15.00, mass: 0.4, canTopple: true, type: 'bat_black', keywords: ['sport', 'pingpong', 'racket']},
+    { name: "Pakje sigaretten", image: sigarettenContainerImg, price: 20.00, mass: 0.2, type: 'sigaretten_container', isPouch: true, keywords: ['pakkie', 'peuken', 'tabak', 'peukie'] },
+    { name: "Aansteker", image: aanstekerStickImg, price: 2.50, mass: 0.1, canTopple: true, type: 'aansteker', uses: 50, keywords: ['vuurtje', 'lichtje', 'lighter', 'gasbrander'] },
+    { name: "Flesje water", image: bottleFullImg, price: 3.00, mass: 1.2, type: 'bottle_full', keywords: ['drinken', 'spa', 'vloeistof', 'vocht'] }
 ];
 
 let currentOpenShop = null;
@@ -7160,6 +7738,17 @@ let currentOpenShop = null;
 function openShopWindow(shopObj) {
     currentOpenShop = shopObj;
     const shopWindow = document.getElementById('shopWindow');
+    const shopContent = document.getElementById('shopContent');
+
+    // Check voor brede winkel
+    if (shopObj.width >= 2 || shopObj.depth >= 2) {
+        shopWindow.style.width = '600px'; // Bredere winkel
+        shopContent.style.gridTemplateColumns = 'repeat(5, 1fr)'; // Meer kolommen
+    } else {
+        shopWindow.style.width = '380px'; // Standaard breedte
+        shopContent.style.gridTemplateColumns = 'repeat(3, 1fr)'; // Standaard kolommen
+    }
+
     shopWindow.style.display = 'flex';
     renderShopItems();
     renderShopOutput();
@@ -7169,6 +7758,116 @@ function openShopWindow(shopObj) {
     document.querySelector('#inventoryBtn img').src = "icons/inventory_active.png";
     renderInventoryItems();
 }
+
+// ─────────────────────────────────────────────
+// 📍 VICINITY (OMGEVING) LOGICA
+// ─────────────────────────────────────────────
+const vicinityWindow = document.getElementById('vicinityWindow');
+const vicinityContent = document.getElementById('vicinityContent');
+const closeVicinityWindowBtn = document.getElementById('closeVicinityWindowBtn');
+let vicinityInterval = null;
+
+function renderVicinityItems() {
+    if (vicinityWindow.style.display !== 'flex') return;
+    
+    vicinityContent.innerHTML = '';
+    const playerX = Math.floor(ball.x);
+    const playerY = Math.floor(ball.y);
+
+    // Filter items binnen 2 tegels
+    const nearbyItems = items.filter(item => {
+        const dist = Math.sqrt(Math.pow(Math.floor(item.x) - playerX, 2) + Math.pow(Math.floor(item.y) - playerY, 2));
+        return dist <= 2;
+    });
+
+    if (nearbyItems.length === 0) {
+        vicinityContent.innerHTML = '<div style="color:#aaa; width:100%; text-align:center; margin-top:20px;">Geen items in de buurt.</div>';
+        return;
+    }
+
+    nearbyItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'inventory-item';
+        div.style.width = '64px';
+        div.style.height = '64px';
+        div.style.position = 'relative'; // Voor normale flow
+        div.style.left = 'auto';
+        div.style.top = 'auto';
+        
+        const imgSrc = item.image ? item.image.src : (createItemFromData(item).image.src);
+        div.innerHTML = `<img src="${imgSrc}">`;
+
+        div.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            if (e.button === 0) {
+                // Start slepen vanuit vicinity (wereld)
+                const index = items.indexOf(item);
+                if (index > -1) {
+                    items.splice(index, 1);
+                    syncItems(); // Verwijder uit wereld voor iedereen
+                    
+                    draggedItem = item;
+                    draggedItemOriginalPos = { x: item.x, y: item.y };
+                    isItemDragging = true;
+                    isDraggingFromVicinity = true;
+                    isDraggingFromInventory = false;
+                    isDraggingFromShop = false;
+                    isDraggingFromContainer = false;
+
+                    // Visueel element
+                    dragImageElement = document.createElement('img');
+                    dragImageElement.src = imgSrc;
+                    dragImageElement.style.position = 'absolute';
+                    dragImageElement.style.pointerEvents = 'none';
+                    dragImageElement.style.zIndex = '9999';
+                    dragImageElement.style.imageRendering = 'pixelated';
+                    const w = (item.image && item.image.width ? item.image.width : 64) * scale;
+                    dragImageElement.style.width = w + 'px';
+                    dragImageElement.style.left = (e.clientX - w/2) + 'px';
+                    dragImageElement.style.top = (e.clientY - w/2) + 'px';
+                    document.body.appendChild(dragImageElement);
+                    
+                    renderVicinityItems(); // Update lijst direct
+                }
+            }
+        });
+
+        vicinityContent.appendChild(div);
+    });
+}
+
+// Sleep logica voor vicinity header
+const vicinityHeader = document.getElementById('vicinityHeader');
+let isDraggingVicinity = false;
+let dragStartVicinity = {x:0, y:0};
+let vicinityStartPos = {x:0, y:0};
+
+if (vicinityHeader) {
+    vicinityHeader.addEventListener("mousedown", (e) => {
+        bringToFront(vicinityWindow);
+        isDraggingVicinity = true;
+        dragStartVicinity = {x: e.clientX, y: e.clientY};
+        const rect = vicinityWindow.getBoundingClientRect();
+        vicinityWindow.style.left = rect.left + "px";
+        vicinityWindow.style.top = rect.top + "px";
+        vicinityStartPos = {x: rect.left, y: rect.top};
+        e.preventDefault();
+    });
+}
+
+window.addEventListener("mousemove", (e) => {
+    if (!isDraggingVicinity) return;
+    const dx = e.clientX - dragStartVicinity.x;
+    const dy = e.clientY - dragStartVicinity.y;
+    const newX = Math.max(0, Math.min(vicinityStartPos.x + dx, window.innerWidth - vicinityWindow.offsetWidth));
+    const newY = Math.max(0, Math.min(vicinityStartPos.y + dy, window.innerHeight - vicinityWindow.offsetHeight));
+    vicinityWindow.style.left = newX + "px";
+    vicinityWindow.style.top  = newY + "px";
+});
+
+window.addEventListener("mouseup", () => {
+    isDraggingVicinity = false;
+});
 
 document.getElementById('closeShopBtn').addEventListener('click', () => {
     document.getElementById('shopWindow').style.display = 'none';
@@ -7341,8 +8040,24 @@ function renderMyRoomSettings() {
         renderMyRoomSettings();
     };
 
+    // No Smoking Toggle
+    const smokeIcon = document.createElement('img');
+    smokeIcon.src = myRoomSettings.noSmoking ? "icons/verboden_active.png" : "icons/verboden.png";
+    smokeIcon.style.width = "16px";
+    smokeIcon.style.height = "16px";
+    smokeIcon.style.imageRendering = "pixelated";
+    smokeIcon.style.cursor = "pointer";
+    smokeIcon.title = "Roken: " + (myRoomSettings.noSmoking ? "VERBODEN" : "TOEGESTAAN");
+
+    smokeIcon.onclick = () => {
+        myRoomSettings.noSmoking = !myRoomSettings.noSmoking;
+        socket.emit('updateRoomSettings', { roomId: myRoomId, settings: { noSmoking: myRoomSettings.noSmoking } });
+        renderMyRoomSettings();
+    };
+
     headerDiv.appendChild(bellIcon);
     headerDiv.appendChild(buildIcon);
+    headerDiv.appendChild(smokeIcon);
     headerDiv.appendChild(roomsIcon);
     myRoomContent.appendChild(headerDiv);
 
@@ -7477,31 +8192,34 @@ if (closeFriendsBtn) {
 
 // CHEAT BUTTON LOGICA
 document.getElementById('cheatBtn').addEventListener('click', () => {
-    const spawnList = [
-        { type: 'bat_red', name: "Batje Rood", mass: 0.4, canTopple: true },
-        { type: 'bat_black', name: "Batje Zwart", mass: 0.4, canTopple: true },
-        { type: 'currency_big', mass: 0.5 },
-        { type: 'currency', mass: 0.5 }
-    ];
-
-    spawnList.forEach(template => {
-        const item = {
-            ...template,
-            x: ball.x + (Math.random() - 0.5) * 2,
-            y: ball.y + (Math.random() - 0.5) * 2,
-            vx: 0, vy: 0, z: 50, vz: 0, rotation: 0, vr: 0
-        };
-        items.push(createItemFromData(item));
-    });
-    syncItems();
-    showNotification("Cheats: Items gespawned!");
+    addToWallet(1000);
+    showNotification("Cheats: €1000 toegevoegd!");
 });
 
 function renderShopItems() {
     const content = document.getElementById('shopContent');
     content.innerHTML = '';
+
+    const searchInput = document.getElementById('shopSearchInput');
+    const sortSelect = document.getElementById('shopSortSelect');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    const sortMode = sortSelect ? sortSelect.value : 'name_asc';
+
+    let displayItems = shopCatalog.filter(item => {
+        const nameMatch = item.name.toLowerCase().includes(searchTerm);
+        const keywordMatch = item.keywords && item.keywords.some(k => k.toLowerCase().includes(searchTerm));
+        return nameMatch || keywordMatch;
+    });
+
+    displayItems.sort((a, b) => {
+        if (sortMode === 'name_asc') return a.name.localeCompare(b.name);
+        if (sortMode === 'name_desc') return b.name.localeCompare(a.name);
+        if (sortMode === 'price_asc') return a.price - b.price;
+        if (sortMode === 'price_desc') return b.price - a.price;
+        return 0;
+    });
     
-    shopCatalog.forEach(item => {
+    displayItems.forEach(item => {
         const div = document.createElement('div');
         div.className = 'build-item'; // Hergebruik stijl
         div.style.height = 'auto';
@@ -7518,6 +8236,13 @@ function renderShopItems() {
         content.appendChild(div);
     });
 }
+
+// Event listeners voor winkel filters
+const shopSearchInput = document.getElementById('shopSearchInput');
+if (shopSearchInput) shopSearchInput.addEventListener('input', renderShopItems);
+
+const shopSortSelect = document.getElementById('shopSortSelect');
+if (shopSortSelect) shopSortSelect.addEventListener('change', renderShopItems);
 
 function buyItem(template) {
     if (walletBalance >= template.price) {
@@ -8012,6 +8737,7 @@ function renderPouchItems() {
             div.style.width = '32px';
             div.style.height = '32px';
             div.style.padding = '0';
+            div.style.transform = 'scale(1)'; // Voorkom dat sigaretten 6x schalen
             
             // Bereken vaste positie
             item.conX = col * 35 + xOffset;
@@ -8064,8 +8790,11 @@ function renderPouchItems() {
     });
 }
 
+let lastPhysicsSync = 0; // NIEUW: Throttle timer
+
 function updateItems(delta) {
-    const friction = 0.92; // Hoe snel items afremmen (dichter bij 1 is minder frictie)
+    const friction = 0.90; // AANGEPAST: Iets meer frictie (was 0.92) voor strakkere stop
+    const dirtyItems = []; // NIEUW: Lijst met items die bewogen hebben
 
     items.forEach(item => {
         // Sla over als het item wordt versleept
@@ -8102,7 +8831,7 @@ function updateItems(delta) {
 
             if (item.z < groundZ) {
                 item.z = groundZ;
-                item.vz *= -0.6; // Stuiter demping (hoeveel energie blijft over)
+                item.vz *= -0.3; // AANGEPAST: Nog minder hard stuiteren
                 if (Math.abs(item.vz) < 2) item.vz = 0; // Stop met stuiteren bij lage snelheid
             }
         }
@@ -8137,7 +8866,42 @@ function updateItems(delta) {
         if (item.x > mapW - 0.5) { item.x = mapW - 0.5; item.vx *= -0.5; }
         if (item.y < 0.5) { item.y = 0.5; item.vy *= -0.5; }
         if (item.y > mapH - 0.5) { item.y = mapH - 0.5; item.vy *= -0.5; }
+
+        // NIEUW: Check of item significant beweegt of in de lucht is
+        const isMoving = item.vx !== 0 || item.vy !== 0 || item.vz !== 0 || item.vr !== 0;
+        const isAirborne = (item.z || 0) > getSurfaceHeight(Math.floor(item.x), Math.floor(item.y)) + 0.1;
+        
+        // NIEUW: Stuur alleen updates als WIJ de eigenaar zijn (voorkomt fighting/jitter)
+        if (item.id && item.lastTouchedBy === mySocketId) {
+            if (isMoving || isAirborne) {
+                item.isResting = false;
+                dirtyItems.push({
+                    id: item.id,
+                    x: item.x, y: item.y, z: item.z || 0,
+                    vx: item.vx, vy: item.vy, vz: item.vz || 0,
+                    rotation: item.rotation || 0, vr: item.vr || 0,
+                    lastTouchedBy: mySocketId
+                });
+            } else if (!item.isResting) {
+                // Het item is net gestopt: stuur een laatste update met 0 snelheid
+                item.isResting = true;
+                dirtyItems.push({
+                    id: item.id,
+                    x: item.x, y: item.y, z: item.z || 0,
+                    vx: 0, vy: 0, vz: 0,
+                    rotation: item.rotation || 0, vr: 0,
+                    lastTouchedBy: mySocketId
+                });
+            }
+        }
     });
+
+    // NIEUW: Stuur updates naar server (max 20 keer per seconde)
+    const now = Date.now();
+    if (dirtyItems.length > 0 && socket && (now - lastPhysicsSync > 50)) {
+        socket.emit('updateItemPhysics', dirtyItems);
+        lastPhysicsSync = now;
+    }
 }
 
 function updateOtherPlayers(delta) {
@@ -8163,6 +8927,28 @@ function updateOtherPlayers(delta) {
                 p.hopOffset = jumpHeight * 4 * p.progress * (1 - p.progress);
             }
         }
+
+        // NIEUW: Laat items ook reageren op andere spelers (visuele interactie)
+        items.forEach(item => {
+            if (item === draggedItem) return;
+            
+            const dx = item.x - p.x;
+            const dy = item.y - p.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            const minDist = 0.6;
+
+            if (dist < minDist) {
+                const pushForce = Math.min(0.15, 0.05 / item.mass);
+                const angle = Math.atan2(dy, dx);
+                // We passen kracht toe, maar claimen GEEN ownership. 
+                // De andere speler doet dat in zijn eigen game, wij simuleren het hier voor direct resultaat.
+                item.vx += Math.cos(angle) * pushForce;
+                item.vy += Math.sin(angle) * pushForce;
+                
+                if (item.canRotate) item.vr += (Math.random() - 0.5) * 0.5;
+                if (item.canTopple) item.vr += (Math.random() - 0.5) * 0.2;
+            }
+        });
     });
 }
 
@@ -8238,6 +9024,7 @@ function updateBall(delta) {
             // Cap de kracht zodat lichte items (zoals peuken) niet gelanceerd worden
             const pushForce = Math.min(0.15, 0.05 / item.mass);
             const angle = Math.atan2(dy, dx);
+            item.lastTouchedBy = mySocketId; // NIEUW: Wij zijn nu de eigenaar omdat we duwen
             item.vx += Math.cos(angle) * pushForce;
             item.vy += Math.sin(angle) * pushForce;
 
@@ -8650,16 +9437,21 @@ window.addEventListener("mousemove", (e) => {
 renderBuildItems();
 
 setInterval(() => {
-    const active = chatMessages
-        .filter(m => Date.now() - m.time < m.duration)
+    const now = Date.now();
+    const currentId = socket ? (socket.id || mySocketId) : 'local';
+    const myActiveMessages = chatMessages
+        .filter(m => {
+            const isMe = (m.userId && m.userId === myUserId) || (!m.userId && (m.id === currentId || m.id === 'local'));
+            return isMe && (now - m.time < m.duration);
+        })
         .sort((a, b) => a.time - b.time);
 
-    if (active.length >= 5) {
-        const oldest = active[0];
+    if (myActiveMessages.length >= 5) {
+        const oldest = myActiveMessages[0];
         const remaining =
             Math.max(
                 0,
-                Math.ceil((oldest.duration - (Date.now() - oldest.time)) / 1000)
+                Math.ceil((oldest.duration - (now - oldest.time)) / 1000)
             );
 
         chatInput.disabled = true;
@@ -8672,12 +9464,24 @@ setInterval(() => {
     }
 }, 250);
 
-function loop(time) {
-    // Bereken delta in fractie van een 60fps frame voor compatibiliteit
-    const deltaTime = time - lastTime;
-    const delta = deltaTime / (1000 / 60); // delta is ~1.0 bij 60fps
-    lastTime = time;
+// NIEUW: Aparte loop voor spellogica (blijft draaien in achtergrond via setInterval)
+function gameLogic() {
+    const now = Date.now();
+    const deltaTime = now - lastLogicTime;
+    lastLogicTime = now;
 
+    const delta = deltaTime / (1000 / 60); // delta is ~1.0 bij 60fps
+    
+    updateItems(delta);
+    updateBall(delta);
+    updateOtherPlayers(delta);
+    updateCamera(delta);
+}
+
+// Start de logic loop op ~60fps
+setInterval(gameLogic, 1000 / 60);
+
+function renderLoop() {
     // Reset transform naar fysieke pixels (inclusief DPR)
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.imageSmoothingEnabled = false; // Standaard voor de hele frame: scherpe pixels
@@ -8711,9 +9515,7 @@ function loop(time) {
     drawPlacementOutline();
     drawTopWall();
     drawLeftWall();
-    updateItems(delta); // Update de positie en snelheid van de items
-    updateBall(delta); // delta meegeven
-    updateOtherPlayers(delta); // Update andere spelers
+    drawFreeWallObjects(); // NIEUW: Teken vrije muurobjecten op de voorgrond
 
     // --- Dieptegesorteerde renderlijst ---
     const renderList = [];
@@ -9141,12 +9943,11 @@ function loop(time) {
     drawInteractionPrompts(); // Teken interactie prompts bovenop de wereld
     drawChatBallon();
     drawPlayerNames(); // NIEUW: Teken namen bij hover
-    updateCamera(delta); // delta meegeven
 
-    requestAnimationFrame(loop);
+    requestAnimationFrame(renderLoop);
 }
 
-requestAnimationFrame(loop); // Start de loop
+requestAnimationFrame(renderLoop); // Start de render loop
 
 })(); // Einde van de IIFE
 
