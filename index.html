@@ -4813,7 +4813,10 @@ function drawTiles() {
     }
 
     // Bouwmodus hover (plaatsen & verplaatsen)
-    if (selectedBuildObject?.placement === 'wall' && hoverTarget?.type === 'wall') {
+    const activeObj = selectedBuildObject || movingObject;
+    const isWallObject = activeObj && ((activeObj.placement === 'wall') || activeObj.wallId);
+
+    if (isWallObject && hoverTarget?.type === 'wall') {
         // Preview voor muurobjecten
         const wallId = hoverTarget.id;
         const isValidPlacement = true;
@@ -4822,7 +4825,7 @@ function drawTiles() {
         // We voegen een tijdelijke vlag toe aan hoverTarget
         hoverTarget.preview = {
             color: isValidPlacement ? "rgba(0, 255, 0, 0.5)" : "rgba(255, 0, 0, 0.5)",
-            image: selectedBuildObject.runtimeImage || wallItemImg,
+            image: activeObj.runtimeImage || wallItemImg,
             valid: isValidPlacement
         };
     } else if (hoverTarget?.preview) {
@@ -6812,6 +6815,7 @@ window.addEventListener("mouseup", e => {
                             }
                             movingObject = null; // Stop met verplaatsen
                             movePreview.style.display = 'none';
+                            hoveredObjects = []; // Reset hovered objects om stale references te voorkomen
                         }
                     } else { // Anders, pak een object op
                         let objectToMove = null;
@@ -6855,9 +6859,21 @@ window.addEventListener("mouseup", e => {
                                 closeSecondaryWindows();
                             } else if (objectToMove.wallId) {
                                 // Muurobject oppakken
-                                movingObject = objectToMove;
-                                socket.emit('removeWallObject', { wallId: movingObject.wallId, name: movingObject.name });
-                                closeSecondaryWindows();
+                                const idx = wallObjects.indexOf(objectToMove);
+                                if (idx > -1) {
+                                    movingObject = objectToMove;
+                                    wallObjects.splice(idx, 1); // Verwijder direct uit lokale lijst
+
+                                    isBuildObjectFlipped = movingObject.flipped; // Synchroniseer de rotatie-status
+                                    socket.emit('removeWallObject', { 
+                                        wallId: movingObject.wallId, 
+                                        name: movingObject.name,
+                                        ownerId: movingObject.ownerId,
+                                        isCustom: movingObject.isCustom,
+                                        image: movingObject.image
+                                    });
+                                    closeSecondaryWindows();
+                                }
                             } else {
                                 const objectToMoveIndex = objects.indexOf(objectToMove);
                                 if (objectToMoveIndex > -1) {
@@ -6907,7 +6923,13 @@ window.addEventListener("mouseup", e => {
                             });
                             items.splice(itemIndex, 1);
                         } else if (objectToDelete.wallId) {
-                            socket.emit('removeWallObject', { wallId: objectToDelete.wallId, name: objectToDelete.name });
+                            socket.emit('removeWallObject', { 
+                                wallId: objectToDelete.wallId, 
+                                name: objectToDelete.name,
+                                ownerId: objectToDelete.ownerId,
+                                isCustom: objectToDelete.isCustom,
+                                image: objectToDelete.image
+                            });
                         } else {
                             const { runtimeImage, ...objectToSend } = objectToDelete;
                             socket.emit('removeObject', objectToSend);
@@ -7090,7 +7112,21 @@ canvas.addEventListener("contextmenu", e => {
             }
         }
         if (isBuildMode && movingObject) {
-            socket.emit('placeObject', movingObject); // Zet het object terug via server
+                if (movingObject.isItem) {
+                    const { image, isItem, ...itemToSend } = movingObject;
+                    socket.emit('placeItem', itemToSend);
+                } else if (movingObject.wallId) {
+                    socket.emit('placeWallObject', { 
+                        wallId: movingObject.wallId, 
+                        name: movingObject.name, 
+                        flipped: movingObject.flipped,
+                        image: movingObject.image,
+                        isCustom: movingObject.isCustom,
+                        ownerId: movingObject.ownerId 
+                    });
+                } else {
+                    socket.emit('placeObject', movingObject); // Zet het object terug via server
+                }
             movingObject = null;
             movePreview.style.display = 'none';
         }
