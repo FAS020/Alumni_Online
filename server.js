@@ -522,7 +522,12 @@ io.on('connection', (socket) => {
       const roomId = socketRoomMap[socket.id];
       if (!roomId || !rooms[roomId]) return;
       const room = rooms[roomId];
-      const idx = room.items.findIndex(i => Math.floor(i.x) === coords.x && Math.floor(i.y) === coords.y);
+      const idx = room.items.findIndex(i => {
+          if (Math.floor(i.x) !== coords.x || Math.floor(i.y) !== coords.y) return false;
+          if (coords.type && i.type !== coords.type) return false;
+          if (coords.name && i.name !== coords.name) return false;
+          return true;
+      });
       if (idx > -1) {
           room.items.splice(idx, 1);
           io.to(roomId).emit('updateItems', room.items);
@@ -534,7 +539,12 @@ io.on('connection', (socket) => {
       const roomId = socketRoomMap[socket.id];
       if (!roomId || !rooms[roomId]) return;
       const room = rooms[roomId];
-      const idx = room.objects.findIndex(o => o.x === coords.x && o.y === coords.y);
+      // FIX: Check ook op naam als die is meegegeven, om te voorkomen dat we de vloer verwijderen ipv een object
+      const idx = room.objects.findIndex(o => {
+          if (o.x !== coords.x || o.y !== coords.y) return false;
+          if (coords.name && o.name !== coords.name) return false;
+          return true;
+      });
       if (idx > -1) {
           room.objects.splice(idx, 1);
           io.to(roomId).emit('updateObjects', room.objects);
@@ -551,11 +561,23 @@ io.on('connection', (socket) => {
       saveRoom(roomId);
   });
 
-  socket.on('removeWallObject', (wallId) => {
+  socket.on('removeWallObject', (data) => {
       const roomId = socketRoomMap[socket.id];
       if (!roomId || !rooms[roomId]) return;
       const room = rooms[roomId];
-      const idx = room.wallObjects.findIndex(o => o.wallId === wallId);
+      
+      let wallId, name;
+      if (typeof data === 'string') {
+          wallId = data; // Backwards compatibility
+      } else {
+          wallId = data.wallId;
+          name = data.name;
+      }
+
+      const idx = room.wallObjects.findIndex(o => {
+          return o.wallId === wallId && (!name || o.name === name);
+      });
+
       if (idx > -1) {
           room.wallObjects.splice(idx, 1);
           io.to(roomId).emit('updateWallObjects', room.wallObjects);
@@ -872,6 +894,18 @@ io.on('connection', (socket) => {
 
       const objDef = customObjects[objIndex];
       const price = objDef.price || 0;
+
+      // Verwijder het bijbehorende bestand als het een custom object is
+      if (objDef.isCustom && objDef.image) {
+          const filename = path.basename(objDef.image);
+          const filePath = path.join(UPLOADS_DIR, 'objects', filename);
+          
+          fs.unlink(filePath, (err) => {
+              if (err && err.code !== 'ENOENT') {
+                  console.error(`Fout bij verwijderen bestand ${filePath}:`, err);
+              }
+          });
+      }
 
       // Verwijder uit de lijst en sla op
       customObjects.splice(objIndex, 1);
