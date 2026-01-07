@@ -1,0 +1,18 @@
+{
+  "objects": [],
+  "wallObjects": [],
+  "items": [],
+  "chatHistory": [],
+  "mapW": 10,
+  "mapH": 10,
+  "tileColors": {},
+  "wallColors": {},
+  "maxPlayers": 25,
+  "ownerId": "user_8jh09z52k",
+  "settings": {
+    "doorbell": false,
+    "alwaysOnline": false,
+    "allowBuilding": false,
+    "noSmoking": true
+  }
+}

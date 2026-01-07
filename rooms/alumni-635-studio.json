@@ -1,0 +1,21 @@
+{
+  "objects": [],
+  "wallObjects": [],
+  "items": [],
+  "chatHistory": [],
+  "mapW": 10,
+  "mapH": 10,
+  "tileColors": {},
+  "wallColors": {},
+  "maxPlayers": 25,
+  "ownerId": "user_0h800ryom",
+  "settings": {
+    "doorbell": false,
+    "alwaysOnline": false,
+    "allowBuilding": false,
+    "noSmoking": false,
+    "isOutside": false,
+    "weather": "clear",
+    "time": "day"
+  }
+}

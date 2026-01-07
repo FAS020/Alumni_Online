@@ -31,23 +31,6 @@
       "id": "mk2zw80fsjd6f1fokdh"
     },
     {
-      "name": "Tafel",
-      "height": 1,
-      "width": 2,
-      "depth": 1,
-      "image": "http://localhost:3000/object_template_96_B.png",
-      "category": "objecten",
-      "subCategory": "objects",
-      "placement": "floor",
-      "isTemplate": true,
-      "price": 50,
-      "x": 0,
-      "y": 4,
-      "flipped": false,
-      "ownerId": "m-_1rcBi84-qmKc1AACk",
-      "id": "mk2zw9jkja3p4nfode"
-    },
-    {
       "name": "Verplaatsbaar Blok",
       "height": 1,
       "image": "http://localhost:3000/object_moveable_template.png",
