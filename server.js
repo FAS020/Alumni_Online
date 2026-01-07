@@ -3,6 +3,7 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const https = require('https');
 const io = new Server(server);
 const path = require('path');
 const fs = require('fs');
@@ -43,11 +44,40 @@ if (!fs.existsSync(path.join(UPLOADS_DIR, 'objects'))) {
 const FRIENDS_PATH = path.join(__dirname, 'friends.json');
 let friendsData = {};
 if (fs.existsSync(FRIENDS_PATH)) {
-    try { friendsData = JSON.parse(fs.readFileSync(FRIENDS_PATH)); } catch(e) {}
+    try { friendsData = JSON.parse(fs.readFileSync(FRIENDS_PATH, 'utf8')); } catch(e) {}
 }
 
 function saveFriends() {
     fs.writeFile(FRIENDS_PATH, JSON.stringify(friendsData, null, 2), (err) => { if(err) console.error(err); });
+}
+
+// NIEUW: Spelers opslag (Inventory & Geld)
+const PLAYERS_PATH = path.join(__dirname, 'players.json');
+let playersData = {};
+if (fs.existsSync(PLAYERS_PATH)) {
+    try { playersData = JSON.parse(fs.readFileSync(PLAYERS_PATH, 'utf8')); } catch(e) {}
+}
+
+function savePlayers() {
+    fs.writeFile(PLAYERS_PATH, JSON.stringify(playersData, null, 2), (err) => { if(err) console.error(err); });
+}
+
+// NIEUW: Server instellingen (Persistentie voor o.a. weer sync)
+const SERVER_SETTINGS_PATH = path.join(__dirname, 'server_settings.json');
+let serverSettings = { realTimeSync: false }; // Default
+
+if (fs.existsSync(SERVER_SETTINGS_PATH)) {
+    try {
+        serverSettings = JSON.parse(fs.readFileSync(SERVER_SETTINGS_PATH, 'utf8'));
+    } catch (e) {
+        console.error("Fout bij laden server settings:", e);
+    }
+}
+
+function saveServerSettings() {
+    fs.writeFile(SERVER_SETTINGS_PATH, JSON.stringify(serverSettings, null, 2), (err) => {
+        if (err) console.error("Fout bij opslaan server settings:", err);
+    });
 }
 
 // Standaard objecten voor een nieuwe kamer
@@ -94,6 +124,8 @@ function saveRoom(roomId) {
         mapH: rooms[roomId].mapH,
         tileColors: rooms[roomId].tileColors,
         wallColors: rooms[roomId].wallColors,
+        puddles: rooms[roomId].puddles,
+        snow: rooms[roomId].snow,
         maxPlayers: rooms[roomId].maxPlayers,
         ownerId: rooms[roomId].ownerId, // Sla eigenaar op
         settings: rooms[roomId].settings // Sla instellingen op
@@ -108,7 +140,7 @@ function saveRoom(roomId) {
 function loadCustomObjectsFromServer() {
     if (fs.existsSync(CUSTOM_OBJECTS_PATH)) {
         try {
-            const data = fs.readFileSync(CUSTOM_OBJECTS_PATH);
+            const data = fs.readFileSync(CUSTOM_OBJECTS_PATH, 'utf8');
             customObjects = JSON.parse(data);
             console.log(`✅ ${customObjects.length} custom objects geladen.`);
         } catch (e) {
@@ -120,6 +152,94 @@ function loadCustomObjectsFromServer() {
 function saveCustomObjectsToServer() {
     fs.writeFile(CUSTOM_OBJECTS_PATH, JSON.stringify(customObjects, null, 2), (err) => {
         if (err) console.error("Fout bij opslaan custom_objects.json:", err);
+    });
+}
+
+// ─────────────────────────────────────────────
+// 🌦️ REAL-TIME WEATHER SYNC
+// ─────────────────────────────────────────────
+let realTimeInterval = null;
+
+// Start de sync direct als deze was opgeslagen als 'aan'
+if (serverSettings.realTimeSync) {
+    // Korte timeout om zeker te zijn dat alles geladen is
+    setTimeout(() => {
+        console.log("🌦️ Live weer sync gestart (vanuit opgeslagen instelling)");
+        updateRealTimeWeather();
+        realTimeInterval = setInterval(updateRealTimeWeather, 600000);
+    }, 1000);
+}
+
+function updateRealTimeWeather() {
+    // Coördinaten van Utrecht (HKU locatie bij benadering)
+    // NIEUW: We halen nu ook daily=sunrise,sunset op en gebruiken timezone=GMT voor correcte tijdvergelijking
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=52.0907&longitude=5.1214&current=is_day,weather_code&daily=sunrise,sunset&timezone=GMT";
+
+    https.get(url, (res) => {
+        let data = '';
+        res.on('data', (chunk) => data += chunk);
+        res.on('end', () => {
+            try {
+                const response = JSON.parse(data);
+                if (response.current && response.daily) {
+                    const isDay = response.current.is_day === 1;
+                    const code = response.current.weather_code;
+                    
+                    let time = isDay ? 'day' : 'night';
+                    let weather = 'clear';
+
+                    // NIEUW: Check of we in de overgangsfase zitten (30 min rondom zonsopkomst/ondergang)
+                    if (response.daily.sunrise && response.daily.sunset) {
+                        // Voeg 'Z' toe om te forceren dat JS dit als UTC leest (API geeft GMT tijd)
+                        const sunriseTime = new Date(response.daily.sunrise[0] + "Z").getTime();
+                        const sunsetTime = new Date(response.daily.sunset[0] + "Z").getTime();
+                        const now = Date.now();
+                        const margin = 45 * 60 * 1000; // 45 minuten marge
+
+                        if (Math.abs(now - sunriseTime) < margin) {
+                            time = 'sunrise';
+                        } else if (Math.abs(now - sunsetTime) < margin) {
+                            time = 'sunset';
+                        }
+                    }
+
+                    // WMO Weather code interpretatie
+                    if (code <= 1) weather = 'clear';
+                    else if (code <= 3) weather = 'mist'; // Bewolkt
+                    else if (code <= 48) weather = 'mist'; // Mist
+                    else if (code <= 67) weather = 'rain'; // Regen/Motregen
+                    else if (code <= 77) weather = 'snow'; // Sneeuw
+                    else if (code <= 82) weather = 'rain'; // Buien
+                    else if (code <= 86) weather = 'snow'; // Sneeuwbuien
+                    else if (code <= 99) weather = 'rain'; // Onweer
+
+                    // Update alle kamers die 'buiten' zijn
+                    Object.keys(rooms).forEach(roomId => {
+                        const room = rooms[roomId];
+                        if (room.settings && room.settings.isOutside) {
+                            let changed = false;
+                            if (room.settings.weather !== weather) {
+                                room.settings.weather = weather;
+                                changed = true;
+                            }
+                            if (room.settings.time !== time) {
+                                room.settings.time = time;
+                                changed = true;
+                            }
+                            
+                            if (changed) {
+                                saveRoom(roomId);
+                                io.to(roomId).emit('roomSettingsUpdated', room.settings);
+                            }
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error("Fout bij verwerken weerdata:", e);
+            }
+        });
+    }).on('error', (e) => {
+        console.error("Fout bij ophalen weer:", e);
     });
 }
 
@@ -159,9 +279,11 @@ function createRoom(id, options = {}) {
         mapH: mapH,
         tileColors: {},
         wallColors: {},
+        puddles: {},
+        snow: {},
         maxPlayers: maxPlayers,
         ownerId: options.ownerId || null, // Eigenaar ID
-        settings: { doorbell: false, alwaysOnline: options.alwaysOnline || false, allowBuilding: options.allowBuilding || false, noSmoking: options.noSmoking || false } // Standaard instellingen
+        settings: { doorbell: false, alwaysOnline: options.alwaysOnline || false, allowBuilding: options.allowBuilding || false, noSmoking: options.noSmoking || false, isOutside: options.isOutside || false, weather: options.weather || 'clear', time: options.time || 'day' } // Standaard instellingen
     };
 
     // Als we testroom aanmaken (of herstellen), vul hem met defaults
@@ -239,12 +361,14 @@ function getRoom(id) {
 
     if (fs.existsSync(filePath)) {
         try {
-            const data = JSON.parse(fs.readFileSync(filePath));
+            const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
             data.players = {}; // Reset spelers
             if (!data.mapW) data.mapW = 25;
             if (!data.mapH) data.mapH = 25;
             if (!data.tileColors) data.tileColors = {};
             if (!data.wallColors) data.wallColors = {};
+            if (!data.puddles) data.puddles = {};
+            if (!data.snow) data.snow = {};
             
             // Zorg dat maxPlayers bestaat (voor oude kamers)
             if (!data.maxPlayers) {
@@ -261,6 +385,9 @@ function getRoom(id) {
             if (!data.settings) data.settings = { doorbell: false, alwaysOnline: false, allowBuilding: false };
             if (data.settings.allowBuilding === undefined) data.settings.allowBuilding = false;
             if (data.settings.noSmoking === undefined) data.settings.noSmoking = false;
+            if (data.settings.isOutside === undefined) data.settings.isOutside = false;
+            if (data.settings.weather === undefined) data.settings.weather = 'clear';
+            if (data.settings.time === undefined) data.settings.time = 'day';
 
             // Extra check: als testroom leeg is geladen, vul hem alsnog
             if (id === 'testroom' && (!data.objects || data.objects.length === 0)) {
@@ -369,6 +496,9 @@ function finishVote(roomId) {
 io.on('connection', (socket) => {
   console.log('Nieuwe speler verbonden:', socket.id);
 
+  // Stuur huidige status van real-time sync
+  socket.emit('realTimeStatus', serverSettings.realTimeSync);
+
   // NIEUW: Stuur de lijst met custom objects als de client erom vraagt
   socket.on('getCustomObjects', () => {
       console.log(`Versturen van ${customObjects.length} custom objects naar ${socket.id}`);
@@ -401,6 +531,9 @@ io.on('connection', (socket) => {
               const isAlwaysOnline = room && room.settings ? room.settings.alwaysOnline : false;
               const allowBuilding = room && room.settings ? room.settings.allowBuilding : false;
               const noSmoking = room && room.settings ? room.settings.noSmoking : false;
+              const isOutside = room && room.settings ? room.settings.isOutside : false;
+              const weather = room && room.settings ? room.settings.weather : 'clear';
+              const time = room && room.settings ? room.settings.time : 'day';
               const isOwnerOnline = id === 'testroom' || (room && room.ownerId && onlineUserIds.has(room.ownerId));
               const friendCount = room && room.players ? Object.values(room.players).filter(p => myFriendIds.has(p.userId)).length : 0;
               
@@ -412,6 +545,9 @@ io.on('connection', (socket) => {
                   isAlwaysOnline: isAlwaysOnline,
                   allowBuilding: allowBuilding,
                   noSmoking: noSmoking,
+                  isOutside: isOutside,
+                  weather: weather,
+                  time: time,
                   isOwnerOnline: isOwnerOnline,
                   friendCount: friendCount
               };
@@ -431,9 +567,19 @@ io.on('connection', (socket) => {
       const userId = data.userId; // Unieke ID van de speler (persistent)
       
       socket.userId = userId; // Store on socket for easy access
+
+      // NIEUW: Zorg dat speler data bestaat en een vaste kleur heeft
+      if (!playersData[userId]) {
+          playersData[userId] = { wallet: 0, inventory: [] };
+      }
+      if (!playersData[userId].color) {
+          playersData[userId].color = '#' + Math.floor(Math.random()*16777215).toString(16);
+          savePlayers();
+      }
+
       let room = getRoom(roomId);
       if (!room) {
-          room = createRoom(roomId, { size: data.size, ownerId: userId, alwaysOnline: data.alwaysOnline === true, allowBuilding: data.allowBuilding === true, noSmoking: data.noSmoking === true });
+          room = createRoom(roomId, { size: data.size, ownerId: userId, alwaysOnline: data.alwaysOnline === true, allowBuilding: data.allowBuilding === true, noSmoking: data.noSmoking === true, isOutside: data.isOutside === true, weather: data.weather || 'clear', time: data.time || 'day' });
       } else if (room.ownerId === userId) {
           // Update bestaande kamer als eigenaar joint met specifieke instelling (via create menu)
           if (!room.settings) room.settings = {};
@@ -468,7 +614,7 @@ io.on('connection', (socket) => {
         x: spawn.x + 0.5,
         y: spawn.y + 0.5,
         id: socket.id,
-        color: '#' + Math.floor(Math.random()*16777215).toString(16),
+        color: playersData[userId].color, // Gebruik opgeslagen kleur
         userId: userId, // Store persistent ID
         name: "Alumni " + socket.id.substr(0,4)
       };
@@ -486,6 +632,8 @@ io.on('connection', (socket) => {
           mapH: room.mapH,
           tileColors: room.tileColors,
           wallColors: room.wallColors,
+          puddles: room.puddles,
+          snow: room.snow,
           isOwner: room.ownerId === userId, // Vertel client of hij eigenaar is
           roomSettings: room.settings
       });
@@ -677,6 +825,8 @@ io.on('connection', (socket) => {
       if (data.items) room.items = data.items;
       if (data.tileColors) room.tileColors = data.tileColors;
       if (data.wallColors) room.wallColors = data.wallColors;
+      if (data.puddles) room.puddles = data.puddles;
+      if (data.snow) room.snow = data.snow;
       
       // Sla de bijgewerkte kamer op
       saveRoom(roomId);
@@ -849,6 +999,27 @@ io.on('connection', (socket) => {
       socket.emit('friendsList', enrichedFriends);
   });
 
+  // NIEUW: Speler data ophalen (Inventory & Geld)
+  socket.on('getPlayerData', (userId) => {
+      if (!playersData[userId]) {
+          // Nieuwe speler defaults
+          playersData[userId] = {
+              wallet: 0,
+              inventory: []
+          };
+          savePlayers();
+      }
+      socket.emit('playerData', playersData[userId]);
+  });
+
+  // NIEUW: Speler data opslaan
+  socket.on('savePlayerData', (data) => {
+      if (!data.userId) return;
+      // Update de data op de server
+      playersData[data.userId] = { wallet: data.wallet, inventory: data.inventory };
+      savePlayers();
+  });
+
   // NIEUW: Haal spelers op van een specifieke kamer
   socket.on('getRoomPlayers', (roomId) => {
       const room = rooms[roomId];
@@ -909,6 +1080,22 @@ io.on('connection', (socket) => {
       socket.to(roomId).emit('updateWallColor', data);
   });
 
+  // NIEUW: Sync puddles (regenplassen)
+  socket.on('syncPuddles', (data) => {
+      const roomId = socketRoomMap[socket.id];
+      if (!roomId || !rooms[roomId]) return;
+      rooms[roomId].puddles = data;
+      socket.to(roomId).emit('puddlesUpdate', data);
+  });
+
+  // NIEUW: Sync snow (sneeuwlaag)
+  socket.on('syncSnow', (data) => {
+      const roomId = socketRoomMap[socket.id];
+      if (!roomId || !rooms[roomId]) return;
+      rooms[roomId].snow = data;
+      socket.to(roomId).emit('snowUpdate', data);
+  });
+
   // NIEUW: Upload een custom object
   socket.on('uploadCustomObject', (data) => {
       if (!data || !data.imageData || !data.template) {
@@ -953,7 +1140,9 @@ io.on('connection', (socket) => {
               moveable: data.moveable !== undefined ? data.moveable : (data.template.moveable || false),
               isFloor: data.isFloor !== undefined ? data.isFloor : (data.template.isFloor || false),
               isTemplate: true,
-              isCustom: true
+              isCustom: true,
+              xOffset: data.xOffset,
+              yOffset: data.yOffset
           };
 
           customObjects.push(newObject);
@@ -1128,6 +1317,59 @@ io.on('connection', (socket) => {
       saveRoom(roomId);
       io.emit('roomNoSmokingToggled', roomId);
       io.to(roomId).emit('roomSettingsUpdated', rooms[roomId].settings);
+  });
+
+  // NIEUW: Toggle Outside status
+  socket.on('toggleIsOutside', (roomId) => {
+      if (!roomId || !rooms[roomId]) return;
+      
+      if (!rooms[roomId].settings) rooms[roomId].settings = {};
+      if (rooms[roomId].settings.isOutside === undefined) rooms[roomId].settings.isOutside = false;
+      rooms[roomId].settings.isOutside = !rooms[roomId].settings.isOutside;
+      
+      saveRoom(roomId);
+      io.emit('roomIsOutsideToggled', roomId);
+      io.to(roomId).emit('roomSettingsUpdated', rooms[roomId].settings);
+  });
+
+  // NIEUW: Zet weer type
+  socket.on('setRoomWeather', (data) => {
+      // data = { roomId, weather } ('clear', 'rain', 'snow')
+      const roomId = data.roomId;
+      if (!roomId || !rooms[roomId]) return;
+      
+      if (!rooms[roomId].settings) rooms[roomId].settings = {};
+      rooms[roomId].settings.weather = data.weather;
+      saveRoom(roomId);
+      io.to(roomId).emit('roomSettingsUpdated', rooms[roomId].settings);
+  });
+
+  // NIEUW: Zet tijd (dag/nacht)
+  socket.on('setRoomTime', (data) => {
+      // data = { roomId, time } ('day', 'night')
+      const roomId = data.roomId;
+      if (!roomId || !rooms[roomId]) return;
+      
+      if (!rooms[roomId].settings) rooms[roomId].settings = {};
+      rooms[roomId].settings.time = data.time;
+      saveRoom(roomId);
+      io.to(roomId).emit('roomSettingsUpdated', rooms[roomId].settings);
+  });
+
+  // NIEUW: Toggle Real-Time Sync
+  socket.on('toggleRealTime', (enabled) => {
+      serverSettings.realTimeSync = enabled;
+      saveServerSettings(); // Sla de keuze op!
+      io.emit('realTimeStatus', serverSettings.realTimeSync);
+      
+      if (serverSettings.realTimeSync) {
+          updateRealTimeWeather(); // Direct updaten
+          if (realTimeInterval) clearInterval(realTimeInterval);
+          realTimeInterval = setInterval(updateRealTimeWeather, 600000); // Elke 10 minuten checken
+      } else {
+          if (realTimeInterval) clearInterval(realTimeInterval);
+          realTimeInterval = null;
+      }
   });
 
   // NIEUW: Verwijder een kamer
