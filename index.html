@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<title>Habbo Clone</title>
+<title>Alumni</title>
 <style>
 html, body {
   margin: 0;
@@ -277,6 +277,12 @@ button img {
   justify-items: center; /* Centreer items binnen hun grid cel */
   align-items: start; /* Items bovenaan beginnen in hun cell */
   align-content: start; /* Zorgt dat rijen bovenaan beginnen en niet verspreiden */
+}
+
+/* NIEUW: Skybox animatie keyframes */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
 }
 
 .build-item {
@@ -976,6 +982,10 @@ button img {
     <button id="roomsBtn" title="Kamers"><img src="icons/rooms.png"></button>
   </div>
 
+  <div class="footer-right">
+    <img src="logo.png" alt="Logo" style="height: 24px; image-rendering:pixelated;">
+  </div>
+
 </div>
 
 <div id="roleSelector">
@@ -991,6 +1001,7 @@ button img {
     <button class="category-btn selected" data-category="objecten" title="Objecten"><img src="icons/object_active.png"></button>
     <button class="category-btn" data-category="kleur" title="Kleur"><img src="icons/color.png"></button>
     <button class="category-btn" id="adminRoomBtn" data-category="kamers" title="Kamers" style="display: none;"><img src="icons/new_room.png"></button>
+    <button class="category-btn" id="adminWeatherBtn" data-category="weer" title="Weer" style="display: none;"><img src="icons/zon.png"></button>
   </div>
 
   <div id="buildMainContent">
@@ -1075,6 +1086,12 @@ button img {
                 <img id="adminTileNumbersToggle" src="icons/numbers.png" style="width:24px; height:24px; cursor:pointer;" title="Toon Tegel Nummers">
             </div>
 
+            <!-- NIEUW: Outside Toggle -->
+            <div style="display:flex; align-items:center; gap:5px;">
+                <span style="font-size:14px;">Buiten</span>
+                <img id="adminOutsideToggle" src="icons/zon.png" style="width:24px; height:24px; cursor:pointer;" title="Is Buitenruimte">
+            </div>
+
             <script>
                 // Inline script voor admin toggle logica
                 const adminAlwaysOnlineToggle = document.getElementById('adminAlwaysOnlineToggle');
@@ -1100,6 +1117,14 @@ button img {
                     adminNoSmokingToggle.dataset.forbidden = !current;
                     adminNoSmokingToggle.src = !current ? "icons/verboden_active.png" : "icons/verboden.png";
                 };
+
+                const adminOutsideToggle = document.getElementById('adminOutsideToggle');
+                adminOutsideToggle.dataset.outside = "false";
+                adminOutsideToggle.onclick = () => {
+                    const current = adminOutsideToggle.dataset.outside === "true";
+                    adminOutsideToggle.dataset.outside = !current;
+                    adminOutsideToggle.src = !current ? "icons/zon_active.png" : "icons/zon.png";
+                };
             </script>
         </div>
 
@@ -1113,6 +1138,59 @@ button img {
         <h4 style="margin: 0 0 5px 0; font-weight: normal;">Kamers</h4>
         <div id="roomList" style="flex-grow: 1; overflow-y: auto; background: rgba(0,0,0,0.2); border: 1px solid #444; padding: 5px; min-height: 100px;"></div>
 
+    </div>
+
+    <!-- Weergave voor Weer Categorie -->
+    <div id="weatherCategoryView" style="display: none; padding: 20px; color: white; font-family: Arial; flex-direction: column; gap: 15px; height: calc(100% - 36px); overflow-y: auto; box-sizing: border-box;">
+        <h4 style="margin: 0 0 5px 0; font-weight: normal;">Tijd</h4>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
+            <button class="time-btn" data-time="sunrise" title="Zonsopkomst" style="background: rgba(255,255,255,0.1); border: 1px solid #555; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <span style="font-size: 24px;">🌅</span>
+                <span style="font-size: 12px; color: white;">Opkomst</span>
+            </button>
+            <button class="time-btn" data-time="day" title="Dag" style="background: rgba(255,255,255,0.1); border: 1px solid #555; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <span style="font-size: 24px;">☀️</span>
+                <span style="font-size: 12px; color: white;">Dag</span>
+            </button>
+            <button class="time-btn" data-time="sunset" title="Zonsondergang" style="background: rgba(255,255,255,0.1); border: 1px solid #555; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <span style="font-size: 24px;">🌇</span>
+                <span style="font-size: 12px; color: white;">Ondergang</span>
+            </button>
+            <button class="time-btn" data-time="night" title="Nacht" style="background: rgba(255,255,255,0.1); border: 1px solid #555; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <span style="font-size: 24px;">🌙</span>
+                <span style="font-size: 12px; color: white;">Nacht</span>
+            </button>
+        </div>
+
+        <h4 style="margin: 0 0 5px 0; font-weight: normal;">Weer</h4>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+            <button class="weather-btn" data-weather="clear" title="Helder" style="background: rgba(255,255,255,0.1); border: 1px solid #555; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <span style="font-size: 24px;">☁️</span>
+                <span style="font-size: 12px; color: white;">Helder</span>
+            </button>
+            <button class="weather-btn" data-weather="rain" title="Regen" style="background: rgba(255,255,255,0.1); border: 1px solid #555; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <span style="font-size: 24px;">🌧️</span>
+                <span style="font-size: 12px; color: white;">Regen</span>
+            </button>
+            <button class="weather-btn" data-weather="snow" title="Sneeuw" style="background: rgba(255,255,255,0.1); border: 1px solid #555; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <span style="font-size: 24px;">❄️</span>
+                <span style="font-size: 12px; color: white;">Sneeuw</span>
+            </button>
+            <button class="weather-btn" data-weather="mist" title="Mist" style="background: rgba(255,255,255,0.1); border: 1px solid #555; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <span style="font-size: 24px;">🌫️</span>
+                <span style="font-size: 12px; color: white;">Mist</span>
+            </button>
+            <button class="weather-btn" data-weather="sun" title="Zon (Gloed)" style="background: rgba(255,255,255,0.1); border: 1px solid #555; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <span style="font-size: 24px;">🌅</span>
+                <span style="font-size: 12px; color: white;">Zon</span>
+            </button>
+        </div>
+
+        <hr style="width: 100%; border: 0; border-top: 1px solid #555; margin: 20px 0;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:14px;">Live Server Sync</span>
+            <img id="adminRealTimeToggle" src="icons/rood.png" style="width:24px; height:24px; cursor:pointer;" title="Sync met echte tijd en weer van server locatie">
+        </div>
     </div>
   </div>
 </div>
@@ -1333,12 +1411,13 @@ let socket;
 let otherPlayers = {}; // Hier slaan we de andere spelers op
 let mySocketId = null;
 let myName = "Jij"; // NIEUW: Variabele voor eigen naam
+let myColor = "blue"; // NIEUW: Variabele voor eigen kleur
 let isUserAdmin = false; // NIEUW: Houdt bij of de gebruiker admin is
 const nameHoverStates = {}; // NIEUW: Houdt hover status bij voor fade-out
 let isRoomOwner = false; // Ben ik de eigenaar van de huidige kamer?
 let myRoomId = null; // ID van MIJN kamer (ongeacht waar ik ben)
-let myRoomSettings = { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false }; // Instellingen van MIJN kamer
-let currentRoomSettings = { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false }; // Instellingen van huidige kamer
+let myRoomSettings = { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false, isOutside: false, weather: 'clear', time: 'day' }; // Instellingen van MIJN kamer
+let currentRoomSettings = { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false, isOutside: false, weather: 'clear', time: 'day' }; // Instellingen van huidige kamer
 
 // NIEUW: Vriendenlijst
 let myFriends = [];
@@ -1383,6 +1462,10 @@ try {
         const allowBuildingParam = abVal === null ? null : (abVal === 'true');
         const nsVal = urlParams.get('noSmoking');
         const noSmokingParam = nsVal === null ? null : (nsVal === 'true');
+        const outVal = urlParams.get('isOutside');
+        const isOutsideParam = outVal === null ? null : (outVal === 'true');
+        const weatherParam = urlParams.get('weather');
+        const timeParam = urlParams.get('time');
 
         try {
             const stored = localStorage.getItem(`habboCloneLastPos_${roomId}`);
@@ -1391,7 +1474,7 @@ try {
 
         // Vraag om mee te doen op deze positie
         const sizeToSend = sizeParam && sizeParam.includes('x') ? sizeParam : (sizeParam ? parseInt(sizeParam) : null);
-        socket.emit('joinRoom', { roomId: roomId, ...savedPos, size: sizeToSend, userId: myUserId, alwaysOnline: alwaysOnlineParam, allowBuilding: allowBuildingParam, noSmoking: noSmokingParam });
+        socket.emit('joinRoom', { roomId: roomId, ...savedPos, size: sizeToSend, userId: myUserId, alwaysOnline: alwaysOnlineParam, allowBuilding: allowBuildingParam, noSmoking: noSmokingParam, isOutside: isOutsideParam, weather: weatherParam || 'clear', time: timeParam || 'day' });
 
         // NIEUW: Vraag data van MIJN kamer op
         socket.emit('getMyRoomData', myUserId);
@@ -1401,6 +1484,9 @@ try {
 
         // NIEUW: Vraag de vriendenlijst op
         socket.emit('getFriends');
+
+        // NIEUW: Vraag mijn inventory en geld op van de server
+        socket.emit('getPlayerData', myUserId);
 
         // Update de chatlog nu we een ID hebben, zodat eigen berichten links staan
         updateChatLog();
@@ -1415,7 +1501,7 @@ try {
     socket.on('myRoomData', (data) => {
         if (data.roomId) {
             myRoomId = data.roomId;
-            myRoomSettings = data.settings || { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false };
+            myRoomSettings = data.settings || { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false, isOutside: false, weather: 'clear', time: 'day' };
             if (document.getElementById('myRoomWindow').style.display === 'flex') {
                 renderMyRoomSettings();
             }
@@ -1454,7 +1540,7 @@ try {
 
         // Check eigenaarschap
         isRoomOwner = data.isOwner || false;
-        currentRoomSettings = data.roomSettings || { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false };
+        currentRoomSettings = data.roomSettings || { doorbell: false, alwaysOnline: false, allowBuilding: false, noSmoking: false, isOutside: false, weather: 'clear', time: 'day' };
         updateBuildButton(); // Update footer button state
         
         // Overschrijf onze lokale lijsten met die van de server
@@ -1490,6 +1576,20 @@ try {
             for (const key in wallColors) delete wallColors[key];
             Object.assign(wallColors, data.wallColors);
         }
+        
+        // Laad puddles van server of reset
+        if (data.puddles) {
+            tilePuddles = data.puddles;
+        } else {
+            tilePuddles = {};
+        }
+        
+        if (data.snow) {
+            tileSnow = data.snow;
+        } else {
+            tileSnow = {};
+        }
+        activeSplashes = [];
     });
 
     // Luister naar updates van de kamer
@@ -1506,6 +1606,16 @@ try {
             hydrateObject(o);
             wallObjects.push(o);
         });
+    });
+    
+    // NIEUW: Ontvang puddle updates van server (gesynced door eigenaar/host)
+    socket.on('puddlesUpdate', (data) => {
+        tilePuddles = data;
+    });
+    
+    // NIEUW: Ontvang snow updates
+    socket.on('snowUpdate', (data) => {
+        tileSnow = data;
     });
     
     socket.on('updateTileColor', (data) => {
@@ -1558,6 +1668,7 @@ try {
         // NIEUW: Update eigen naam als we die in de lijst vinden
         if (mySocketId && allPlayers[mySocketId]) {
             myName = allPlayers[mySocketId].name;
+            myColor = allPlayers[mySocketId].color; // Update eigen kleur
         }
 
         const newIds = Object.keys(allPlayers);
@@ -1596,6 +1707,10 @@ try {
                 buildableObjects.push(obj);
             }
         });
+        // NIEUW: Ververs het bouwmenu direct als het open staat
+        if (isBuildMode && activeBuildCategory === 'objecten') {
+            renderBuildItems();
+        }
     });
 
     // NIEUW: Ontvang een nieuw toegevoegd custom object
@@ -1651,6 +1766,25 @@ try {
     socket.on('refund', (data) => {
         addToWallet(data.amount);
         showNotification(`<span style="color: #4cd137;">+€${data.amount.toFixed(2).replace('.', ',')}</span> (${data.reason})`);
+    });
+
+    // NIEUW: Luister naar data van de server
+    socket.on('playerData', (data) => {
+        if (data) {
+            walletBalance = data.wallet || 0;
+            document.getElementById('wallet').textContent = `€${walletBalance.toFixed(2)}`;
+            
+            if (Array.isArray(data.inventory)) {
+                inventoryItems.length = 0;
+                data.inventory.forEach(itemData => {
+                    inventoryItems.push(createItemFromData(itemData));
+                });
+                // Als inventory open staat, ververs de weergave
+                if (document.getElementById('inventory').style.display === 'flex') {
+                    renderInventoryItems();
+                }
+            }
+        }
     });
 
     // NIEUW: Resultaat van aanbellen (voor bezoeker)
@@ -2118,6 +2252,31 @@ try {
                 smokeBtn.style.cursor = 'pointer';
                 smokeBtn.onclick = () => socket.emit('toggleNoSmoking', roomId);
 
+                // Outside knop
+                const sunBtn = document.createElement('button');
+                const sunImg = document.createElement('img');
+                sunImg.src = roomData.isOutside ? 'icons/zon_active.png' : 'icons/zon.png';
+                sunImg.style.width = '16px';
+                sunImg.style.height = '16px';
+                sunBtn.appendChild(sunImg);
+                sunBtn.title = roomData.isOutside ? 'Is Buitenruimte' : 'Is Binnenruimte';
+                sunBtn.style.padding = '4px';
+                sunBtn.style.cursor = 'pointer';
+                sunBtn.onclick = () => socket.emit('toggleIsOutside', roomId);
+
+                // Weer knop (Toggle cycle: Clear -> Rain -> Snow -> Clear)
+                const weatherBtn = document.createElement('button');
+                const weatherIcons = { 'clear': '☁️', 'rain': '🌧️', 'snow': '❄️', 'mist': '🌫️', 'sun': '🌅' };
+                weatherBtn.textContent = weatherIcons[roomData.weather] || '☀️';
+                weatherBtn.title = `Weer: ${roomData.weather}`;
+                weatherBtn.style.padding = '4px';
+                weatherBtn.style.cursor = 'pointer';
+                weatherBtn.style.fontSize = '12px';
+                weatherBtn.onclick = () => {
+                    const nextWeather = roomData.weather === 'clear' ? 'rain' : 'clear'; // Simpele toggle voor lijst, admin menu heeft alles
+                    socket.emit('setRoomWeather', { roomId: roomId, weather: nextWeather });
+                };
+
                 // Hernoem knop
                 const renameBtn = document.createElement('button');
                 const renameImg = document.createElement('img');
@@ -2167,6 +2326,8 @@ try {
                 btnGroup.appendChild(aoBtn);
                 btnGroup.appendChild(buildBtn);
                 btnGroup.appendChild(smokeBtn);
+                btnGroup.appendChild(sunBtn);
+                btnGroup.appendChild(weatherBtn);
                 btnGroup.appendChild(renameBtn);
                 btnGroup.appendChild(delBtn);
             }
@@ -2341,6 +2502,12 @@ try {
         }
     });
 
+    socket.on('roomIsOutsideToggled', () => {
+        if (document.getElementById('roomCategoryView').style.display === 'block') {
+            socket.emit('getRooms');
+        }
+    });
+
     socket.on('roomRenamed', (data) => {
         showNotification(`Kamer "${data.oldId}" is nu "${data.newId}".`);
         // Ververs de admin lijst als die open is
@@ -2360,6 +2527,15 @@ try {
     });
 
     socket.on('renameError', (message) => alert(`Fout bij hernoemen: ${message}`));
+
+    // NIEUW: Real-time status update
+    socket.on('realTimeStatus', (isActive) => {
+        const toggle = document.getElementById('adminRealTimeToggle');
+        if (toggle) {
+            toggle.dataset.active = isActive ? "true" : "false";
+            toggle.src = isActive ? "icons/groen.png" : "icons/rood.png";
+        }
+    });
 
     // NIEUW: Ontvang spelerslijst van een kamer
     socket.on('roomPlayersList', (data) => {
@@ -2517,7 +2693,7 @@ let path = [];
 let highlightedPath = []; // Voor het tekenen van het volledige pad
 
 // Zoom
-const zoomLevels = [0.8, 0.9, 1.0, 1.2, 1.4]; // Fijnere zoom-stappen
+const zoomLevels = [0.8, 0.9, 1.0, 1.2, 1.4, 1.6, 1.8]; // Fijnere zoom-stappen
 let currentZoomIndex = 2; // Start op neutraal niveau (1.0)
 let scale = zoomLevels[currentZoomIndex];
 
@@ -2555,6 +2731,17 @@ let camSmooth = false;
 
 // Bouwmodus
 let highestZ = 21; // Startwaarde voor z-index management
+let rainParticles = []; // Voor weer effect
+
+// Puddles & Splashes
+let tilePuddles = {}; 
+let tileSnow = {}; // NIEUW: Sneeuwlaag data
+let activeSplashes = [];
+
+// Helper voor deterministische random (voor consistente plassen)
+function randomDeterministic(x, y) {
+    return Math.abs(Math.sin(x * 12.9898 + y * 78.233) * 43758.5453) % 1;
+}
 
 function bringToFront(element) {
     // Reset z-index van alle vensters naar een basiswaarde
@@ -2784,6 +2971,14 @@ let transactionFadeTimeout;
 
 // NIEUW: Persistente data functies (Opslaan & Laden)
 function savePlayerData() {
+    // Stuur naar server als we verbonden zijn
+    if (socket && myUserId) {
+        socket.emit('savePlayerData', {
+            userId: myUserId,
+            wallet: walletBalance,
+            inventory: inventoryItems.map(serializeItem)
+        });
+    }
     const data = {
         wallet: walletBalance,
         inventory: inventoryItems.map(serializeItem)
@@ -3295,51 +3490,6 @@ function interruptAction() {
     }
 }
 
-function drawPlacementOutline() {
-    const obj = (selectedBuildObject?.placement === 'floor' && selectedBuildObject) || movingObject || draggedObject || draggedItem;
-    if (obj && hoverCell) {
-        const isFlipped = (obj === selectedBuildObject) ? isBuildObjectFlipped : (obj.flipped || false);
-        const w = isFlipped ? (obj.depth || 1) : (obj.width || 1);
-        const d = isFlipped ? (obj.width || 1) : (obj.depth || 1);
-        
-        let isValidPlacement = true;
-        for(let dx = 0; dx < w; dx++) {
-            for(let dy = 0; dy < d; dy++) {
-                const tx = hoverCell.x + dx;
-                const ty = hoverCell.y + dy;
-                if (tx >= mapW || ty >= mapH) {
-                    isValidPlacement = false;
-                } else if (!obj.isFloor && !obj.isItem && obj !== draggedItem && (isBlocked(tx, ty) || (Math.floor(ball.x) === tx && Math.floor(ball.y) === ty))) {
-                    isValidPlacement = false;
-                }
-            }
-        }
-        
-        // NIEUW: Check afstand voor draggedItem (max 2 tegels)
-        if (obj === draggedItem) {
-             const dist = Math.sqrt(Math.pow(hoverCell.x - Math.floor(ball.x), 2) + Math.pow(hoverCell.y - Math.floor(ball.y), 2));
-             if (dist > 2) isValidPlacement = false;
-        }
-
-        const p0 = toScreen(hoverCell.x, hoverCell.y);
-        const p1 = toScreen(hoverCell.x + w, hoverCell.y);
-        const p2 = toScreen(hoverCell.x + w, hoverCell.y + d);
-        const p3 = toScreen(hoverCell.x, hoverCell.y + d);
-
-        ctx.save();
-        ctx.strokeStyle = isValidPlacement ? "white" : "red";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(p0.sx, p0.sy);
-        ctx.lineTo(p1.sx, p1.sy);
-        ctx.lineTo(p2.sx, p2.sy);
-        ctx.lineTo(p3.sx, p3.sy);
-        ctx.closePath();
-        ctx.stroke();
-        ctx.restore();
-    }
-}
-
 function renderInventoryItems() {
     const inventoryContent = document.getElementById('inventoryContent');
     inventoryContent.innerHTML = ''; // Maak de lijst leeg
@@ -3823,6 +3973,7 @@ buildCategoryMenu.addEventListener('click', (e) => {
                 if (b.dataset.category === 'objecten') img.src = "icons/object.png";
                 if (b.dataset.category === 'kleur') img.src = "icons/color.png";
                 if (b.dataset.category === 'kamers') img.src = "icons/new_room.png";
+                if (b.dataset.category === 'weer') img.src = "icons/zon.png";
             }
         });
         // Deselecteer de losse tools
@@ -3856,12 +4007,14 @@ buildCategoryMenu.addEventListener('click', (e) => {
             if (activeBuildCategory === 'objecten') activeImg.src = "icons/object_active.png";
             if (activeBuildCategory === 'kleur') activeImg.src = "icons/color_active.png";
             if (activeBuildCategory === 'kamers') activeImg.src = "icons/new_room_active.png";
+            if (activeBuildCategory === 'weer') activeImg.src = "icons/zon_active.png";
         }
 
         // Wissel de zichtbare content
         document.getElementById('objectCategoryView').style.display = activeBuildCategory === 'objecten' ? 'flex' : 'none';
         document.getElementById('colorCategoryView').style.display = activeBuildCategory === 'kleur' ? 'flex' : 'none';        
         document.getElementById('roomCategoryView').style.display = activeBuildCategory === 'kamers' ? 'block' : 'none';
+        document.getElementById('weatherCategoryView').style.display = activeBuildCategory === 'weer' ? 'block' : 'none';
         
         if (activeBuildCategory === 'objecten') {
             renderObjectSubCategories(); // Render de subcategorie-knoppen
@@ -3873,6 +4026,35 @@ buildCategoryMenu.addEventListener('click', (e) => {
     }
 });
 
+// Weer knoppen logica (Weer)
+document.querySelectorAll('.weather-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const type = btn.dataset.weather;
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomId = urlParams.get('room') || 'testroom';
+        if (socket) socket.emit('setRoomWeather', { roomId: roomId, weather: type });
+        
+        // Visuele feedback
+        document.querySelectorAll('.weather-btn').forEach(b => b.style.borderColor = '#555');
+        btn.style.borderColor = '#7bff00';
+        showNotification(`Weer ingesteld op: ${btn.title}`);
+    });
+});
+
+// Tijd knoppen logica (Dag/Nacht)
+document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const type = btn.dataset.time;
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomId = urlParams.get('room') || 'testroom';
+        if (socket) socket.emit('setRoomTime', { roomId: roomId, time: type });
+        
+        // Visuele feedback
+        document.querySelectorAll('.time-btn').forEach(b => b.style.borderColor = '#555');
+        btn.style.borderColor = '#7bff00';
+        showNotification(`Tijd ingesteld op: ${btn.title}`);
+    });
+});
 
 
 // --- Logica voor Kleur-tools ---
@@ -3989,6 +4171,11 @@ function openBuildAdminMenu(context) {
         roomBtn.style.display = (context === 'admin') ? 'flex' : 'none';
     }
 
+    const weatherBtn = document.getElementById('adminWeatherBtn');
+    if (weatherBtn) {
+        weatherBtn.style.display = (context === 'admin') ? 'flex' : 'none';
+    }
+
     const uploadBtn = document.getElementById('uploadToolBtn');
     if (uploadBtn) {
         uploadBtn.style.display = (context === 'admin') ? 'flex' : 'none';
@@ -4014,6 +4201,7 @@ document.getElementById('createRoomBtn').addEventListener('click', () => {
     const alwaysOnline = document.getElementById('adminAlwaysOnlineToggle').dataset.active === "true";
     const allowBuilding = document.getElementById('adminBuildToggle').dataset.allowed === "true";
     const noSmoking = document.getElementById('adminNoSmokingToggle').dataset.forbidden === "true";
+    const isOutside = document.getElementById('adminOutsideToggle').dataset.outside === "true";
 
     if (!roomName) {
         showNotification("Benoem de kamer.");
@@ -4029,7 +4217,7 @@ document.getElementById('createRoomBtn').addEventListener('click', () => {
 
     // Omdat we geen bestanden kunnen schrijven (browser security), gebruiken we URL parameters.
     // Dit herlaadt de pagina met de nieuwe instellingen (naam en grootte).
-    window.location.search = `?room=${sanitizedName}&size=${selectedSize}&alwaysOnline=${alwaysOnline}&allowBuilding=${allowBuilding}&noSmoking=${noSmoking}`;
+    window.location.search = `?room=${sanitizedName}&size=${selectedSize}&alwaysOnline=${alwaysOnline}&allowBuilding=${allowBuilding}&noSmoking=${noSmoking}&isOutside=${isOutside}`;
 });
 
 document.getElementById('saveRoomBtn').addEventListener('click', () => {
@@ -4038,7 +4226,9 @@ document.getElementById('saveRoomBtn').addEventListener('click', () => {
         wallObjects: wallObjects, 
         tileColors: tileColors, 
         wallColors: wallColors,
-        items: items.map(serializeItem) 
+        items: items.map(serializeItem),
+        puddles: tilePuddles, // NIEUW: Sla puddles op
+        snow: tileSnow // NIEUW: Sla sneeuw op
     });
     showNotification("Kamer opgeslagen!");
 });
@@ -4063,6 +4253,15 @@ document.getElementById('clearRoomBtn').addEventListener('click', () => {
         showNotification("Alle items verwijderd!");
     }
 });
+
+// NIEUW: Real-time sync toggle listener
+const adminRealTimeToggle = document.getElementById('adminRealTimeToggle');
+if (adminRealTimeToggle) {
+    adminRealTimeToggle.addEventListener('click', () => {
+        const current = adminRealTimeToggle.dataset.active === "true";
+        if (socket) socket.emit('toggleRealTime', !current);
+    });
+}
 
 // ─────────────────────────────────────────────
 // 📤 UPLOAD CUSTOM ITEM LOGICA
@@ -4151,14 +4350,8 @@ if (customFileUpload) {
         // Selecteer eerste als default
         if(uniqueTemplates.length > 0) {
             selectedTemplate = uniqueTemplates[0];
-            document.getElementById('confWalkable').checked = selectedTemplate.isFloor || false;
-            document.getElementById('confMoveable').checked = selectedTemplate.moveable || false;
+            updateUploadUI();
         }
-
-        // Reset inputs
-        document.getElementById('confWidth').value = 1;
-        document.getElementById('confDepth').value = 1;
-        document.getElementById('confHeight').value = 1;
 
         // Toon preview
         previewImageObj = new Image();
@@ -4171,7 +4364,13 @@ if (customFileUpload) {
                 colBox.h = parseInt(document.getElementById('confDepth').value) || 1;
                 // Zet het ankerpunt (top van de diamant) in het midden van de afbeelding, iets boven de onderkant
                 colBox.x = Math.floor(previewImageObj.width / 2);
-                colBox.y = Math.max(0, previewImageObj.height - 32); 
+                
+                // Bepaal y-offset op basis van template type
+                let yOffset = 32; // Default (vloer / brede muur)
+                if (selectedTemplate && selectedTemplate.placement === 'wall') {
+                    yOffset = (selectedTemplate.width && selectedTemplate.width > 1) ? 32 : 16;
+                }
+                colBox.y = Math.max(0, previewImageObj.height - yOffset); 
                 drawCollisionPreview();
             };
         };
@@ -4184,10 +4383,51 @@ document.getElementById('templateSelect').addEventListener('change', (e) => {
     const option = e.target.options[e.target.selectedIndex];
     if(option && option.dataset.json) {
         selectedTemplate = JSON.parse(option.dataset.json);
-        document.getElementById('confWalkable').checked = selectedTemplate.isFloor || false;
-        document.getElementById('confMoveable').checked = selectedTemplate.moveable || false;
+        updateUploadUI();
     }
 });
+
+function updateUploadUI() {
+    if (!selectedTemplate) return;
+    const isWall = selectedTemplate.placement === 'wall';
+    
+    const configStep = document.getElementById('uploadConfigStep');
+    const inputGrid = configStep.querySelector('div:first-child > div:nth-child(2)');
+    const checkboxRow = configStep.querySelector('div:nth-child(2)');
+    
+    if (isWall) {
+        if(inputGrid) inputGrid.style.display = 'none';
+        if(checkboxRow) checkboxRow.style.display = 'none';
+        
+        // Forceer waarden van template
+        colBox.w = selectedTemplate.width || 1;
+        colBox.h = selectedTemplate.depth || 1;
+        
+        // Reset offsets naar standaard voor dit type muurdecoratie als er een plaatje is
+        if (previewImageObj) {
+             const stdOffset = (colBox.w > 1) ? 32 : 16;
+             colBox.y = Math.max(0, previewImageObj.height - stdOffset);
+             colBox.x = Math.floor(previewImageObj.width / 2);
+        }
+
+        document.getElementById('confWidth').value = colBox.w;
+        document.getElementById('confDepth').value = colBox.h;
+        document.getElementById('confHeight').value = selectedTemplate.height || 1;
+    } else {
+        if(inputGrid) inputGrid.style.display = 'grid';
+        if(checkboxRow) checkboxRow.style.display = 'flex';
+        
+        document.getElementById('confWalkable').checked = selectedTemplate.isFloor || false;
+        document.getElementById('confMoveable').checked = selectedTemplate.moveable || false;
+        
+        colBox.w = selectedTemplate.width || 1;
+        colBox.h = selectedTemplate.depth || 1;
+        document.getElementById('confWidth').value = colBox.w;
+        document.getElementById('confDepth').value = colBox.h;
+        document.getElementById('confHeight').value = selectedTemplate.height || 1;
+    }
+    if (previewImageObj) drawCollisionPreview();
+}
 
 // Functie om de preview en het grid te tekenen
 function drawCollisionPreview() {
@@ -5058,49 +5298,6 @@ function drawTiles() {
         }
     }
 
-    // Teken het gehighlighte pad
-    if (highlightedPath.length > 0) {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.5)"; // Wit met meer zichtbaarheid
-        highlightedPath.forEach(tile => {
-            const { sx, sy } = toScreen(tile.x, tile.y);
-            ctx.beginPath();
-            ctx.moveTo(sx, sy);
-            ctx.lineTo(sx + tileW / 2, sy + tileH / 2);
-            ctx.lineTo(sx, sy + tileH);
-            ctx.lineTo(sx - tileW / 2, sy + tileH / 2);
-            ctx.closePath();
-            ctx.fill();
-        });
-    }
-
-
-    // Hover-effect voor de kwast
-    if (isBuildMode && activeBuildCategory === 'kleur' && hoverTarget) {
-        if (hoverTarget.type === 'tile') {
-            const { sx, sy } = toScreen(hoverTarget.id.x, hoverTarget.id.y);
-            ctx.beginPath();
-            ctx.moveTo(sx, sy);
-            ctx.lineTo(sx + tileW / 2, sy + tileH / 2);
-            ctx.lineTo(sx, sy + tileH);
-            ctx.lineTo(sx - tileW / 2, sy + tileH / 2);
-            ctx.closePath();
-            ctx.fillStyle = "rgba(255,255,255,0.5)";
-            ctx.fill();
-        } else if (hoverTarget.type === 'wall') {
-            // Dit wordt afgehandeld in de drawWall functies
-        }
-    } else if (hoverCell && !isBuildMode && !isItemDragging && !isObjectDragging) { // Oude hover voor padvinden
-        const { sx, sy } = toScreen(hoverCell.x, hoverCell.y);
-        ctx.beginPath();
-        ctx.moveTo(sx, sy);
-        ctx.lineTo(sx + tileW / 2, sy + tileH / 2);
-        ctx.lineTo(sx, sy + tileH);
-        ctx.lineTo(sx - tileW / 2, sy + tileH / 2);
-        ctx.closePath();
-        ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.fill();
-    }
-
     // Bouwmodus hover (plaatsen & verplaatsen)
     const activeObj = selectedBuildObject || movingObject;
     const isWallObject = activeObj && ((activeObj.placement === 'wall') || activeObj.wallId);
@@ -5142,7 +5339,7 @@ function drawCharacter(x, y, isLocal, color = "blue", hop = 0, isSmoking = false
     const drawY = sy - currentHop - capsuleHeight;
 
     // Capsule speler
-    ctx.fillStyle = "red";
+    ctx.fillStyle = color; // Gebruik de spelerskleur voor het lijfje
     ctx.beginPath();
     ctx.moveTo(sx - capsuleWidth/2, drawY + radius);
     ctx.arcTo(sx - capsuleWidth/2, drawY + capsuleHeight, sx + capsuleWidth/2, drawY + capsuleHeight, radius);
@@ -5152,17 +5349,6 @@ function drawCharacter(x, y, isLocal, color = "blue", hop = 0, isSmoking = false
     ctx.closePath();
     ctx.fill();
 
-    // Hoed boven capsule
-    const hatWidth = 32;
-    const hatHeight = 16;
-    const capsuleTop = drawY;
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(sx, capsuleTop - hatHeight);
-    ctx.lineTo(sx - hatWidth/2, capsuleTop);
-    ctx.lineTo(sx + hatWidth/2, capsuleTop);
-    ctx.closePath();
-      ctx.fill();
 
     // NIEUW: Rook animatie
     if (isSmoking) {
@@ -5264,7 +5450,7 @@ function drawCharacter(x, y, isLocal, color = "blue", hop = 0, isSmoking = false
 }
 
 function drawBall() {
-    drawCharacter(ball.x, ball.y, true, "blue", 0, isSmoking, ball.smokingStartTime, ball.smokingItemType, isDrinking, ball.drinkingStartTime, ball.drinkingItemType);
+    drawCharacter(ball.x, ball.y, true, myColor, 0, isSmoking, ball.smokingStartTime, ball.smokingItemType, isDrinking, ball.drinkingStartTime, ball.drinkingItemType);
 }
 
 // Achterwand
@@ -5286,18 +5472,12 @@ function drawTopWall() {
         ctx.closePath();
         ctx.fill();
 
-        // Teken de highlight eroverheen als de muis erboven is
-        if (hoverTarget && hoverTarget.type === 'wall' && hoverTarget.id === wallId) {
-            ctx.fillStyle = "rgba(255,255,255,0.5)";
-            ctx.fill(); // Gebruik hetzelfde pad, dus vul opnieuw
-        }
-
         // Teken een eventueel muurobject
         const objectsStartingOnWall = wallObjects.filter(wo => wo.wallId === wallId);
         objectsStartingOnWall.forEach(wallObject => {
             if (!wallObject.isFree) {
                 // Grid-based tekening
-                const width = wallObject.width || 1;
+                const width = parseInt(wallObject.width || 1);
                 const endSegmentX = x + width - 1;
                 if (endSegmentX >= mapW) return; // Object gaat buiten de map
 
@@ -5312,15 +5492,32 @@ function drawTopWall() {
                     ctx.filter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
                 }
 
-                if (wallObject.flipped) {
-                    ctx.scale(-1, 1);
-                    ctx.drawImage(img, -objX - img.width / 2, objY - img.height + yOffset);
+                if (wallObject.isCustom && wallObject.xOffset !== undefined) {
+                    const drawX = objX - wallObject.xOffset;
+                    const drawY = objY - wallObject.yOffset;
+                    if (wallObject.flipped) {
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(img, -drawX - img.width, drawY);
+                    } else {
+                        ctx.drawImage(img, drawX, drawY);
+                    }
                 } else {
-                    ctx.drawImage(img, objX - img.width / 2, objY - img.height + yOffset);
+                    if (wallObject.flipped) {
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(img, -objX - img.width / 2, objY - img.height + yOffset);
+                    } else {
+                        ctx.drawImage(img, objX - img.width / 2, objY - img.height + yOffset);
+                    }
                 }
                 ctx.restore();
             }
         });
+
+        // Teken de highlight eroverheen als de muis erboven is (NA de objecten)
+        if (hoverTarget && hoverTarget.type === 'wall' && hoverTarget.id === wallId) {
+            ctx.fillStyle = "rgba(255,255,255,0.5)";
+            ctx.fill(); // Gebruik hetzelfde pad
+        }
 
         // Teken de preview voor een nieuw muurobject
         const activeObj = movingObject || selectedBuildObject;
@@ -5328,7 +5525,7 @@ function drawTopWall() {
         if (isWallObject && hoverTarget?.type === 'wall' && hoverTarget.id === wallId) {
             if (!activeObj.isFree) {
                 // OUDE LOGICA
-                const width = activeObj.width || 1;
+                const width = parseInt(activeObj.width || 1);
                 const endSegmentX = x + width - 1;
                 if (endSegmentX >= mapW) return;
 
@@ -5350,13 +5547,26 @@ function drawTopWall() {
                 const yOffset = (width > 1) ? 32 : 16;
                 ctx.globalAlpha = 0.7;
 
-                if (isBuildObjectFlipped) {
-                    ctx.save();
-                    ctx.scale(-1, 1);
-                    ctx.drawImage(img, -objX - img.width / 2, objY - img.height + yOffset);
-                    ctx.restore();
+                if (activeObj.isCustom && activeObj.xOffset !== undefined) {
+                    const drawX = objX - activeObj.xOffset;
+                    const drawY = objY - activeObj.yOffset;
+                    if (isBuildObjectFlipped) {
+                        ctx.save();
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(img, -drawX - img.width, drawY);
+                        ctx.restore();
+                    } else {
+                        ctx.drawImage(img, drawX, drawY);
+                    }
                 } else {
-                    ctx.drawImage(img, objX - img.width / 2, objY - img.height + yOffset);
+                    if (isBuildObjectFlipped) {
+                        ctx.save();
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(img, -objX - img.width / 2, objY - img.height + yOffset);
+                        ctx.restore();
+                    } else {
+                        ctx.drawImage(img, objX - img.width / 2, objY - img.height + yOffset);
+                    }
                 }
                 ctx.globalAlpha = 1;
             }
@@ -5383,18 +5593,12 @@ function drawLeftWall() {
         ctx.closePath();
         ctx.fill();
 
-        // Teken de highlight eroverheen als de muis erboven is
-        if (hoverTarget && hoverTarget.type === 'wall' && hoverTarget.id === wallId) {
-            ctx.fillStyle = "rgba(255,255,255,0.5)";
-            ctx.fill(); // Gebruik hetzelfde pad, dus vul opnieuw
-        }
-
         // Teken een eventueel muurobject
         const objectsStartingOnWall = wallObjects.filter(wo => wo.wallId === wallId);
         objectsStartingOnWall.forEach(wallObject => {
             if (!wallObject.isFree) {
                 // Grid-based tekening
-                const width = wallObject.width || 1;
+                const width = parseInt(wallObject.width || 1);
                 const endSegmentY = y + width - 1;
                 if (endSegmentY >= mapH) return;
 
@@ -5410,15 +5614,32 @@ function drawLeftWall() {
                     ctx.filter = buildTool === 'delete' ? "sepia(1) hue-rotate(-50deg) saturate(5)" : "brightness(1.5)";
                 }
 
-                if (wallObject.flipped) {
-                    ctx.scale(-1, 1);
-                    ctx.drawImage(img, -objX - img.width / 2, drawY - img.height + yOffset);
+                if (wallObject.isCustom && wallObject.xOffset !== undefined) {
+                    const drawX = objX - wallObject.xOffset;
+                    const drawY = objY - wallObject.yOffset;
+                    if (wallObject.flipped) {
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(img, -drawX - img.width, drawY);
+                    } else {
+                        ctx.drawImage(img, drawX, drawY);
+                    }
                 } else {
-                    ctx.drawImage(img, objX - img.width / 2, drawY - img.height + yOffset);
+                    if (wallObject.flipped) {
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(img, -objX - img.width / 2, drawY - img.height + yOffset);
+                    } else {
+                        ctx.drawImage(img, objX - img.width / 2, drawY - img.height + yOffset);
+                    }
                 }
                 ctx.restore();
             }
         });
+
+        // Teken de highlight eroverheen als de muis erboven is (NA de objecten)
+        if (hoverTarget && hoverTarget.type === 'wall' && hoverTarget.id === wallId) {
+            ctx.fillStyle = "rgba(255,255,255,0.5)";
+            ctx.fill(); // Gebruik hetzelfde pad
+        }
 
         // Teken de preview voor een nieuw muurobject
         const activeObj = movingObject || selectedBuildObject;
@@ -5426,7 +5647,7 @@ function drawLeftWall() {
         if (isWallObject && hoverTarget?.type === 'wall' && hoverTarget.id === wallId) {
             if (!activeObj.isFree) {
                 // OUDE LOGICA
-                const width = activeObj.width || 1;
+                const width = parseInt(activeObj.width || 1);
                 const endSegmentY = y + width - 1;
                 if (endSegmentY >= mapH) return;
 
@@ -5447,13 +5668,26 @@ function drawLeftWall() {
                 const img = activeObj.runtimeImage || (width > 1 ? wallItem2Img : wallItemImg);
                 const yOffset = (width > 1) ? 32 : 16;
                 ctx.globalAlpha = 0.7;
-                if (isBuildObjectFlipped) {
-                    ctx.save();
-                    ctx.scale(-1, 1);
-                    ctx.drawImage(img, -objX - img.width / 2, objY - img.height + yOffset);
-                    ctx.restore();
+                if (activeObj.isCustom && activeObj.xOffset !== undefined) {
+                    const drawX = objX - activeObj.xOffset;
+                    const drawY = objY - activeObj.yOffset;
+                    if (isBuildObjectFlipped) {
+                        ctx.save();
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(img, -drawX - img.width, drawY);
+                        ctx.restore();
+                    } else {
+                        ctx.drawImage(img, drawX, drawY);
+                    }
                 } else {
-                    ctx.drawImage(img, objX - img.width / 2, objY - img.height + yOffset);
+                    if (isBuildObjectFlipped) {
+                        ctx.save();
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(img, -objX - img.width / 2, objY - img.height + yOffset);
+                        ctx.restore();
+                    } else {
+                        ctx.drawImage(img, objX - img.width / 2, objY - img.height + yOffset);
+                    }
                 }
                 ctx.globalAlpha = 1;
             }
@@ -5775,7 +6009,7 @@ function drawChatBallon() {
     const lineHeight = 18;
     const gap = 18;
     const fadeTime = 1000;
-    const offsetAbovePlayer = 96;
+    const offsetAbovePlayer = 48 * scale + 40; // Dynamische afstand op basis van zoom
 
     // Helper om positie te bepalen
     function getPlayerPosition(id) {
@@ -7293,7 +7527,9 @@ window.addEventListener("mouseup", e => {
                                 image: selectedBuildObject.image, // Stuur plaatje mee
                                 isCustom: selectedBuildObject.isCustom, // Stuur custom vlag mee
                                 ownerId: mySocketId, // Stuur eigenaar mee
-                                width: width // Stuur breedte mee
+                                width: width, // Stuur breedte mee
+                                xOffset: selectedBuildObject.xOffset, // NIEUW: Stuur offsets mee
+                                yOffset: selectedBuildObject.yOffset
                             });
                         }
                     }
@@ -9464,6 +9700,99 @@ setInterval(() => {
     }
 }, 250);
 
+let lastPuddleSyncTime = 0;
+let lastSnowSyncTime = 0;
+
+function updateWeatherEffects(delta) {
+    const weather = currentRoomSettings.weather;
+    const isRaining = currentRoomSettings.isOutside && weather === 'rain';
+    const isSnowing = currentRoomSettings.isOutside && weather === 'snow';
+    
+    // Bepaal of wij de simulatie draaien (Eigenaar of Host in publieke kamer)
+    const allIds = Object.keys(otherPlayers).concat([mySocketId]);
+    allIds.sort();
+    const isHost = allIds[0] === mySocketId;
+    const shouldSimulate = isRoomOwner || (!currentRoomSettings.ownerId && isHost);
+
+    if (shouldSimulate) {
+        // --- SNEEUW LOGICA ---
+        if (isSnowing) {
+            // Sneeuw bouwt op
+            for (let i = 0; i < 3; i++) {
+                const rx = Math.floor(Math.random() * (mapW - 2)) + 1;
+                const ry = Math.floor(Math.random() * (mapH - 2)) + 1;
+                const key = `${rx},${ry}`;
+                if (!isBlocked(rx, ry)) { 
+                    if (!tileSnow[key]) tileSnow[key] = 0;
+                    if (tileSnow[key] < 1) tileSnow[key] += 0.005 * delta; // Sneeuw groeit langzamer
+                }
+            }
+        }
+        else {
+            // Sneeuw smelt (Dooien) -> Wordt water
+            for (const key in tileSnow) {
+                const meltRate = 0.002 * delta;
+                tileSnow[key] -= meltRate;
+                
+                // Smeltwater wordt toegevoegd aan puddles
+                if (!tilePuddles[key]) tilePuddles[key] = 0;
+                tilePuddles[key] += meltRate;
+                if (tilePuddles[key] > 1) tilePuddles[key] = 1;
+
+                if (tileSnow[key] <= 0) delete tileSnow[key];
+            }
+        }
+
+        // --- REGEN LOGICA ---
+        if (isRaining) {
+            // Plassen groeien door regen
+            for (let i = 0; i < 5; i++) {
+                const rx = Math.floor(Math.random() * (mapW - 2)) + 1;
+                const ry = Math.floor(Math.random() * (mapH - 2)) + 1;
+                const key = `${rx},${ry}`;
+                
+                // Gebruik deterministische random om te bepalen of hier een plas kan vormen (kuil in de weg)
+                // Alleen tegels met een waarde > 0.65 krijgen een plas (ca. 35% van de tegels)
+                if (randomDeterministic(rx, ry) > 0.65 && !isBlocked(rx, ry)) { 
+                    if (!tilePuddles[key]) tilePuddles[key] = 0;
+                    if (tilePuddles[key] < 1) tilePuddles[key] += 0.01 * delta;
+                }
+            }
+        } else {
+            // Plassen drogen op (als het niet regent)
+            for (const key in tilePuddles) {
+                tilePuddles[key] -= 0.001 * delta;
+                if (tilePuddles[key] <= 0) delete tilePuddles[key];
+            }
+        }
+        
+        // Sync naar server (elke seconde, throttled)
+        const now = Date.now();
+        if (now - lastPuddleSyncTime > 1000) {
+            socket.emit('syncPuddles', tilePuddles);
+            socket.emit('syncSnow', tileSnow); // Ook sneeuw syncen
+            lastPuddleSyncTime = now;
+        }
+    }
+    
+    // Spetters zijn visueel en lokaal, die mag iedereen zien/genereren
+    if (isRaining) {
+        if (activeSplashes.length < 50) {
+             const count = Math.random() < 0.5 ? 0 : 1; 
+             for(let i=0; i<count; i++){
+                 const rx = Math.random() * (mapW - 2) + 1;
+                 const ry = Math.random() * (mapH - 2) + 1;
+                 if (!isBlocked(Math.floor(rx), Math.floor(ry))) {
+                     activeSplashes.push({x: rx, y: ry, startTime: Date.now()});
+                 }
+             }
+        }
+    }
+    
+    const now = Date.now();
+    activeSplashes = activeSplashes.filter(s => now - s.startTime < 300);
+}
+
 // NIEUW: Aparte loop voor spellogica (blijft draaien in achtergrond via setInterval)
 function gameLogic() {
     const now = Date.now();
@@ -9476,10 +9805,190 @@ function gameLogic() {
     updateBall(delta);
     updateOtherPlayers(delta);
     updateCamera(delta);
+    updateWeatherEffects(delta);
 }
 
 // Start de logic loop op ~60fps
 setInterval(gameLogic, 1000 / 60);
+
+let weatherParticles = [];
+// NIEUW: State variabelen voor soepele transities
+let curTimeOverlay = { r: 0, g: 0, b: 0, a: 0 };
+let curWeatherOverlay = { r: 0, g: 0, b: 0, a: 0 };
+let curSkyColor = { r: 135, g: 206, b: 235, a: 1 }; // Default dag blauw
+let curHorizonColor = { r: 34, g: 34, b: 34, a: 1 }; // Default horizon grijs
+let curGroundColor = { r: 34, g: 34, b: 34, a: 1 }; // Default grond grijs
+
+// Helper voor lineaire interpolatie
+function lerp(start, end, t) {
+    return start + (end - start) * t;
+}
+
+// Helper voor kleur interpolatie
+function lerpColor(current, target, speed) {
+    return {
+        r: lerp(current.r, target.r, speed),
+        g: lerp(current.g, target.g, speed),
+        b: lerp(current.b, target.b, speed),
+        a: lerp(current.a !== undefined ? current.a : 1, (target.a !== undefined ? target.a : 1), speed)
+    };
+}
+
+function updateAndDrawWeather(ctx, width, height) {
+    const weather = currentRoomSettings.weather || 'clear';
+    const time = currentRoomSettings.time || 'day';
+    const isOutside = currentRoomSettings.isOutside;
+
+    // 1. Particle logica (alleen als we buiten zijn)
+    if (!isOutside) {
+        weatherParticles = [];
+    } else {
+        // Spawn particles
+        if (weatherParticles.length < 200 && (weather === 'rain' || weather === 'snow')) {
+            let spawnX = Math.random() * width;
+            let spawnY = -10;
+            
+            if (weather === 'rain') spawnX = Math.random() * (width + 300); // Breder spawnen voor schuine regen
+
+            weatherParticles.push({
+                x: spawnX,
+                y: spawnY,
+                speed: Math.random() * 5 + 5,
+                type: weather
+            });
+        }
+    }
+
+    // 2. Bepaal doelkleuren voor overlays
+    let targetTime = { r: 0, g: 0, b: 0, a: 0 };
+    let targetWeather = { r: 0, g: 0, b: 0, a: 0 };
+
+    if (isOutside) {
+        if (time === 'night') targetTime = { r: 0, g: 0, b: 20, a: 0.6 };
+        else if (time === 'sunrise') targetTime = { r: 255, g: 150, b: 50, a: 0.2 };
+        else if (time === 'sunset') targetTime = { r: 200, g: 50, b: 50, a: 0.3 };
+        
+        if (weather === 'mist') targetWeather = { r: 255, g: 255, b: 255, a: 0.4 };
+        else if (weather === 'sun' && time === 'day') targetWeather = { r: 255, g: 220, b: 150, a: 0.25 };
+    }
+
+    // 3. Interpoleer huidige kleur naar doelkleur (Smooth Transition)
+    const speed = 0.01; // Snelheid van de transitie (lager = trager/vloeiender)
+    curTimeOverlay = lerpColor(curTimeOverlay, targetTime, speed);
+    curWeatherOverlay = lerpColor(curWeatherOverlay, targetWeather, speed);
+
+    // 4. Teken overlays
+    if (curTimeOverlay.a > 0.005) {
+        ctx.fillStyle = `rgba(${Math.round(curTimeOverlay.r)}, ${Math.round(curTimeOverlay.g)}, ${Math.round(curTimeOverlay.b)}, ${curTimeOverlay.a})`;
+        ctx.fillRect(0, 0, width, height);
+    }
+    if (curWeatherOverlay.a > 0.005) {
+        ctx.fillStyle = `rgba(${Math.round(curWeatherOverlay.r)}, ${Math.round(curWeatherOverlay.g)}, ${Math.round(curWeatherOverlay.b)}, ${curWeatherOverlay.a})`;
+        ctx.fillRect(0, 0, width, height);
+    }
+
+    // Teken particles (Regen, Sneeuw)
+    if (weather === 'rain' || weather === 'snow') {
+        ctx.strokeStyle = 'rgba(174, 194, 224, 0.5)';
+        ctx.fillStyle = 'white';
+        ctx.lineWidth = 1;
+
+        for (let i = 0; i < weatherParticles.length; i++) {
+            const p = weatherParticles[i];
+            
+            if (weather === 'rain') {
+                p.y += p.speed;
+                p.x -= 2; // Schuin naar links
+                
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p.x - 2, p.y + 10); // Schuine streep
+                ctx.stroke();
+            } else if (weather === 'snow') {
+                p.y += p.speed * 0.2; // Sneeuw valt trager (was 0.6)
+                // Pixelated sneeuw (vierkantjes)
+                ctx.fillRect(p.x, p.y, 2, 2);
+            }
+
+            // Kill particles die buiten beeld vallen
+            if (p.y > height) {
+                weatherParticles.splice(i, 1);
+                i--;
+            }
+        }
+    }
+}
+
+function drawSkybox() {
+    if (!currentRoomSettings.isOutside) {
+        return;
+    }
+
+    const weather = currentRoomSettings.weather || 'clear';
+    const time = currentRoomSettings.time || 'day';
+
+    // Bepaal doelkleuren voor lucht en horizon
+    let targetSky = { r: 135, g: 206, b: 235 }; // Default dag
+    let targetHorizon = { r: 160, g: 215, b: 245 }; // Default horizon (Iets donkerder dan grond voor verloop)
+    let targetGround = { r: 34, g: 34, b: 34 }; // Default grond grijs
+
+    if (time === 'night') {
+        targetSky = { r: 10, g: 10, b: 30 };
+        targetHorizon = { r: 34, g: 34, b: 34 };
+        targetGround = { r: 34, g: 34, b: 34 };
+    } else if (weather === 'rain') {
+        targetSky = { r: 50, g: 50, b: 70 };
+        targetHorizon = { r: 34, g: 34, b: 34 };
+        targetGround = { r: 34, g: 34, b: 34 };
+    } else if (weather === 'snow' || weather === 'mist') {
+        targetSky = { r: 200, g: 200, b: 210 };
+        targetHorizon = { r: 200, g: 200, b: 210 };
+        targetGround = { r: 34, g: 34, b: 34 };
+    } else if (time === 'sunrise') {
+        targetSky = { r: 255, g: 200, b: 120 };
+        targetHorizon = { r: 255, g: 170, b: 0 }; // Oranje horizon
+        targetGround = { r: 34, g: 34, b: 34 }; // Grijs aan de grond
+    } else if (time === 'sunset') {
+        targetSky = { r: 180, g: 80, b: 100 };
+        targetHorizon = { r: 255, g: 68, b: 0 }; // Rood/Oranje horizon
+        targetGround = { r: 34, g: 34, b: 34 }; // Grijs aan de grond
+    } else if (weather === 'sun' && time === 'day') {
+        targetSky = { r: 255, g: 200, b: 100 };
+        targetHorizon = { r: 255, g: 210, b: 125 }; // Iets donkerder voor verloop
+        targetGround = { r: 34, g: 34, b: 34 }; // Grijs aan de grond
+    }
+
+    // Interpoleer kleuren
+    const speed = 0.01;
+    curSkyColor = lerpColor(curSkyColor, targetSky, speed);
+    curHorizonColor = lerpColor(curHorizonColor, targetHorizon, speed);
+    curGroundColor = lerpColor(curGroundColor, targetGround, speed);
+
+    ctx.save();
+    // GEEN reset transform, we tekenen in de wereld!
+    
+    // Bereken het ankerpunt (Tile 0,0 - de hoek van de muren)
+    const anchor = toScreen(0, 0);
+    
+    // Maak een gradient die start bij de vloer (anchor.sy) en omhoog gaat
+    // We tekenen een grote rechthoek die meebeweegt met de wereld
+    const skyHeight = 2000; // Hoog genoeg om het scherm te vullen
+    const skyWidth = 4000;  // Breed genoeg
+    
+    const gradient = ctx.createLinearGradient(0, anchor.sy, 0, anchor.sy - skyHeight);
+    
+    // Gebruik geïnterpoleerde kleuren
+    gradient.addColorStop(0, `rgb(${Math.round(curGroundColor.r)},${Math.round(curGroundColor.g)},${Math.round(curGroundColor.b)})`);
+    gradient.addColorStop(0.1, `rgb(${Math.round(curHorizonColor.r)},${Math.round(curHorizonColor.g)},${Math.round(curHorizonColor.b)})`);
+    gradient.addColorStop(0.3, `rgb(${Math.round(curSkyColor.r)},${Math.round(curSkyColor.g)},${Math.round(curSkyColor.b)})`);
+    
+    ctx.fillStyle = gradient;
+    
+    // Teken de lucht achter de muren (vanaf -2000 tot +2000 breedte)
+    ctx.fillRect(anchor.sx - skyWidth/2, anchor.sy - skyHeight, skyWidth, skyHeight);
+
+    ctx.restore();
+}
 
 function renderLoop() {
     // Reset transform naar fysieke pixels (inclusief DPR)
@@ -9511,14 +10020,222 @@ function renderLoop() {
         (window.innerHeight / 4 + camY) * dpr
     );
 
+    // NIEUW: Teken skybox als we buiten zijn (NU IN WERELD SPACE)
+    drawSkybox();
+
     drawTiles();
-    drawPlacementOutline();
     drawTopWall();
     drawLeftWall();
     drawFreeWallObjects(); // NIEUW: Teken vrije muurobjecten op de voorgrond
 
     // --- Dieptegesorteerde renderlijst ---
     const renderList = [];
+    
+    // 1. Path Highlight
+    if (highlightedPath.length > 0) {
+        highlightedPath.forEach(tile => {
+            renderList.push({
+                type: 'highlight',
+                sortKey: tile.x + tile.y - 0.05, // Boven vloer (-0.1), onder objecten
+                draw: () => {
+                    const { sx, sy } = toScreen(tile.x, tile.y);
+                    ctx.beginPath();
+                    ctx.moveTo(sx, sy);
+                    ctx.lineTo(sx + tileW / 2, sy + tileH / 2);
+                    ctx.lineTo(sx, sy + tileH);
+                    ctx.lineTo(sx - tileW / 2, sy + tileH / 2);
+                    ctx.closePath();
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                    ctx.fill();
+                }
+            });
+        });
+    }
+
+    // Puddles (Regenplassen) - Toegevoegd aan renderList voor correcte z-index (boven vloeren)
+    for (const key in tilePuddles) {
+        const puddle = tilePuddles[key];
+        if (puddle > 0.05) {
+            const [tx, ty] = key.split(',').map(Number);
+            renderList.push({
+                type: 'puddle',
+                sortKey: tx + ty - 0.06, // Boven vloer (-0.1), onder highlights (-0.05)
+                draw: () => {
+                    const { sx, sy } = toScreen(tx, ty);
+                    ctx.save();
+                    ctx.translate(sx, sy + tileH / 2);
+                    ctx.scale(1, 0.5);
+                    
+                    // Pixel Art Puddle
+                    const size = (tileW / 2 * 0.8) * Math.sqrt(puddle);
+                    const pixelSize = 4; // Grootte van de 'pixels'
+                    const seed = randomDeterministic(tx, ty);
+                    
+                    ctx.fillStyle = `rgba(100, 120, 160, ${0.6 * puddle})`;
+                    
+                    for (let py = -size; py <= size; py += pixelSize) {
+                        // Bereken breedte op deze hoogte (cirkel formule)
+                        const chord = Math.sqrt(Math.max(0, size*size - py*py));
+                        // Voeg ruis toe aan de breedte en positie voor een grillige vorm
+                        const noise = Math.sin(py * 0.5 + seed * 10) * (size * 0.3);
+                        const w = Math.max(0, (chord + noise) * 2);
+                        const xOffset = Math.cos(py * 0.1 + seed * 5) * (size * 0.2);
+                        
+                        if (w > 0) ctx.fillRect(xOffset - w/2, py, w, pixelSize);
+                    }
+                    ctx.restore();
+                }
+            });
+        }
+    }
+
+    // Snow (Sneeuwlaag) - Teken BOVEN puddles
+    for (const key in tileSnow) {
+        const snowAmount = tileSnow[key];
+        if (snowAmount > 0.05) {
+            const [tx, ty] = key.split(',').map(Number);
+            renderList.push({
+                type: 'snow',
+                sortKey: tx + ty - 0.055, // Iets boven puddles (-0.06)
+                draw: () => {
+                    const { sx, sy } = toScreen(tx, ty);
+                    ctx.save();
+                    ctx.translate(sx, sy + tileH / 2);
+                    ctx.scale(1, 0.5);
+                    
+                    // Pixel Art Snow (Wit, iets groter dan puddle)
+                    const size = (tileW / 2 * 0.9) * Math.sqrt(snowAmount);
+                    const pixelSize = 4;
+                    const seed = randomDeterministic(tx, ty) + 0.5; // Andere seed dan puddle
+                    
+                    ctx.fillStyle = `rgba(240, 245, 255, ${0.9 * snowAmount})`; // Bijna wit
+                    
+                    for (let py = -size; py <= size; py += pixelSize) {
+                        const chord = Math.sqrt(Math.max(0, size*size - py*py));
+                        const noise = Math.sin(py * 0.4 + seed * 10) * (size * 0.2); // Iets zachtere ruis
+                        const w = Math.max(0, (chord + noise) * 2);
+                        const xOffset = Math.cos(py * 0.15 + seed * 5) * (size * 0.15);
+                        
+                        if (w > 0) ctx.fillRect(xOffset - w/2, py, w, pixelSize);
+                    }
+                    ctx.restore();
+                }
+            });
+        }
+    }
+
+    // Splashes (Regenspetters)
+    activeSplashes.forEach(s => {
+        const tx = Math.floor(s.x);
+        const ty = Math.floor(s.y);
+        renderList.push({
+            type: 'splash',
+            sortKey: tx + ty - 0.04, // Boven puddles
+            draw: () => {
+                const { sx, sy } = toScreen(s.x, s.y);
+                const age = Date.now() - s.startTime;
+                const progress = age / 300;
+                if (progress > 1) return;
+                const centerY = sy + tileH / 2;
+                ctx.save();
+                
+                // Pixel Art Splash (Ripple)
+                ctx.fillStyle = `rgba(200, 220, 255, ${1 - progress})`;
+                const dist = 12 * progress;
+                const pSize = 2;
+                
+                // 4 uitdijende pixels
+                ctx.fillRect(sx - pSize/2, centerY - dist * 0.5, pSize, pSize);
+                ctx.fillRect(sx - pSize/2, centerY + dist * 0.5, pSize, pSize);
+                ctx.fillRect(sx - dist, centerY - pSize/2, pSize, pSize);
+                ctx.fillRect(sx + dist, centerY - pSize/2, pSize, pSize);
+                
+                if (progress < 0.6) {
+                    const dropH = 15 * Math.sin(progress * Math.PI);
+                    ctx.fillRect(sx - 1, centerY - dropH, 2, 2);
+                    ctx.fillRect(sx - 5, centerY - dropH * 0.7, 2, 2);
+                    ctx.fillRect(sx + 4, centerY - dropH * 0.7, 2, 2);
+                }
+                ctx.restore();
+            }
+        });
+    });
+
+    // 2. Hover Highlight
+    let hoverTile = null;
+    if (isBuildMode && activeBuildCategory === 'kleur' && hoverTarget && hoverTarget.type === 'tile') {
+        hoverTile = hoverTarget.id;
+    } else if (hoverCell && !isBuildMode && !isItemDragging && !isObjectDragging) {
+        hoverTile = hoverCell;
+    }
+
+    if (hoverTile) {
+        renderList.push({
+            type: 'highlight',
+            sortKey: hoverTile.x + hoverTile.y - 0.05,
+            draw: () => {
+                const { sx, sy } = toScreen(hoverTile.x, hoverTile.y);
+                ctx.beginPath();
+                ctx.moveTo(sx, sy);
+                ctx.lineTo(sx + tileW / 2, sy + tileH / 2);
+                ctx.lineTo(sx, sy + tileH);
+                ctx.lineTo(sx - tileW / 2, sy + tileH / 2);
+                ctx.closePath();
+                ctx.fillStyle = "rgba(255,255,255,0.5)";
+                ctx.fill();
+            }
+        });
+    }
+
+    // 3. Placement Outline (Verplaatst naar renderList voor diepte)
+    const objForOutline = (selectedBuildObject?.placement === 'floor' && selectedBuildObject) || movingObject || draggedObject || draggedItem;
+    if (objForOutline && hoverCell) {
+        const isFlipped = (objForOutline === selectedBuildObject) ? isBuildObjectFlipped : (objForOutline.flipped || false);
+        const w = isFlipped ? (objForOutline.depth || 1) : (objForOutline.width || 1);
+        const d = isFlipped ? (objForOutline.width || 1) : (objForOutline.depth || 1);
+        
+        let isValidPlacement = true;
+        for(let dx = 0; dx < w; dx++) {
+            for(let dy = 0; dy < d; dy++) {
+                const tx = hoverCell.x + dx;
+                const ty = hoverCell.y + dy;
+                if (tx >= mapW || ty >= mapH) {
+                    isValidPlacement = false;
+                } else if (!objForOutline.isFloor && !objForOutline.isItem && objForOutline !== draggedItem && (isBlocked(tx, ty) || (Math.floor(ball.x) === tx && Math.floor(ball.y) === ty))) {
+                    isValidPlacement = false;
+                }
+            }
+        }
+        
+        if (objForOutline === draggedItem) {
+             const dist = Math.sqrt(Math.pow(hoverCell.x - Math.floor(ball.x), 2) + Math.pow(hoverCell.y - Math.floor(ball.y), 2));
+             if (dist > 2) isValidPlacement = false;
+        }
+
+        renderList.push({
+            type: 'outline',
+            sortKey: (hoverCell.x + (w - 1) / 2) + (hoverCell.y + (d - 1) / 2) - 0.04, // Boven vloer (-0.1) en highlights (-0.05)
+            draw: () => {
+                const p0 = toScreen(hoverCell.x, hoverCell.y);
+                const p1 = toScreen(hoverCell.x + w, hoverCell.y);
+                const p2 = toScreen(hoverCell.x + w, hoverCell.y + d);
+                const p3 = toScreen(hoverCell.x, hoverCell.y + d);
+
+                ctx.save();
+                ctx.strokeStyle = isValidPlacement ? "white" : "red";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(p0.sx, p0.sy);
+                ctx.lineTo(p1.sx, p1.sy);
+                ctx.lineTo(p2.sx, p2.sy);
+                ctx.lineTo(p3.sx, p3.sy);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.restore();
+            }
+        });
+    }
+
     let playerAdded = false;
     const playerTileX = Math.floor(ball.x);
     const playerTileY = Math.floor(ball.y);
@@ -9702,7 +10419,8 @@ function renderLoop() {
         // Sla over als het item wordt versleept, want die wordt apart getekend
         if (item === draggedItem) return;
 
-        let sortKey = Math.floor(item.x) + Math.floor(item.y);
+        // NIEUW: Gebruik exacte positie voor sortering zodat items niet onder vloeren schuiven
+        let sortKey = item.x + item.y;
 
         // FIX: Als item op een object ligt, zorg dat het ALTIJD na dat object getekend wordt
         // Dit lost het probleem op dat items op de 'achterste' tegel van een tafel erachter vallen.
@@ -9939,6 +10657,13 @@ function renderLoop() {
         item.draw();
     }
     // --- Einde renderlijst ---
+
+    // NIEUW: Weer effecten tekenen NA de wereld, maar VOOR de UI (ballonnen/prompts)
+    // Dit zorgt ervoor dat regen over de spelers valt, maar onder de chatballonnen door gaat.
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // Reset transform naar screen space
+    updateAndDrawWeather(ctx, window.innerWidth, window.innerHeight);
+    ctx.restore();
 
     drawInteractionPrompts(); // Teken interactie prompts bovenop de wereld
     drawChatBallon();
