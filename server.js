@@ -90,7 +90,6 @@ const defaultObjects = [
     { x: 3, y: 18, height: 2, flipped: true, name: "Hoge Blok", subCategory: 'objects' },
     { x: 20, y: 20, height: 1, flipped: false, name: "Blok", subCategory: 'objects' },
     { x: 18, y: 3, height: 2, flipped: false, name: "Hoge Blok", subCategory: 'objects' },
-    { x: 8, y: 12, height: 1, flipped: false, moveable: true, name: "Verplaatsbaar Blok", subCategory: 'moveable' },
     { x: 16, y: 5, height: 2, flipped: false, name: "Winkel", subCategory: 'shop' },
     { x: 19, y: 5, height: 2, flipped: true, name: "Winkel", subCategory: 'shop' },
     { x: 12, y: 5, height: 1, flipped: false, name: "Container", subCategory: 'containers' },
@@ -128,12 +127,23 @@ function saveRoom(roomId) {
         snow: rooms[roomId].snow,
         maxPlayers: rooms[roomId].maxPlayers,
         ownerId: rooms[roomId].ownerId, // Sla eigenaar op
+        spawnPoint: rooms[roomId].spawnPoint, // NIEUW: Sla spawn op
         settings: rooms[roomId].settings // Sla instellingen op
     };
 
     fs.writeFile(path.join(ROOMS_DIR, `${roomId}.json`), JSON.stringify(roomData, null, 2), (err) => {
         if (err) console.error(`Fout bij opslaan kamer ${roomId}:`, err);
     });
+}
+
+// NIEUW: Throttle voor opslaan om disk I/O te sparen bij physics updates
+const saveTimers = {};
+function scheduleRoomSave(roomId) {
+    if (saveTimers[roomId]) return; // Al gepland
+    saveTimers[roomId] = setTimeout(() => {
+        saveRoom(roomId);
+        delete saveTimers[roomId];
+    }, 1000); // Sla max 1x per seconde op
 }
 
 // NIEUW: Functies om custom objects te laden en op te slaan
@@ -273,6 +283,7 @@ function createRoom(id, options = {}) {
         objects: [], // Start met een lege lijst
         wallObjects: [],
         items: [], // Start met een lege lijst
+        marks: [], // NIEUW: Marker tekeningen (in-memory)
         players: {},
         chatHistory: [],
         mapW: mapW,
@@ -283,6 +294,7 @@ function createRoom(id, options = {}) {
         snow: {},
         maxPlayers: maxPlayers,
         ownerId: options.ownerId || null, // Eigenaar ID
+        spawnPoint: { x: 0, y: 0 }, // NIEUW: Default spawn
         settings: { doorbell: false, alwaysOnline: options.alwaysOnline || false, allowBuilding: options.allowBuilding || false, noSmoking: options.noSmoking || false, isOutside: options.isOutside || false, weather: options.weather || 'clear', time: options.time || 'day' } // Standaard instellingen
     };
 
@@ -363,6 +375,7 @@ function getRoom(id) {
         try {
             const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
             data.players = {}; // Reset spelers
+            data.chatHistory = []; // NIEUW: Reset chatgeschiedenis bij het laden
             if (!data.mapW) data.mapW = 25;
             if (!data.mapH) data.mapH = 25;
             if (!data.tileColors) data.tileColors = {};
@@ -370,6 +383,8 @@ function getRoom(id) {
             if (!data.puddles) data.puddles = {};
             if (!data.snow) data.snow = {};
             
+            if (!data.marks) data.marks = []; // Reset marks bij laden (sessie gebonden)
+
             // Zorg dat maxPlayers bestaat (voor oude kamers)
             if (!data.maxPlayers) {
                 const area = (data.mapW || 25) * (data.mapH || 25);
@@ -388,6 +403,7 @@ function getRoom(id) {
             if (data.settings.isOutside === undefined) data.settings.isOutside = false;
             if (data.settings.weather === undefined) data.settings.weather = 'clear';
             if (data.settings.time === undefined) data.settings.time = 'day';
+            if (!data.spawnPoint) data.spawnPoint = { x: 0, y: 0 }; // NIEUW: Default spawn bij laden
 
             // Extra check: als testroom leeg is geladen, vul hem alsnog
             if (id === 'testroom' && (!data.objects || data.objects.length === 0)) {
@@ -441,19 +457,41 @@ function findNearestFreeTile(room, startX, startY) {
     let x = Math.floor(startX);
     let y = Math.floor(startY);
     
-    // Check of startpositie binnen de kaart valt. Zo niet, reset naar 0,0
-    if (x < 0 || x >= mapW || y < 0 || y >= mapH) {
-        x = 0;
-        y = 0;
-    }
+    // Clamp start positie binnen de map
+    if (x < 0) x = 0; if (x >= mapW) x = mapW - 1;
+    if (y < 0) y = 0; if (y >= mapH) y = mapH - 1;
 
     if (!isPositionOccupied(room, x, y)) return { x, y };
 
-    // Zoek eerste vrije plek binnen de grenzen van de kamer
-    for (let j = 0; j < mapH; j++) {
-        for (let i = 0; i < mapW; i++) {
-            if (!isPositionOccupied(room, i, j)) {
-                return { x: i, y: j };
+    // NIEUW: Zoek spiraalsgewijs naar buiten (BFS) voor de dichtstbijzijnde vrije tegel
+    const visited = new Set();
+    const queue = [{x, y}];
+    visited.add(`${x},${y}`);
+
+    while (queue.length > 0) {
+        const current = queue.shift();
+        
+        const neighbors = [
+            {x: current.x, y: current.y - 1},
+            {x: current.x + 1, y: current.y},
+            {x: current.x, y: current.y + 1},
+            {x: current.x - 1, y: current.y},
+            {x: current.x + 1, y: current.y - 1},
+            {x: current.x + 1, y: current.y + 1},
+            {x: current.x - 1, y: current.y + 1},
+            {x: current.x - 1, y: current.y - 1}
+        ];
+
+        for (const n of neighbors) {
+            if (n.x >= 0 && n.x < mapW && n.y >= 0 && n.y < mapH) {
+                const key = `${n.x},${n.y}`;
+                if (!visited.has(key)) {
+                    if (!isPositionOccupied(room, n.x, n.y)) {
+                        return { x: n.x, y: n.y };
+                    }
+                    visited.add(key);
+                    queue.push(n);
+                }
             }
         }
     }
@@ -573,7 +611,11 @@ io.on('connection', (socket) => {
           playersData[userId] = { wallet: 0, inventory: [] };
       }
       if (!playersData[userId].color) {
-          playersData[userId].color = '#' + Math.floor(Math.random()*16777215).toString(16);
+          // Genereer een lichte/felle kleur (HSL) voor betere leesbaarheid
+          const h = Math.floor(Math.random() * 360);
+          const s = Math.floor(Math.random() * 30) + 70; // 70-100% Saturation (Felheid)
+          const l = Math.floor(Math.random() * 25) + 55; // 55-80% Lightness (Helderheid)
+          playersData[userId].color = `hsl(${h}, ${s}%, ${l}%)`;
           savePlayers();
       }
 
@@ -601,8 +643,8 @@ io.on('connection', (socket) => {
       socket.join(roomId);
       socketRoomMap[socket.id] = roomId;
 
-      let preferredX = 0;
-      let preferredY = 0;
+      let preferredX = room.spawnPoint ? room.spawnPoint.x : 0;
+      let preferredY = room.spawnPoint ? room.spawnPoint.y : 0;
       if (data && typeof data.x === 'number' && typeof data.y === 'number') {
           preferredX = data.x;
           preferredY = data.y;
@@ -628,6 +670,7 @@ io.on('connection', (socket) => {
           objects: room.objects,        
           wallObjects: room.wallObjects, 
           items: room.items,
+          marks: room.marks, // Stuur bestaande tekeningen mee
           mapW: room.mapW,
           mapH: room.mapH,
           tileColors: room.tileColors,
@@ -660,11 +703,14 @@ io.on('connection', (socket) => {
     if (!roomId || !rooms[roomId]) return;
     const room = rooms[roomId];
 
+    const player = room.players[socket.id];
+
     const chatData = {
-      user: room.players[socket.id] ? room.players[socket.id].name : "Alumni " + socket.id.substr(0,4),
+      user: player ? player.name : "Alumni " + socket.id.substr(0,4),
       text: msg,
       id: socket.id,
-      userId: room.players[socket.id] ? room.players[socket.id].userId : null, // Send persistent ID
+      userId: player ? player.userId : null, // Send persistent ID
+      color: player ? player.color : '#ffffff', // NIEUW: Stuur kleur mee
       time: Date.now()
     };
     
@@ -702,6 +748,7 @@ io.on('connection', (socket) => {
       if (!roomId || !rooms[roomId]) return;
       const room = rooms[roomId];
       const idx = room.items.findIndex(i => {
+          if (coords.id && i.id) return i.id === coords.id; // NIEUW: Zoek op ID indien beschikbaar
           if (Math.floor(i.x) !== coords.x || Math.floor(i.y) !== coords.y) return false;
           if (coords.type && i.type !== coords.type) return false;
           if (coords.name && i.name !== coords.name) return false;
@@ -726,7 +773,36 @@ io.on('connection', (socket) => {
           return true;
       });
       if (idx > -1) {
+          const removedObj = room.objects[idx];
           room.objects.splice(idx, 1);
+          
+          // NIEUW: Verwijder markers die op deze muur getekend zijn
+          if (removedObj.isWall && room.marks && room.marks.length > 0) {
+              const initialCount = room.marks.length;
+              room.marks = room.marks.filter(m => {
+                  // Check of marker m op de verwijderde muur zit
+                  if (removedObj.flipped) {
+                      // Y-axis muur (staat op X)
+                      // Check X (moet dichtbij zijn, marge 0.5)
+                      if (Math.abs(m.x - removedObj.x) > 0.5) return true; // Bewaar
+                      // Check Y (moet binnen de lengte van de muur vallen)
+                      const w = removedObj.width || 1;
+                      if (m.y < removedObj.y || m.y > removedObj.y + w) return true; // Bewaar
+                      return false; // Verwijder
+                  } else {
+                      // X-axis muur (staat op Y)
+                      if (Math.abs(m.y - removedObj.y) > 0.5) return true; // Bewaar
+                      const w = removedObj.width || 1;
+                      if (m.x < removedObj.x || m.x > removedObj.x + w) return true; // Bewaar
+                      return false; // Verwijder
+                  }
+              });
+              
+              if (room.marks.length !== initialCount) {
+                  io.to(roomId).emit('updateMarks', room.marks);
+              }
+          }
+
           io.to(roomId).emit('updateObjects', room.objects);
           saveRoom(roomId);
       }
@@ -741,6 +817,57 @@ io.on('connection', (socket) => {
       room.wallObjects.push(obj);
       io.to(roomId).emit('updateWallObjects', room.wallObjects);
       saveRoom(roomId);
+  });
+
+  // NIEUW: Marker tekeningen ontvangen en doorsturen
+  socket.on('placeMarks', (newMarks) => {
+      const roomId = socketRoomMap[socket.id];
+      if (!roomId || !rooms[roomId]) return;
+      
+      if (!rooms[roomId].marks) rooms[roomId].marks = [];
+      if (Array.isArray(newMarks)) {
+          rooms[roomId].marks.push(...newMarks);
+          // Beperk aantal marks om geheugen te sparen (bijv. 10.000 punten)
+          if (rooms[roomId].marks.length > 10000) rooms[roomId].marks = rooms[roomId].marks.slice(-10000);
+          socket.to(roomId).emit('placeMarks', newMarks);
+      }
+  });
+
+  // NIEUW: Marker tekeningen verwijderen (gummen)
+  socket.on('removeMarks', (data) => {
+      const roomId = socketRoomMap[socket.id];
+      if (!roomId || !rooms[roomId]) return;
+      
+      const { x, y, z, radius } = data;
+      const r2 = radius * radius;
+      
+      if (rooms[roomId].marks) {
+          const initialLength = rooms[roomId].marks.length;
+          rooms[roomId].marks = rooms[roomId].marks.filter(m => {
+              const dx = m.x - x;
+              const dy = m.y - y;
+              const dz = m.z - z;
+              return (dx*dx + dy*dy + dz*dz) > r2;
+          });
+          
+          if (rooms[roomId].marks.length !== initialLength) {
+              io.to(roomId).emit('updateMarks', rooms[roomId].marks);
+          }
+      }
+  });
+
+  // NIEUW: Undo laatste marker actie (verwijder specifieke marks op ID)
+  socket.on('undoMarks', (markIds) => {
+      const roomId = socketRoomMap[socket.id];
+      if (!roomId || !rooms[roomId] || !rooms[roomId].marks) return;
+
+      const initialLength = rooms[roomId].marks.length;
+      const idsToRemove = new Set(markIds);
+      rooms[roomId].marks = rooms[roomId].marks.filter(m => !idsToRemove.has(m.id));
+
+      if (rooms[roomId].marks.length !== initialLength) {
+          io.to(roomId).emit('updateMarks', rooms[roomId].marks);
+      }
   });
 
   // NIEUW: Live physics updates (beweging van items)
@@ -770,6 +897,20 @@ io.on('connection', (socket) => {
       if (changed) {
           // Stuur door naar anderen (niet naar jezelf, want jij simuleert het al)
           socket.to(roomId).emit('updateItemPhysics', data);
+          scheduleRoomSave(roomId); // NIEUW: Sla de nieuwe posities op (vertraagd)
+      }
+  });
+
+  // NIEUW: Update kleur van een object (zoals een custom muur)
+  socket.on('updateObjectColor', (data) => {
+      const roomId = socketRoomMap[socket.id];
+      if (!roomId || !rooms[roomId]) return;
+      const room = rooms[roomId];
+      const obj = room.objects.find(o => o.id === data.id);
+      if (obj) {
+          obj.color = data.color;
+          io.to(roomId).emit('updateObjects', room.objects);
+          saveRoom(roomId);
       }
   });
 
@@ -1142,13 +1283,108 @@ io.on('connection', (socket) => {
               isTemplate: true,
               isCustom: true,
               xOffset: data.xOffset,
-              yOffset: data.yOffset
+              yOffset: data.yOffset,
+              keywords: data.keywords || []
           };
 
           customObjects.push(newObject);
           saveCustomObjectsToServer();
           io.emit('customObjectAdded', newObject); // Stuur naar ALLE clients
       });
+  });
+
+  // NIEUW: Update een custom object
+  socket.on('updateCustomObject', (data) => {
+      const objIndex = customObjects.findIndex(o => o.name === data.originalName);
+      if (objIndex === -1) return;
+
+      const obj = customObjects[objIndex];
+      const oldName = obj.name;
+      
+      // Update eigenschappen
+      obj.name = data.name || oldName;
+      obj.price = data.price ? parseFloat(data.price) : 0;
+      obj.adminOnly = !!data.adminOnly;
+      obj.width = parseInt(data.width);
+      obj.depth = parseInt(data.depth);
+      obj.height = parseInt(data.height);
+      obj.isFloor = !!data.isFloor;
+      obj.moveable = !!data.moveable;
+      obj.xOffset = parseInt(data.xOffset);
+      obj.yOffset = parseInt(data.yOffset);
+      obj.keywords = data.keywords || [];
+
+      // Functie om af te ronden na eventuele image upload
+      const finishUpdate = () => {
+          saveCustomObjectsToServer();
+          io.emit('customObjectUpdated', { originalName: oldName, object: obj });
+
+          // Update instanties in ALLE kamers
+          const files = fs.readdirSync(ROOMS_DIR);
+          files.forEach(file => {
+              if (!file.endsWith('.json')) return;
+              const roomId = file.replace('.json', '');
+              
+              // Check geheugen of schijf
+              let room = rooms[roomId];
+              let isInMemory = !!room;
+              if (!room) {
+                  try { room = JSON.parse(fs.readFileSync(path.join(ROOMS_DIR, file), 'utf8')); } catch(e) { return; }
+              }
+
+              let changed = false;
+              const updateInstance = (inst) => {
+                  if (inst.name === oldName && inst.isCustom) {
+                      inst.name = obj.name;
+                      inst.price = obj.price;
+                      inst.width = obj.width;
+                      inst.depth = obj.depth;
+                      inst.height = obj.height;
+                      inst.isFloor = obj.isFloor;
+                      inst.moveable = obj.moveable;
+                      inst.xOffset = obj.xOffset;
+                      inst.yOffset = obj.yOffset;
+                      inst.image = obj.image; // Update image URL ook
+                      inst.keywords = obj.keywords;
+                      changed = true;
+                  }
+              };
+
+              if (room.objects) room.objects.forEach(updateInstance);
+              if (room.wallObjects) room.wallObjects.forEach(updateInstance);
+
+              if (changed) {
+                  if (isInMemory) {
+                      saveRoom(roomId);
+                      io.to(roomId).emit('updateObjects', room.objects);
+                      io.to(roomId).emit('updateWallObjects', room.wallObjects);
+                  } else {
+                      fs.writeFile(path.join(ROOMS_DIR, file), JSON.stringify(room, null, 2), ()=>{});
+                  }
+              }
+          });
+      };
+
+      if (data.imageData) {
+           // Overschrijf bestand of maak nieuw (simpel: nieuw bestand, update ref)
+           const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.png`;
+           const imagePath = path.join(UPLOADS_DIR, 'objects', filename);
+           const imageUrl = `/uploads/objects/${filename}`;
+           
+           fs.writeFile(imagePath, data.imageData, (err) => {
+               if (!err) {
+                   // Oude verwijderen zou netjes zijn, maar risico op broken links als cache traag is.
+                   // Voor nu laten we oude staan of verwijderen we hem:
+                   if (obj.image && obj.image.startsWith('/uploads/')) {
+                       try { fs.unlinkSync(path.join(__dirname, obj.image)); } catch(e){}
+                   }
+                   obj.image = imageUrl;
+                   finishUpdate();
+               }
+           });
+      } else {
+          finishUpdate();
+      }
   });
 
   // NIEUW: Verwijder een custom object (Admin only)
@@ -1244,6 +1480,46 @@ io.on('connection', (socket) => {
               }
           }
       });
+  });
+
+  // NIEUW: Resize kamer
+  socket.on('resizeRoom', (data) => {
+      const roomId = socketRoomMap[socket.id];
+      if (!roomId || !rooms[roomId]) return;
+      
+      const room = rooms[roomId];
+      // Alleen eigenaar mag resizen (of iedereen in testroom/publieke kamer zonder owner)
+      if (room.ownerId && room.ownerId !== socket.userId) return;
+
+      let newW = parseInt(data.width);
+      let newH = parseInt(data.height);
+      
+      // Validatie (min 5, max 50 om server load te beperken)
+      if (isNaN(newW) || newW < 5) newW = 5;
+      if (isNaN(newH) || newH < 5) newH = 5;
+      if (newW > 50) newW = 50;
+      if (newH > 50) newH = 50;
+
+      room.mapW = newW;
+      room.mapH = newH;
+      
+      // Verwijder objecten die buiten de nieuwe grenzen vallen
+      room.objects = room.objects.filter(o => o.x < newW && o.y < newH);
+      
+      // Verwijder muurobjecten die aan muren hingen die nu weg zijn
+      room.wallObjects = room.wallObjects.filter(wo => {
+          const parts = wo.wallId.split('_');
+          const idx = parseInt(parts[1]);
+          if (parts[0] === 'top') return idx < newW;
+          if (parts[0] === 'left') return idx < newH;
+          return true;
+      });
+
+      saveRoom(roomId);
+      
+      io.to(roomId).emit('roomResized', { mapW: newW, mapH: newH });
+      io.to(roomId).emit('updateObjects', room.objects);
+      io.to(roomId).emit('updateWallObjects', room.wallObjects);
   });
 
   // NIEUW: Hernoem een kamer
@@ -1354,6 +1630,18 @@ io.on('connection', (socket) => {
       rooms[roomId].settings.time = data.time;
       saveRoom(roomId);
       io.to(roomId).emit('roomSettingsUpdated', rooms[roomId].settings);
+  });
+
+  // NIEUW: Zet spawn punt
+  socket.on('setRoomSpawn', (data) => {
+      const roomId = socketRoomMap[socket.id];
+      if (!roomId || !rooms[roomId]) return;
+      
+      // Check eigenaarschap: Alleen eigenaar mag spawn zetten (tenzij het een publieke kamer zonder owner is)
+      if (rooms[roomId].ownerId && rooms[roomId].ownerId !== socket.userId) return;
+
+      rooms[roomId].spawnPoint = { x: Math.floor(data.x), y: Math.floor(data.y) };
+      saveRoom(roomId);
   });
 
   // NIEUW: Toggle Real-Time Sync
