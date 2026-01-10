@@ -33,5 +33,1485 @@
     "wallet": 0,
     "inventory": [],
     "color": "#294f48"
+  },
+  "user_0sfh20v26": {
+    "wallet": 23500,
+    "inventory": [],
+    "color": "#c76e0"
+  },
+  "user_8e9xykx9c": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#4c702"
+  },
+  "user_4r73lpr3h": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#868f93"
+  },
+  "user_r97angfvf": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#cbcbe0"
+  },
+  "user_1sgc9153u": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#29ea67"
+  },
+  "user_o8qus51ke": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#c6d6c5"
+  },
+  "user_fdschw578": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#183864"
+  },
+  "user_iu1kdlw6r": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#fbc842"
+  },
+  "user_uy1u7jrkb": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#a73"
+  },
+  "user_maqcen6vs": {
+    "wallet": 959.5,
+    "inventory": [
+      {
+        "name": "Flesje water",
+        "price": 3,
+        "mass": 1.2,
+        "type": "bottle_full",
+        "keywords": [
+          "drinken",
+          "spa",
+          "vloeistof",
+          "vocht"
+        ],
+        "x": 3.0234375,
+        "y": 13.3046875,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "invX": 190,
+        "invY": 199.5500030517578
+      },
+      {
+        "name": "Aansteker",
+        "price": 2.5,
+        "mass": 0.1,
+        "canTopple": true,
+        "type": "aansteker",
+        "uses": 49,
+        "keywords": [
+          "vuurtje",
+          "lichtje",
+          "lighter",
+          "gasbrander"
+        ],
+        "x": 3.3984375,
+        "y": 14.3046875,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "invX": 269,
+        "invY": 221.5500030517578
+      },
+      {
+        "name": "Batje Rood",
+        "price": 15,
+        "mass": 0.4,
+        "canTopple": true,
+        "type": "bat_red",
+        "keywords": [
+          "sport",
+          "pingpong",
+          "racket"
+        ],
+        "x": -0.2890625,
+        "y": 12.0546875,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "invX": 223,
+        "invY": 126.55000305175781
+      },
+      {
+        "type": "sigaretten_container",
+        "name": "Pakje sigaretten",
+        "x": -1.0390625,
+        "y": 7.1171875,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.2,
+        "canRotate": false,
+        "canTopple": false,
+        "isPouch": true,
+        "items": [
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 29,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 64,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 99,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 134,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 169,
+            "conY": 25
+          }
+        ],
+        "id": "mk5xrt6p3vs0ol9axbj",
+        "lastTouchedBy": "Z0wHIFKmctFtVkNqAAAH",
+        "isResting": true,
+        "invX": 258,
+        "invY": 35.55000305175781,
+        "conX": -2,
+        "conY": 35
+      },
+      {
+        "name": "Pakje sigaretten",
+        "price": 20,
+        "mass": 0.2,
+        "type": "sigaretten_container",
+        "isPouch": true,
+        "keywords": [
+          "pakkie",
+          "peuken",
+          "tabak",
+          "peukie"
+        ],
+        "x": 2.9140625,
+        "y": 13.0390625,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "items": [
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          }
+        ],
+        "invX": 195,
+        "invY": 193.5500030517578
+      }
+    ],
+    "color": "#70242"
+  },
+  "user_7egjco2py": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#953a7c"
+  },
+  "user_8ba2xifvb": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#adb5e3"
+  },
+  "user_kemsh91rg": {
+    "wallet": 0,
+    "inventory": [
+      {
+        "type": "ball",
+        "name": "Bal Spawn",
+        "x": -2.0234375,
+        "y": 9.8515625,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.8,
+        "canRotate": true,
+        "canTopple": false,
+        "isPouch": false,
+        "id": "mk60mmsm0ff2j86tzch6",
+        "lastTouchedBy": "gxVgJyblzG1OfO41AAAV",
+        "isResting": true,
+        "invX": 139,
+        "invY": 63.55000305175781,
+        "conX": -44,
+        "conY": 291
+      },
+      {
+        "type": "aansteker",
+        "name": "Aansteker",
+        "x": -2.4453125,
+        "y": 7.7734375,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.1,
+        "canRotate": false,
+        "canTopple": true,
+        "isPouch": false,
+        "uses": 50,
+        "id": "mk60nj6ts9wqwr1qx9g",
+        "lastTouchedBy": "gxVgJyblzG1OfO41AAAV",
+        "isResting": true,
+        "invX": 67,
+        "invY": 23.550003051757812
+      },
+      {
+        "type": "sigaretten_container",
+        "name": "Pakje sigaretten",
+        "x": -2.2265625,
+        "y": 8.1796875,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.2,
+        "canRotate": false,
+        "canTopple": false,
+        "isPouch": true,
+        "items": [
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0
+          }
+        ],
+        "id": "mk60ngkcu0jp34knfem",
+        "lastTouchedBy": "gxVgJyblzG1OfO41AAAV",
+        "isResting": true,
+        "invX": 98,
+        "invY": 186.5500030517578
+      },
+      {
+        "type": "sigaretten_container",
+        "name": "Pakje sigaretten",
+        "x": -1.6328125,
+        "y": 8.5234375,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.2,
+        "canRotate": false,
+        "canTopple": false,
+        "isPouch": true,
+        "items": [
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 29,
+            "conY": 25
+          }
+        ],
+        "id": "mk60nhji4avlqvbay4o",
+        "lastTouchedBy": "gxVgJyblzG1OfO41AAAV",
+        "isResting": true,
+        "invX": 271,
+        "invY": 75.55000305175781
+      }
+    ],
+    "color": "#266b40"
+  },
+  "user_yat4ivn28": {
+    "wallet": 0,
+    "inventory": []
+  },
+  "user_ovc64qe9p": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#28f895"
+  },
+  "user_qd531eevl": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#de39fd"
+  },
+  "user_n8poy6hk2": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#9363a3"
+  },
+  "user_01q06ciqr": {
+    "wallet": 0,
+    "inventory": [
+      {
+        "type": "ball",
+        "name": "Bal Spawn",
+        "x": -3.8203125,
+        "y": 8.0859375,
+        "z": 32,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": -23.013515329097064,
+        "vr": -9.933017856494943e-9,
+        "mass": 0.8,
+        "canRotate": true,
+        "canTopple": false,
+        "isPouch": false,
+        "id": "mk5hp14pm74tiszu1xo",
+        "lastTouchedBy": "vAzqbGHJ-8kriKWvAAAP",
+        "isResting": false,
+        "invX": 138,
+        "invY": 6.5500030517578125
+      },
+      {
+        "type": "bat_black",
+        "name": "Batje Zwart",
+        "x": -1.4921875,
+        "y": 6.5703125,
+        "z": 32,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.4,
+        "canRotate": false,
+        "canTopple": true,
+        "isPouch": false,
+        "id": "mk5hofkwe2oons0bgaf",
+        "lastTouchedBy": "-4Ax54o3hIU4e3bfAAAn",
+        "isResting": true,
+        "invX": 261,
+        "invY": 19.550003051757812
+      }
+    ],
+    "color": "#969ce5"
+  },
+  "user_2616uvuqi": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "#83d87d"
+  },
+  "user_2u37vzpac": {
+    "wallet": 997.5,
+    "inventory": [
+      {
+        "name": "Marker Zwart",
+        "price": 2.5,
+        "mass": 0.1,
+        "canTopple": true,
+        "type": "marker_zwart",
+        "keywords": [
+          "stift",
+          "tekenen",
+          "zwart",
+          "marker"
+        ],
+        "x": -0.4296875,
+        "y": 8.8203125,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "invX": 223,
+        "invY": 72.55000305175781,
+        "isActive": false,
+        "lastTouchedBy": "VM49iGljTVZkZ580AAAf",
+        "id": "mk66myj9rj4a5su7u3s",
+        "isResting": true
+      },
+      {
+        "type": "bat_red",
+        "name": "Batje Rood",
+        "x": 0.6015625,
+        "y": 8.4765625,
+        "z": 32,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.4,
+        "canRotate": false,
+        "canTopple": true,
+        "isPouch": false,
+        "id": "mk2zy6p99s2id7mys9",
+        "lastTouchedBy": "VM49iGljTVZkZ580AAAf",
+        "isResting": true,
+        "invX": 267,
+        "invY": 83.55000305175781
+      }
+    ],
+    "color": "hsl(313, 86%, 59%)"
+  },
+  "user_khy72526c": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(115, 90%, 63%)"
+  },
+  "user_nxak7zoyj": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(295, 74%, 56%)"
+  },
+  "user_m0zattteo": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(252, 73%, 62%)"
+  },
+  "user_mws99my5j": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(158, 86%, 61%)"
+  },
+  "user_2ok3kqxh3": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(52, 85%, 79%)"
+  },
+  "user_t5un8eigr": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(337, 81%, 63%)"
+  },
+  "user_2aeznbfke": {
+    "wallet": 997.5,
+    "inventory": []
+  },
+  "user_6isheiabc": {
+    "wallet": 0,
+    "inventory": [
+      {
+        "name": "Marker Zwart",
+        "price": 2.5,
+        "mass": 0.1,
+        "canTopple": true,
+        "type": "marker_zwart",
+        "keywords": [
+          "stift",
+          "tekenen",
+          "zwart",
+          "marker"
+        ],
+        "x": 2.6953125,
+        "y": 15.6328125,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": 1.5707963267948966,
+        "vr": 0,
+        "invX": 73,
+        "invY": -1.4499969482421875,
+        "isActive": true,
+        "lastTouchedBy": "3TsloVBr5RDqykpnAAAB",
+        "id": "mk6s0pz4dc9s3dzizy8",
+        "isResting": true,
+        "lastMarkTime": 1767957529857
+      }
+    ],
+    "color": "hsl(19, 83%, 65%)"
+  },
+  "user_k0udtdl43": {
+    "wallet": 995,
+    "inventory": [
+      {
+        "name": "Marker Zwart",
+        "price": 2.5,
+        "mass": 0.1,
+        "canTopple": true,
+        "type": "marker_zwart",
+        "keywords": [
+          "stift",
+          "tekenen",
+          "zwart",
+          "marker"
+        ],
+        "x": 7.1171875,
+        "y": 14.3359375,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "invX": 180,
+        "invY": 70.55000305175781
+      },
+      {
+        "name": "Marker Zwart",
+        "price": 2.5,
+        "mass": 0.1,
+        "canTopple": true,
+        "type": "marker_zwart",
+        "keywords": [
+          "stift",
+          "tekenen",
+          "zwart",
+          "marker"
+        ],
+        "x": -4.283854166666666,
+        "y": 4.952256944444445,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": -1.5707963267948966,
+        "vr": 0,
+        "invX": 79,
+        "invY": 70.55000305175781,
+        "isActive": false,
+        "lastTouchedBy": "b69lH8dcJiKX3UU3AAAF",
+        "id": "mk71vomqj0xd9pep639",
+        "isResting": true,
+        "lastMarkTime": 1767973712846
+      },
+      {
+        "type": "marker_rood",
+        "name": "Marker Rood",
+        "x": -0.1015625,
+        "y": 7.0546875,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.1,
+        "canRotate": false,
+        "canTopple": true,
+        "isPouch": false,
+        "id": "mk749xh8zbijogozfhk",
+        "lastTouchedBy": "_rBdPI2Y_9wUauUdAAAD",
+        "isResting": true,
+        "invX": 290,
+        "invY": 49.55000305175781,
+        "isActive": false
+      },
+      {
+        "type": "marker_blauw",
+        "name": "Marker Blauw",
+        "x": 3.7109375,
+        "y": 10.9921875,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.1,
+        "canRotate": false,
+        "canTopple": true,
+        "isPouch": false,
+        "id": "mk749zjm8s9pe95eh7",
+        "lastTouchedBy": "_rBdPI2Y_9wUauUdAAAD",
+        "isResting": true,
+        "invX": 286,
+        "invY": 173.5500030517578,
+        "isActive": false
+      },
+      {
+        "type": "bottle_empty",
+        "name": "Leeg flesje",
+        "mass": 0.8,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "invX": 87,
+        "invY": 139
+      }
+    ],
+    "color": "hsl(105, 82%, 67%)"
+  },
+  "user_pgigp33lx": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(339, 82%, 65%)"
+  },
+  "user_50bevlaeb": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(268, 94%, 77%)"
+  },
+  "user_a31dw455l": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(274, 90%, 59%)"
+  },
+  "user_cbe80kij7": {
+    "wallet": 977.5,
+    "inventory": [
+      {
+        "type": "sigaretten_container",
+        "name": "Pakje sigaretten",
+        "x": -1.3359375,
+        "y": 8.5390625,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "mass": 0.2,
+        "canRotate": false,
+        "canTopple": false,
+        "isPouch": true,
+        "items": [
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 29,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 64,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 99,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 134,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 169,
+            "conY": 25
+          }
+        ],
+        "id": "mk7bhhnrokpq6ydzs",
+        "lastTouchedBy": "lbkUoFrBlXN9-8XHAAAb",
+        "isResting": true,
+        "invX": 40,
+        "invY": 42.55000305175781
+      },
+      {
+        "name": "Aansteker",
+        "price": 2.5,
+        "mass": 0.1,
+        "canTopple": true,
+        "type": "aansteker",
+        "uses": 48,
+        "keywords": [
+          "vuurtje",
+          "lichtje",
+          "lighter",
+          "gasbrander"
+        ],
+        "x": 3.1171875,
+        "y": 13.8359375,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "invX": 176,
+        "invY": 209.5500030517578
+      },
+      {
+        "name": "Pakje sigaretten",
+        "price": 20,
+        "mass": 0.2,
+        "type": "sigaretten_container",
+        "isPouch": true,
+        "keywords": [
+          "pakkie",
+          "peuken",
+          "tabak",
+          "peukie"
+        ],
+        "x": -0.4296875,
+        "y": 9.5078125,
+        "vx": 0,
+        "vy": 0,
+        "z": 0,
+        "vz": 0,
+        "rotation": 0,
+        "vr": 0,
+        "items": [
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 29,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 64,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 99,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 134,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 169,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 204,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 239,
+            "conY": 25
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 46.5,
+            "conY": 60
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 81.5,
+            "conY": 60
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 116.5,
+            "conY": 60
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 151.5,
+            "conY": 60
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 186.5,
+            "conY": 60
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 221.5,
+            "conY": 60
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 29,
+            "conY": 95
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 64,
+            "conY": 95
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 99,
+            "conY": 95
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 134,
+            "conY": 95
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 169,
+            "conY": 95
+          },
+          {
+            "type": "sigaret",
+            "name": "Sigaret",
+            "mass": 0.05,
+            "canTopple": true,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "rotation": 0,
+            "vr": 0,
+            "conX": 204,
+            "conY": 95
+          }
+        ],
+        "invX": 201,
+        "invY": 83.55000305175781,
+        "conX": -12,
+        "conY": 68
+      }
+    ],
+    "color": "hsl(244, 80%, 73%)",
+    "playerNumber": 1
+  },
+  "user_szvmidce8": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(62, 90%, 77%)",
+    "playerNumber": 2
+  },
+  "user_7v1d3ryuk": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(158, 81%, 68%)",
+    "playerNumber": 3
+  },
+  "user_ivtd78kz4": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(50, 94%, 58%)"
+  },
+  "user_lvtr2fyze": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(140, 78%, 59%)"
+  },
+  "user_3s9b4t63m": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(47, 83%, 75%)"
+  },
+  "user_fp096xj10": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(103, 75%, 68%)"
+  },
+  "user_9c526xepe": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(272, 74%, 69%)"
   }
 }
