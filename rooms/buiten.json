@@ -1654,6 +1654,6 @@
     "noSmoking": false,
     "isOutside": true,
     "weather": "mist",
-    "time": "day"
+    "time": "night"
   }
 }

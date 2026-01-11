@@ -1544,5 +1544,11 @@
     "inventory": [],
     "debt": 1000,
     "color": "hsl(17, 92%, 70%)"
+  },
+  "user_m5rcsc220": {
+    "wallet": 0,
+    "inventory": [],
+    "debt": 1000,
+    "color": "hsl(267, 90%, 74%)"
   }
 }
