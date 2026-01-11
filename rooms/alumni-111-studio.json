@@ -1,0 +1,75 @@
+{
+  "objects": [
+    {
+      "isWall": true,
+      "name": "Muur",
+      "groupId": "mk9rxei5hjsn8bk98cp",
+      "isGate": false,
+      "x": 6,
+      "y": 3,
+      "wallHeight": 150,
+      "wallThickness": 0.25,
+      "flipped": false,
+      "color": "#555",
+      "ownerId": "DSqHm5tTYqq5LhpxAAAF",
+      "price": 50,
+      "id": "mk9rxei60hu6s5700ggp"
+    },
+    {
+      "name": "Hoge Kraan",
+      "height": 2,
+      "image": "http://localhost:3000/templates/kraan_template_96.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 75,
+      "interactionType": "tap",
+      "x": 0,
+      "y": 7,
+      "flipped": false,
+      "ownerId": "IyWdnDT-whrww5ukAAAF",
+      "id": "mk9v5czv59q0yb4242e"
+    },
+    {
+      "name": "Hoge Kraan",
+      "height": 2,
+      "image": "http://localhost:3000/templates/kraan_template_96.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 75,
+      "interactionType": "tap",
+      "x": 0,
+      "y": 5,
+      "flipped": false,
+      "ownerId": "IyWdnDT-whrww5ukAAAF",
+      "id": "mk9v5e9qayteisn74yu"
+    }
+  ],
+  "wallObjects": [],
+  "items": [],
+  "chatHistory": [],
+  "mapW": 10,
+  "mapH": 10,
+  "tileColors": {},
+  "wallColors": {},
+  "puddles": {},
+  "snow": {},
+  "maxPlayers": 25,
+  "ownerId": "user_v43y7wc10",
+  "spawnPoint": {
+    "x": 0,
+    "y": 0
+  },
+  "settings": {
+    "doorbell": false,
+    "alwaysOnline": false,
+    "allowBuilding": false,
+    "noSmoking": false,
+    "isOutside": false,
+    "weather": "clear",
+    "time": "day"
+  }
+}

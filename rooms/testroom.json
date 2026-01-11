@@ -120,6 +120,37 @@
       "flipped": false,
       "name": "Prullenbak",
       "subCategory": "trash"
+    },
+    {
+      "name": "Kraan",
+      "height": 1,
+      "image": "http://localhost:3000/templates/kraan_template.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 50,
+      "interactionType": "tap",
+      "x": 9,
+      "y": 11,
+      "flipped": false,
+      "ownerId": "-OL05prUlzIFY7vHAAAD",
+      "id": "mk9rwis9w8h1luvu6qj"
+    },
+    {
+      "name": "Blok",
+      "height": 1,
+      "image": "http://localhost:3000/templates/object_template.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 10,
+      "x": 11,
+      "y": 8,
+      "flipped": false,
+      "ownerId": "-OL05prUlzIFY7vHAAAD",
+      "id": "mk9rwlqecxfqi0np1ll"
     }
   ],
   "wallObjects": [

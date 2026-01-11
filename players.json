@@ -1513,5 +1513,36 @@
     "wallet": 0,
     "inventory": [],
     "color": "hsl(272, 74%, 69%)"
+  },
+  "user_v43y7wc10": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(196, 92%, 74%)"
+  },
+  "user_6ox2hwki4": {
+    "wallet": 1000,
+    "inventory": [],
+    "color": "hsl(26, 70%, 79%)"
+  },
+  "user_gh1ibrxe5": {
+    "wallet": 0,
+    "inventory": [],
+    "color": "hsl(340, 77%, 74%)"
+  },
+  "user_spj9f2408": {
+    "wallet": 0,
+    "inventory": [],
+    "debt": 0,
+    "color": "hsl(286, 77%, 72%)"
+  },
+  "IyWdnDT-whrww5ukAAAF": {
+    "wallet": 1000,
+    "inventory": []
+  },
+  "user_nbe28gf8q": {
+    "wallet": 0,
+    "inventory": [],
+    "debt": 1000,
+    "color": "hsl(17, 92%, 70%)"
   }
 }

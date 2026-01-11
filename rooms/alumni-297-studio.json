@@ -1,0 +1,27 @@
+{
+  "objects": [],
+  "wallObjects": [],
+  "items": [],
+  "chatHistory": [],
+  "mapW": 10,
+  "mapH": 10,
+  "tileColors": {},
+  "wallColors": {},
+  "puddles": {},
+  "snow": {},
+  "maxPlayers": 25,
+  "ownerId": "user_nbe28gf8q",
+  "spawnPoint": {
+    "x": 0,
+    "y": 0
+  },
+  "settings": {
+    "doorbell": false,
+    "alwaysOnline": false,
+    "allowBuilding": false,
+    "noSmoking": false,
+    "isOutside": false,
+    "weather": "clear",
+    "time": "day"
+  }
+}

@@ -16,6 +16,68 @@
       "y": 4,
       "flipped": false,
       "ownerId": "IsX_ZC10VcTr-nQzAAAJ"
+    },
+    {
+      "name": "Pong outdoors",
+      "height": 1,
+      "width": 2,
+      "depth": 1,
+      "image": "/uploads/objects/1767872545606-cxpgg0i.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 4500,
+      "interactionType": "pong",
+      "adminOnly": false,
+      "moveable": false,
+      "isFloor": false,
+      "isCustom": true,
+      "xOffset": 32,
+      "yOffset": 32,
+      "keywords": [
+        "pingpong",
+        "games",
+        "batje",
+        "tafeltennis",
+        "sport"
+      ],
+      "x": 1,
+      "y": 17,
+      "flipped": false,
+      "ownerId": "4U09n32V-cspi_K6AAAN",
+      "id": "mk9v719ku9y8bgnh56b"
+    },
+    {
+      "name": "Hoge Blok",
+      "height": 2,
+      "image": "http://localhost:3000/templates/object_template_96.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 20,
+      "x": 4,
+      "y": 20,
+      "flipped": false,
+      "ownerId": "4U09n32V-cspi_K6AAAN",
+      "id": "mk9v7eijjx0rn79iezr"
+    },
+    {
+      "name": "Hoge Kraan",
+      "height": 2,
+      "image": "http://localhost:3000/templates/kraan_template_96.png",
+      "category": "objecten",
+      "subCategory": "objects",
+      "placement": "floor",
+      "isTemplate": true,
+      "price": 75,
+      "interactionType": "tap",
+      "x": 1,
+      "y": 16,
+      "flipped": false,
+      "ownerId": "4U09n32V-cspi_K6AAAN",
+      "id": "mk9v7iq8xsmj3yhssi"
     }
   ],
   "wallObjects": [],
@@ -40,9 +102,9 @@
       "name": "Batje Rood",
       "mass": 0.4,
       "canTopple": true,
-      "x": 4.639846529443045,
-      "y": 10.493014313859188,
-      "vx": 0,
+      "x": 3.447390681964055,
+      "y": 10.486926626124415,
+      "vx": -0.001212126819143297,
       "vy": 0,
       "z": 0,
       "vz": 0,
@@ -51,7 +113,7 @@
       "invX": 332,
       "invY": 118.55000305175781,
       "id": "mk2g1orcemo4juhzc7",
-      "lastTouchedBy": "s9qboDjJaqGAQARYAAAR",
+      "lastTouchedBy": "WwB8UXjxZ_pfMAxpAAAL",
       "isResting": true
     },
     {
@@ -73,48 +135,48 @@
     {
       "type": "currency_big",
       "mass": 0.5,
-      "x": 7.2338933757392745,
-      "y": 2.6565058064101126,
-      "vx": 0,
+      "x": 9.967076524732374,
+      "y": 3.425711663122798,
+      "vx": -0.0013260506487736974,
       "vy": 0,
       "z": 0,
       "vz": 0,
       "rotation": 0,
       "vr": 0,
       "id": "mk2geiopcvbtze2e6pj",
-      "lastTouchedBy": "YoUD9XMb--8ndGoxAAAX"
+      "lastTouchedBy": "VnSmprM7dEMU0swOAAAZ"
     },
     {
       "type": "currency",
       "mass": 0.5,
-      "x": 5.072718262361612,
-      "y": 1.2623715704945067,
-      "vx": 0,
+      "x": 4.214129548774153,
+      "y": 0.8746020026120073,
+      "vx": -0.001210444379785154,
       "vy": 0,
       "z": 0,
       "vz": 0,
       "rotation": 0,
       "vr": 0,
       "id": "mk2geioqzo7oklc9j7j",
-      "lastTouchedBy": "YoUD9XMb--8ndGoxAAAX",
+      "lastTouchedBy": "_QdYwKxVtIvE25sdAAAJ",
       "isResting": true
     },
     {
       "type": "bottle_empty",
       "name": "Waterfles (Leeg)",
       "mass": 1.2,
-      "vx": 0,
-      "vy": 0,
+      "vx": -0.0010965072827363942,
+      "vy": 0.0013019217466299605,
       "vz": 0,
       "rotation": 0,
       "vr": 0,
       "invX": 350,
       "invY": 84.55000305175781,
-      "x": 2.5805797079955606,
-      "y": 1.4103739907203012,
+      "x": 0.9327794343228382,
+      "y": 0.7019571526782453,
       "z": 0,
       "id": "mk2g1orcjtkp0jtdtfa",
-      "lastTouchedBy": "s9qboDjJaqGAQARYAAAR",
+      "lastTouchedBy": "4U09n32V-cspi_K6AAAN",
       "isResting": true
     },
     {
@@ -122,16 +184,16 @@
       "name": "Batje Zwart",
       "mass": 0.4,
       "canTopple": true,
-      "x": 3.5649712212229563,
-      "y": 6.443161132763115,
-      "vx": 0,
+      "x": 1.250330841627858,
+      "y": 6.002930956064402,
+      "vx": -0.001044723809676665,
       "vy": 0,
       "z": 0,
       "vz": 0,
       "rotation": 1.5707963267948966,
       "vr": 0,
       "id": "mk2geiopni5at9sxc2",
-      "lastTouchedBy": "mthjwEL3mHamlL3OAAAJ",
+      "lastTouchedBy": "cCAp9WabneNc_QixAAAJ",
       "isResting": true,
       "invX": 316,
       "invY": 109.55000305175781
@@ -172,18 +234,18 @@
     {
       "type": "peuk",
       "name": "Peuk",
-      "x": 7.80463276015419,
-      "y": 1.9201482809844141,
+      "x": 5.498725428098783,
+      "y": 0.6281838779356163,
       "z": 0,
       "rotation": 1.5707963267948966,
       "mass": 0.01,
       "canTopple": true,
-      "vx": 0,
+      "vx": -0.0013045078948384274,
       "vy": 0,
       "vz": 0,
       "vr": 0,
       "id": "mk2jk66dkzafss1764",
-      "lastTouchedBy": "sf8s8cFOKrathx16AAAD"
+      "lastTouchedBy": "_QdYwKxVtIvE25sdAAAJ"
     },
     {
       "type": "peuk",
@@ -204,381 +266,39 @@
     {
       "type": "peuk",
       "name": "Peuk",
-      "x": 9.673669625543283,
-      "y": 5.48744493325398,
+      "x": 8.586877266094971,
+      "y": 8.112074184193215,
       "z": 0,
       "rotation": 1.5707963267948966,
       "mass": 0.01,
       "canTopple": true,
       "vx": 0,
-      "vy": 0,
+      "vy": 0.0012410662635254997,
       "vz": 0,
       "vr": 0,
       "id": "mk2jo5dw53q4c43913t",
-      "lastTouchedBy": "mthjwEL3mHamlL3OAAAJ"
+      "lastTouchedBy": "WwB8UXjxZ_pfMAxpAAAL"
     }
   ],
-  "chatHistory": [
-    {
-      "user": "Alumni S5W7",
-      "text": "*zucht*",
-      "id": "S5W738vLJR_9gS_cAAAZ",
-      "userId": "user_198nak43a",
-      "time": 1767696918026
-    },
-    {
-      "user": "Alumni S5W7",
-      "text": "*paf*",
-      "id": "S5W738vLJR_9gS_cAAAZ",
-      "userId": "user_198nak43a",
-      "time": 1767696919027
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*steekt een sigaret op*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701032994
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701034207
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701036437
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701036740
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*kuch*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701036840
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701037041
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701038759
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701038858
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*kuch*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701039566
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701040073
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701040275
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701040376
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701040477
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701040578
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701041090
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701041293
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701042096
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*kuch*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701042607
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*steekt een sigaret op*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701059826
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*kuch*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701060427
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701060737
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701061546
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*kuch*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701062055
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*kuch*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701063775
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*kuch*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701063978
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701064078
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701064786
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701064987
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701065694
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701066201
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*kuch*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701066318
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701066408
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701066508
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701067118
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*zucht*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701067530
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*paf*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701068242
-    },
-    {
-      "user": "Alumni sf8s",
-      "text": "*kuch*",
-      "id": "sf8s8cFOKrathx16AAAD",
-      "userId": "user_198nak43a",
-      "time": 1767701069863
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*steekt een sigaret op*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701218604
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*paf*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701222045
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*zucht*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701222758
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*kuch*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701223061
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*kuch*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701225146
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*paf*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701225351
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*zucht*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701226874
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*kuch*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701227593
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*paf*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701227999
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*zucht*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701228203
-    },
-    {
-      "user": "Alumni mthj",
-      "text": "*zucht*",
-      "id": "mthjwEL3mHamlL3OAAAJ",
-      "userId": "user_uialqiai0",
-      "time": 1767701228609
-    }
-  ],
+  "chatHistory": [],
   "mapW": 30,
   "mapH": 30,
   "tileColors": {},
   "wallColors": {},
+  "puddles": {},
+  "snow": {},
   "maxPlayers": 100,
+  "spawnPoint": {
+    "x": 0,
+    "y": 0
+  },
   "settings": {
     "doorbell": false,
     "alwaysOnline": true,
     "allowBuilding": false,
-    "noSmoking": true
+    "noSmoking": true,
+    "isOutside": false,
+    "weather": "clear",
+    "time": "day"
   }
 }
