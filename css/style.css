@@ -1,0 +1,1556 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #222;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+canvas {
+  display: block;
+  cursor: pointer;
+  image-rendering: pixelated; /* Zorgt voor scherpe weergave op alle schermen */
+}
+
+/* ───────────────────────────── */
+/* Algemene knoppen */
+/* ───────────────────────────── */
+button {
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  border: none; /* Geen rand */
+  background: transparent; /* Geen achtergrond */
+  padding: 0;
+}
+
+/* Algemene stijl voor alle iconen in knoppen */
+button img {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ───────────────────────────── */
+/* Footer / chat input */
+/* ───────────────────────────── */
+#footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centreer de chat-groep */
+  padding: 0 20px; /* Wat ruimte aan de zijkanten */
+  box-sizing: border-box;
+}
+
+.footer-left, .footer-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 10px;
+  width: 400px; /* Breder voor zoom knoppen */
+}
+.footer-left {
+  left: 20px;
+  gap: 20px; /* Meer ruimte tussen knoppen */
+}
+.footer-right { right: 20px; justify-content: flex-end; }
+
+#chatInput {
+  width: 300px;
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 24px;
+  border: none;
+  outline: none;
+}
+
+#charCounter {
+  color: #aaa;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  min-width: 60px;
+  text-align: left;
+}
+
+/* Nieuwe container voor de hele chat-groep */
+.chat-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#openChatLog, #buildBtn, #inventoryBtn, #adminBtn, #cheatBtn, #roomsBtn, #myRoomBtn, #friendsBtn, #zoomIn, #zoomOut, #centerCam {
+  width: 24px;
+  height: 24px;
+}
+
+#friendsBtn,
+#myRoomBtn,
+#roomsBtn {
+  margin-left: 15px;
+}
+/* ───────────────────────────── */
+/* Bouwmenu */
+/* ───────────────────────────── */
+#buildMenu {
+  position: absolute; /* Nodig voor verplaatsen */
+  left: 40px;
+  top: 80px;
+  /* 60px voor categorieën + 450px voor content */
+  width: 510px;
+  height: 470px; /* Iets hoger gemaakt voor de color picker */
+  background: rgba(17, 17, 17, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none; /* Start verborgen, wordt 'flex' in JS */
+  z-index: 20;
+  overflow: hidden; /* Zorgt dat content binnen de afgeronde hoeken blijft */
+  flex-direction: row; /* Categorieën links, content rechts */
+}
+
+#buildCategoryMenu {
+  width: 60px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Meer ruimte */
+  align-items: center; /* Centreer items voor vierkante knoppen */
+}
+
+.category-btn {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#buildMainContent {
+  width: 450px;
+}
+
+#objectCategoryView {
+  display: flex; /* Standaard zichtbaar */
+  flex-direction: column;
+  height: 100%;
+}
+
+#colorCategoryView {
+  display: none; /* Standaard verborgen */
+  box-sizing: border-box;
+  height: calc(100% - 36px); /* Volledige hoogte minus de header */
+  display: flex;
+  flex-direction: row;
+}
+
+#objectSubCategoryMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Meer ruimte */
+  width: 60px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  box-sizing: border-box;
+  align-items: center; /* Horizontaal centreren */
+}
+
+
+#colorTools {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 55px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+#colorPickerWrapper {
+  flex-grow: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column; /* Zorgt ervoor dat de color picker en details onder elkaar staan */
+  justify-content: center;
+  align-items: center;
+}
+
+#colorPicker {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  -webkit-color-swatch-wrapper { padding: 0; } /* Webkit specifieke styling */
+  border: none;
+  background: none;
+}
+
+#colorDetails {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#colorPreview {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+}
+
+#hexInput {
+  width: 100px;
+  padding: 8px;
+  background: #222;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #fff;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+#buildTools {
+  padding: 5px 10px; /* Minder verticale padding */
+  /* border-top is nu border-bottom op de header */
+  display: flex;
+  gap: 10px;
+  justify-content: space-between; /* Ruimte tussen zoekbalk en tools */
+  align-items: center;
+  background: rgba(0,0,0,0.1); /* Lichte achtergrond voor contrast */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Scheidingslijn */
+}
+
+.tool-btn {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#buildMenuHeader {
+  height: 36px;
+  line-height: 36px;
+  padding: 0 12px;
+  background: #1a1a1a;
+  border-radius: 10px 10px 0 0;
+  cursor: move;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Scheidingslijn */
+  user-select: none;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+#buildMenuContent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Forceer 3 kolommen die de ruimte vullen */
+  gap: 10px;
+  padding: 10px; /* Padding voor de content zelf */
+  height: calc(100% - 51px); /* Hoogte minus de dunnere #buildTools balk (50px + 1px border) */
+  overflow-y: auto;
+  box-sizing: border-box;
+  justify-items: center; /* Centreer items binnen hun grid cel */
+  align-items: start; /* Items bovenaan beginnen in hun cell */
+  align-content: start; /* Zorgt dat rijen bovenaan beginnen en niet verspreiden */
+}
+
+/* NIEUW: Skybox animatie keyframes */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.build-item {
+  background: rgba(0, 0, 0, 0.4); /* Donkerder met transparantie */
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Plaatje boven, tekst onder */
+  gap: 8px;
+  color: white;
+  font-size: 12px;
+  font-family: Arial, sans-serif; /* Consistent lettertype */
+  width: 90px;
+  height: 110px; /* Vaste hoogte teruggezet */
+}
+
+
+.build-item:hover {
+  background: #555;
+}
+
+.build-item.selected {
+  border-color: white;
+}
+
+#buildMenuHeader, #chatLogHeader, #inventoryHeader, #pongHeader, #shopHeader, #containerHeader, #pouchHeader, #vicinityHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.build-item img {
+  height: 64px; /* Vaste hoogte voor consistentie */
+  max-width: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* NIEUW: Stijl voor inventory items (alleen plaatje, geen tekst) */
+.inventory-item {
+  background: transparent;
+  border-radius: 6px;
+  cursor: grab;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  transform: scale(6);
+  transform-origin: top left;
+}
+.inventory-item:hover {
+  background: transparent;
+}
+.inventory-item img {
+  display: block;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+/* Fix voor shop output items zodat ze zichtbaar blijven */
+#shopOutput .inventory-item {
+  transform: scale(1);
+  margin: 0 2px;
+}
+#shopOutput .inventory-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* Fix voor vicinity items zodat ze netjes in rijen staan */
+#vicinityContent .inventory-item {
+  transform: scale(1);
+  margin: 0;
+  width: 100% !important;
+  height: 64px !important;
+}
+#vicinityContent .inventory-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#chatLog {
+  position: absolute;
+  bottom: 60px;
+  right: 20px;
+  width: 320px;
+  height: 400px;
+
+  background: rgba(17, 17, 17, 0.85); /* Transparantie toegevoegd */
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.85); /* Transparantie toegevoegd */
+  border-radius: 10px;
+
+  font-family: Arial;
+  font-size: 14px;
+
+  display: none;
+  overflow: hidden;
+  z-index: 20;
+}
+
+#inventory {
+  position: absolute;
+  left: 150px;
+  top: 120px;
+  width: 400px; /* Breder gemaakt */
+  height: 450px; /* Langer gemaakt */
+  background: rgba(17, 17, 17, 0.85); /* Transparantie toegevoegd */
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.85); /* Transparantie toegevoegd */
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: none; /* Start verborgen */
+  overflow: hidden;
+  z-index: 20;
+  flex-direction: column; /* Zorgt dat header en content onder elkaar staan */
+}
+
+#chatLogHeader {
+  height: 36px;
+  line-height: 36px;
+  padding: 0 12px;
+
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px 10px 0 0;
+
+  cursor: move;
+  user-select: none;
+}
+
+#inventoryHeader, #pongHeader, #shopHeader, #containerHeader, #pouchHeader, #vicinityHeader {
+  height: 36px;
+  line-height: 36px;
+  padding: 0 12px;
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px 10px 0 0;
+  cursor: move;
+  user-select: none;
+}
+
+#inventoryTools {
+  padding: 5px 10px; /* Minder verticale padding */
+  display: flex;
+  gap: 10px;
+  justify-content: space-between; /* Wallet links, dagboek rechts */
+  align-items: center; /* Verticaal centreren */
+  background: rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#wallet {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: white; /* Goud-achtige kleur */
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+#transactionFeed {
+  font-family: Arial, sans-serif;
+  font-size: 12px; /* 2px kleiner dan wallet (14px) */
+  opacity: 0;
+}
+
+#chatLogContent {
+  height: calc(100% - 36px);
+  padding: 10px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+#inventoryContent {
+  height: calc(100% - 36px - 51px); /* Hoogte minus header en dunnere tools paneel */
+  padding: 10px;
+  overflow: hidden; /* Scrollen uitgeschakeld zoals gevraagd */
+  box-sizing: border-box;
+  display: block; /* Was grid, nu block voor vrije plaatsing */
+  position: relative; /* Zodat items absoluut gepositioneerd kunnen worden */
+}
+
+/* ───── Pong Minigame ───── */
+#pongGame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; /* Breder gemaakt zoals een tafel */
+  height: 336px; /* 300 canvas + 36 header */
+  background: rgba(17, 17, 17, 0.85); /* Subtiele transparantie */
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 30; /* Bovenop alles */
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+#pongScoreboard {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+}
+
+#pongCanvas {
+  background: rgba(0, 0, 0, 0.6); /* Half-transparant speelveld */
+  width: 100%;
+  height: 264px; /* Aangepast voor scorebord */
+  cursor: default; /* Cursor wordt via JS geregeld */
+}
+
+/* Achtergrond voor Pong om clicks af te vangen en cursor te verbergen */
+#pongBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 29; /* Net onder de pong game (30) */
+  display: none;
+}
+
+/* Notificatie paneel */
+#notification {
+  position: absolute;
+  bottom: 100px; /* Boven de status bar */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17, 17, 17, 0.85);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  z-index: 100;
+  pointer-events: none; /* Klik er doorheen */
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#voteCounter {
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  background: rgba(17, 17, 17, 0.85);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  z-index: 95;
+  display: none;
+  text-align: center;
+}
+
+/* ───── Winkel Venster ───── */
+#shopWindow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 380px; /* Breder gemaakt voor mooiere spacing */
+  height: 550px;
+  background: rgba(17, 17, 17, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 25;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+#shopContent {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: max-content;
+  gap: 5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  justify-items: center;
+  height: 300px;
+}
+
+/* ───── Kamers Venster ───── */
+#roomsWindow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 400px;
+  background: rgba(17, 17, 17, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 25;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+#roomsContent {
+  padding: 10px;
+  overflow-y: auto;
+  height: calc(100% - 36px);
+  font-size: 10px;
+}
+
+/* ───── Mijn Kamer Venster ───── */
+#myRoomWindow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 350px; /* Iets hoger voor de lijst */
+  background: rgba(17, 17, 17, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 25;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+/* ───── Kamer Spelers Venster ───── */
+#roomPlayersWindow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 350px; /* Iets hoger voor de lijst */
+  background: rgba(17, 17, 17, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 25;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+}
+
+#friendsContent {
+  padding: 20px;
+}
+
+#roomPlayersContent {
+  padding: 20px;
+}
+
+/* ───── Vrienden Venster ───── */
+#friendsWindow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 350px; /* Iets hoger voor de lijst */
+  background: rgba(17, 17, 17, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 25;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+#myRoomContent {
+  padding: 20px;
+}
+
+/* ───── Role Selector ───── */
+#roleSelector {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+.role-btn {
+  padding: 20px 40px;
+  font-size: 20px;
+  cursor: pointer;
+  background: #333;
+  color: white;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  transition: background 0.2s;
+  margin: 0 10px;
+}
+.role-btn:hover {
+  background: #555;
+}
+
+#shopOutput {
+  flex-grow: 1;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 10px;
+  border-radius: 6px;
+  min-height: 100px;
+}
+
+/* ───── Container Venster ───── */
+#containerWindow {
+  position: absolute;
+  left: 600px; /* Rechts van inventory */
+  top: 120px;
+  width: 260px;
+  height: 300px;
+  background: rgba(17, 17, 17, 0.85);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: none;
+  overflow: hidden;
+  z-index: 20;
+  flex-direction: column;
+}
+
+#containerTools {
+  padding: 5px 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end; /* Knoppen rechts uitlijnen */
+  align-items: center;
+  background: rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ───── Pouch Venster ───── */
+#pouchWindow {
+  position: absolute;
+  left: 200px;
+  top: 150px;
+  width: 260px;
+  height: 300px;
+  background: rgba(17, 17, 17, 0.85);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: none;
+  overflow: hidden;
+  z-index: 20;
+  flex-direction: column;
+}
+
+/* ───── Vicinity Venster ───── */
+#vicinityWindow {
+  position: absolute;
+  left: 560px; /* Rechts van inventory (150 + 400 + 10) */
+  top: 120px;
+  width: 400px;
+  height: 450px; /* Zelfde hoogte als inventory */
+  background: rgba(17, 17, 17, 0.85);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: none;
+  overflow: hidden;
+  z-index: 20;
+  flex-direction: column;
+}
+
+/* ───── Marker Menu ───── */
+#markerMenu {
+  position: absolute;
+  left: 560px; /* Rechts van inventory */
+  top: 120px;
+  width: 200px;
+  height: 420px;
+  background: rgba(17, 17, 17, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 20;
+  font-size: 14px;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+#markerMenuHeader {
+  height: 36px;
+  line-height: 36px;
+  padding: 0 12px;
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px 10px 0 0;
+  cursor: move;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Custom Slider Styling */
+#markerSizeSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+#markerSizeSlider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: #ffffff;
+  border-radius: 0px;
+}
+#markerSizeSlider::-moz-range-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: #ffffff;
+  border-radius: 0px;
+}
+#markerSizeSlider::-webkit-slider-thumb {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -4.5px;
+}
+#markerSizeSlider::-moz-range-thumb {
+  height: 10px;
+  width: 10px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+/* White spin buttons for number inputs */
+input[type="number"], select {
+  color-scheme: dark;
+}
+
+/* ───── Paper Venster ───── */
+#paperWindow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 510px;
+  height: 470px;
+  background: rgba(17, 17, 17, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 25;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+#paperHeader {
+  height: 36px;
+  line-height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px 10px 0 0;
+  cursor: move;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#paperContent {
+  padding: 20px;
+  overflow-y: auto;
+  height: calc(100% - 36px);
+}
+
+.paper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 20px;
+}
+
+.paper-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #aaa;
+}
+.paper-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.paper-delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  background: #f44336;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 12px;
+  display: none; /* Show on hover */
+}
+.paper-item:hover .paper-delete-btn {
+  display: flex;
+}
+
+/* ───── Project Venster (Full Screen) ───── */
+#projectWindow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+  --proj-guide-color: #7bff00;
+  --proj-transform-color: #7bff00;
+  --proj-anchor-color: #7bff00;
+}
+
+#projectHeader {
+  height: 36px;
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.project-menu-btn {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+.project-menu-btn:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ───── Project Dropdown Menu ───── */
+.project-dropdown {
+  position: absolute;
+  top: 30px; /* Net onder de knop */
+  left: 0;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  z-index: 200;
+  min-width: 120px;
+  display: none;
+  flex-direction: column;
+}
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #ccc;
+  font-family: Arial, sans-serif;
+}
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+#projectSubHeader {
+  height: 28px;
+  background: #222;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  flex-shrink: 0;
+}
+
+#projectSubHeader select, #projectSubHeader input {
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+}
+
+#projectSubHeader span {
+  color: #aaa;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  margin-right: 5px;
+}
+
+#projectMainLayout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+#projectToolbar {
+  width: 40px;
+  background: #1a1a1a;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+#projectToolbarHeader {
+  font-size: 10px;
+  color: #aaa;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  font-family: Arial, sans-serif;
+}
+
+#projectToolbar .tool-btn {
+  font-size: 18px; /* Emoji grootte */
+  line-height: 1;
+}
+
+#projectToolbar .tool-btn.active {
+  background-color: #444;
+  border-radius: 4px;
+}
+
+#projectSidebar {
+  width: 250px;
+  background: #1a1a1a;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#projectColorPanel {
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#projectLayersPanel {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.project-panel-header {
+  width: 100%;
+  text-align: left;
+  color: #aaa;
+  font-size: 12px;
+  margin-bottom: 10px;
+  font-family: Arial, sans-serif;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
+}
+
+.layer-item {
+  padding: 6px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #aaa;
+  font-family: Arial, sans-serif; /* Gevraagde font fix */
+}
+.layer-item:hover {
+  background: #2a2a2a;
+}
+.layer-item.active {
+  background: #444;
+  color: white;
+}
+
+#projectWorkspace {
+  flex: 1;
+  background: #111;
+  overflow: auto; /* Scrollbars indien nodig */
+  position: relative;
+  display: flex;
+  /* Centrering wordt nu via JS geregeld op basis van zoom */
+  cursor: grab;
+}
+
+/* Scrollbar styling voor workspace */
+#projectWorkspace::-webkit-scrollbar { width: 8px; height: 8px; }
+#projectWorkspace::-webkit-scrollbar-track { background: #111; }
+#projectWorkspace::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+#projectWorkspace::-webkit-scrollbar-thumb:hover { background: #666; }
+#projectWorkspace::-webkit-scrollbar-corner { background: #111; }
+#projectWorkspace { scrollbar-width: thin; scrollbar-color: #444 #111; }
+
+#projectZoomLevel {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #aaa;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+#projectWorkspace:active {
+  cursor: grabbing;
+}
+
+#projectCanvasWrapper {
+  transform-origin: center center;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);  
+  position: relative; /* Nodig voor absolute positionering van grid overlay */
+  flex-shrink: 0; /* Voorkom krimpen in flex container */
+  overflow: visible; /* Zodat transform handles zichtbaar blijven */
+}
+
+/* NIEUW: Masker voor de inhoud (lagen) zodat ze niet buiten het canvas komen */
+#projectClippingMask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#projectClippingMask canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none; /* Muis events gaan naar de workspace container */
+}
+
+/* ───── Nieuw Project Venster ───── */
+#newProjectWindow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 510px;
+  height: 570px;
+  background: rgba(17, 17, 17, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 25;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+#newProjectHeader {
+  height: 36px;
+  line-height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px 10px 0 0;
+  cursor: move;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#newProjectContent {
+  padding: 20px;
+  overflow-y: auto;
+  height: calc(100% - 36px);
+}
+
+/* ───── Pixel Grid Overlay (PSD Style) ───── */
+.pixel-grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  display: none; /* Standaard verborgen */
+  background-size: 1px 1px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.3) 5%, transparent 5%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 5%, transparent 5%);
+  image-rendering: pixelated;
+}
+
+.layer-thumbnail {
+  width: 30px;
+  height: 20px;
+  border: 1px solid #555;
+  background: #222; /* Checkboard patroon zou mooier zijn voor transparantie */
+  margin-right: 8px;
+  image-rendering: pixelated;
+}
+
+/* ───── Project Guides ───── */
+.project-guide-line {
+  position: absolute;
+  background-color: var(--proj-guide-color);
+  display: none;
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+.project-guide-line.vertical { top: 0; bottom: 0; width: 1px; left: 50%; transform: translateX(-50%); }
+.project-guide-line.horizontal { left: 0; right: 0; height: 1px; top: 50%; transform: translateY(-50%); }
+
+/* ───── Transform Overlay ───── */
+#transformOverlay {
+  position: absolute;
+  border: 1px solid var(--proj-transform-color);
+  display: none;
+  z-index: 101;
+  pointer-events: auto; /* Klikken vangen voor verplaatsen */
+  background: transparent;
+  cursor: move;
+}
+.transform-handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border: 1px solid var(--proj-transform-color);
+  pointer-events: auto;
+  z-index: 102;
+}
+/* Cursor stijlen voor handles worden via JS geregeld of inline styles */
+
+.transform-anchor {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 1px solid var(--proj-anchor-color);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 103;
+  cursor: crosshair;
+}
+
+.transform-rotator {
+  position: absolute;
+  left: 50%;
+  top: -30px; /* Boven het kader */
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 1px solid var(--proj-transform-color);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  cursor: grab; /* Rotatie cursor */
+  z-index: 102;
+}
+.transform-rotator::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 1px;
+  height: 20px;
+  background: var(--proj-transform-color);
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+/* ───── Selectie Overlay ───── */
+#projectSelectionOverlay {
+  position: absolute;
+  border: 1px dashed white;
+  box-shadow: 0 0 0 1px black; /* Dubbele rand voor zichtbaarheid op elke achtergrond */
+  background: rgba(50, 150, 255, 0.2);
+  display: none;
+  pointer-events: none; /* Klikken gaat erdoorheen */
+  z-index: 104;
+}
+
+/* ───── Kleur Selectie Venster (Popup) ───── */
+#colorSelectionWindow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 250px;
+  height: auto;
+  background: rgba(17, 17, 17, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  display: none;
+  z-index: 60; /* Boven project window */
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+#saveProjectSettingsBtn {
+  margin-top: 0;
+  padding: 10px;
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  transition: all 0.2s;
+}
+#saveProjectSettingsBtn:hover {
+  background: white;
+  color: black;
+}
+
+#createNewProjectConfirmBtn {
+  margin-top: 0;
+  padding: 12px;
+  background: white;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 10px;
+  font-family: Arial, sans-serif;
+  transition: background 0.2s;
+}
+#createNewProjectConfirmBtn:hover {
+  background: #ccc;
+}
+
+/* ───── Custom scrollbar (WebKit) voor Chat & Bouwmenu ───── */
+#chatLogContent::-webkit-scrollbar,
+#buildMenuContent::-webkit-scrollbar,
+#inventoryContent::-webkit-scrollbar,
+#vicinityContent::-webkit-scrollbar,
+#roomCategoryView::-webkit-scrollbar,
+#roomList::-webkit-scrollbar,
+#shopContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+#chatLogContent::-webkit-scrollbar-track,
+#buildMenuContent::-webkit-scrollbar-track,
+#inventoryContent::-webkit-scrollbar-track,
+#vicinityContent::-webkit-scrollbar-track,
+#roomCategoryView::-webkit-scrollbar-track,
+#roomList::-webkit-scrollbar-track,
+#shopContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#chatLogContent::-webkit-scrollbar-thumb,
+#buildMenuContent::-webkit-scrollbar-thumb,
+#inventoryContent::-webkit-scrollbar-thumb,
+#vicinityContent::-webkit-scrollbar-thumb,
+#roomCategoryView::-webkit-scrollbar-thumb,
+#roomList::-webkit-scrollbar-thumb,
+#shopContent::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 6px;
+}
+
+/* ───── Custom scrollbar (Firefox) voor Chat & Bouwmenu ───── */
+#chatLogContent,
+#buildMenuContent,
+#inventoryContent,
+#vicinityContent,
+#roomCategoryView,
+#roomList,
+#shopContent {
+  scrollbar-width: thin;
+  scrollbar-color: white transparent;
+}
+
+/* ───── Upload Modal ───── */
+#uploadModal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(17, 17, 17, 0.95);
+  border: 1px solid white;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 100;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  width: 400px;
+  display: none; /* Wordt 'flex' via JS */
+  flex-direction: column;
+  gap: 15px;
+}
+
+#pongNotification {
+    text-align: center;
+}
+
+#customObjectName {
+  width: 100%;
+  padding: 8px;
+  background: #333;
+  border: 1px solid #555;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#templateGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* ───── Pop-up Styling ───── */
+.popup-content { text-align: center; }
+.popup-header { margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.popup-sub { margin-bottom: 10px; }
+.popup-actions { display: flex; gap: 10px; justify-content: center; }
+
+.popup-btn { padding: 5px 15px; color: white; border: none; border-radius: 50px; cursor: pointer; font-family: Arial, sans-serif; font-size: 10px; }
+.popup-btn.confirm { background: transparent; border: 1px solid white; }
+.popup-btn.confirm:hover { background: white; color: black; }
+.popup-btn.deny { background: transparent; border: 1px solid #f44336; }
+.popup-btn.deny:hover { background: #f44336; color: white; }
+.popup-btn.neutral { background: transparent; border: 1px solid white; }
+.popup-btn.neutral:hover { background: white; color: black; }
+
+.ctx-item:hover { background-color: #444; }
+
+.popup-input { width: 200px; padding: 8px; background: #333; border: 1px solid #555; color: white; border-radius: 50px; margin-bottom: 10px; font-family: Arial, sans-serif; }
+
+/* ───── Status Bar (Roken etc.) ───── */
+#statusBarContainer {
+  position: absolute;
+  bottom: 60px; /* Boven de footer (50px) + 10px marge */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 8px;
+  display: none; /* Start verborgen */
+  overflow: hidden;
+  z-index: 90;
+}
+#statusBarFill {
+  height: 100%;
+  width: 0%;
+  background: #7bff00;
+  transition: width 0.1s linear;
+}
+#statusBarText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  text-shadow: 1px 1px 0 #000;
+}
+
